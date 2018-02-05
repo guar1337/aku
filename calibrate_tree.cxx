@@ -21,6 +21,10 @@ void loader(TString fname, float *AConst, float *BConst)
    printf ("#   Cannot open %s coefficient file\n",fname.Data());
    return;
    }
+   else
+   {
+   		printf("Opening %s calibration file...\n",fname.Data() );
+   }
     getline(plik, dummy);
     getline(plik, dummy);
    for (int iii=0; iii<16; iii++)
@@ -57,7 +61,7 @@ in_ny2=0;
 in_trigger=0;
 
 
-inTree->Print();
+//inTree->Print();
 
 //Creating addresses of BEAM holding branches
 inTree->SetMakeClass(1);
@@ -129,6 +133,7 @@ loader("/home/guar/Desktop/1217_data/coefs/sqy_l_ec.clb", a_SQY_L, b_SQY_L);
 loader("/home/guar/Desktop/1217_data/coefs/sqy_r_ec.clb", a_SQY_R, b_SQY_R);
 loader("/home/guar/Desktop/1217_data/calib/CsI_R_pedestals.par", a_CsI_R, b_CsI_R);
 loader("/home/guar/Desktop/1217_data/calib/CsI_L_pedestals.par", a_CsI_L, b_CsI_L);
+printf("\n");
 
 double gamma, beta_squared;
 
