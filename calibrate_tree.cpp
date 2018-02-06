@@ -4,9 +4,9 @@
 #include "TH2D.h"
 #include "stdio.h"
 #include "Riostream.h"
-#include "calibrate_tree.hh"
+#include "calibrate_tree.h"
 #include <iostream>
-#include "interface.hh"
+#include "interface.h"
 
 
 // voron1392

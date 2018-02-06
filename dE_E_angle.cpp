@@ -3,9 +3,9 @@
 #include "TH2D.h"
 #include "stdio.h"
 #include "Riostream.h"
-#include "dE_E_angle.hh"
+#include "dE_E_angle.h"
 #include <iostream>
-#include "interface.hh"
+#include "interface.h"
 
 
 bool create_input_tree(TTree *inTree)
