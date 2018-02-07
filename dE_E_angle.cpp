@@ -1,10 +1,10 @@
 #include "TFile.h"
-#include "TH2D.h"
 #include "stdio.h"
 #include "Riostream.h"
 #include "dE_E_angle.h"
 #include <iostream>
 #include "interface.h"
+#include "TRandom3.h"
 
 ClassImp(dE_E_angle);
 
@@ -201,8 +201,9 @@ void dE_E_angle::actual_work()
    TVector3 zx(0.0,1.0,0.0);
    TVector3 v_beam(0.0,0.0,1.0);
    TRotation beam_setting_array;
-   lvTar = TLorentzVector(0.0,0.0,0.0,1875.612928);
-   //angle randomization
+   TLorentzVector lvTar(0.0,0.0,0.0,1875.612928);
+   TLorentzVector lvBeam, lv2h, lv6he;
+   TRandom3 *rnd = new TRandom3();
 
    Long64_t nEntries = inTree->GetEntries();
    printf("##############################################################################\n");
@@ -210,11 +211,12 @@ void dE_E_angle::actual_work()
    for (Long64_t entry=0; entry<nEntries; entry++)
    {
       inTree->GetEntry(entry);
-      TRandom *rnd;
-      //if( entry % ( nEntries / 20 ) == 0)
-      //{
-      //   cout<<"#    Progress: "<<double(entry * 100)/ nEntries<<" %"<<endl;
-      //}   
+      
+
+      if( entry % ( nEntries / 20 ) == 0)
+      {
+         cout<<"#    Progress: "<<double(entry * 100)/ nEntries<<" %"<<endl;
+      }   
 
       //NULLing everything
       {
@@ -251,7 +253,7 @@ void dE_E_angle::actual_work()
          sqretot=0.0;
          sqrang=0.0;
       }
-/*
+
       null_strips(SQX_L_strip,  SQY_L_strip,  CsI_L_strip,
                   SQX_R_strip,  SQY_R_strip,  CsI_R_strip);
 
@@ -262,7 +264,7 @@ void dE_E_angle::actual_work()
                   SQX_R_Edep,  SQY_R_Edep,  CsI_R_Edep);
 
       null_MWPC(out_x1, out_x2, out_y1, out_y2);
-      */
+      
          //1 channel loop
       out_nx1=in_nx1;
       out_nx2=in_nx2;
@@ -349,21 +351,22 @@ void dE_E_angle::actual_work()
       if(out_nx1*out_ny1*out_nx2*out_ny2!=0)
       {
          //displacement + go to corner of MWPC + follow wire order
-         mwpc=true;
-         MWPC_1_X=(-1.0) + (15.5*1.25)-(out_x1[0]+rnd->Uniform()-0.5)*1.25;
-         MWPC_1_Y=(-2.5) + (-15.5*1.25)+(out_y1[0]+rnd->Uniform()-0.5)*1.25;
+      	         mwpc=true;
+         MWPC_1_X=(-1.0) + (15.5*1.25)-(out_x1[0]+rnd->Uniform(0.0,1.0)-0.5)*1.25;
+         MWPC_1_Y=(-2.5) + (-15.5*1.25)+(out_y1[0]+rnd->Uniform(0.0,1.0)-0.5)*1.25;
          MWPC_1_Z=-816.0;
 
-         MWPC_2_X=(-1.5) + (15.5*1.25)-(out_x2[0]+rnd->Uniform()-0.5)*1.25;
-         MWPC_2_Y=(-1.0) + (-15.5*1.25)+(out_y2[0]+rnd->Uniform()-0.5)*1.25;
+         MWPC_2_X=(-1.5) + (15.5*1.25)-(out_x2[0]+rnd->Uniform(0.0,1.0)-0.5)*1.25;
+         MWPC_2_Y=(-1.0) + (-15.5*1.25)+(out_y2[0]+rnd->Uniform(0.0,1.0)-0.5)*1.25;
          MWPC_2_Z=-270.0;
+
 
          dX=MWPC_2_X-MWPC_1_X;
          dY=MWPC_2_Y-MWPC_1_Y;
          dZ=MWPC_2_Z-MWPC_1_Z;
 
          v_beam.SetXYZ(dX,dY,dZ);
-         lvBeam = TLorentzVector(v_beam,in_T+5606.59508);
+         lvBeam.SetVectMag(v_beam,in_T+5606.59508);
          XZsum=-MWPC_1_X-MWPC_1_Z;
 
          evX=MWPC_1_X+(XZsum*dX)/(dX+dZ);
@@ -376,6 +379,7 @@ void dE_E_angle::actual_work()
 
 
       }
+      
       //SQL energy - deuterium
       if (SQX_L_mult*SQY_L_mult==1)//+f1->GetRandom()-1.0
       {
@@ -384,12 +388,12 @@ void dE_E_angle::actual_work()
 
          if(mwpc==1)
          {
-            X2H=s::sql_dist*sin(s::sql_ang) + (30.0-4.*(SQX_L_strip[1]+rnd->Uniform()-0.5)) * cos(s::sql_ang);
-            Y2H=-30.+4.* (SQY_L_strip[1]+rnd->Uniform()-0.5);
-            Z2H=s::sql_dist*cos(s::sql_ang) - (30.-4.*(SQX_L_strip[1]+rnd->Uniform()-0.5)) * sin(s::sql_ang);  
+            X2H=s::sql_dist*sin(s::sql_ang) + (30.0-4.*(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5)) * cos(s::sql_ang);
+            Y2H=-30.+4.* (SQY_L_strip[1]+rnd->Uniform(0.0,1.0));
+            Z2H=s::sql_dist*cos(s::sql_ang) - (30.-4.*(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5)) * sin(s::sql_ang);  
 
             TVector3 vect2H(X2H-evX, Y2H-evY, Z2H-evZ);
-            lv2h = TLorentzVector(vect2H,1875.612928+sqlde+sqletot);
+            lv2h.SetVectMag(vect2H,1875.612928+sqlde+sqletot);
             vect2H=beam_setting_array*vect2H; 
 
             sqlphi=vect2H.Phi()*s::rad_to_deg;  
@@ -414,12 +418,12 @@ void dE_E_angle::actual_work()
 
          if(mwpc==1)
          {
-            X6He=-s::sqr_dist*sin(s::sqr_ang)+(30.-4.*(SQX_R_strip[1]+rnd->Uniform()-0.5))*cos(s::sqr_ang);
-            Y6He=30.-4.*(SQY_R_strip[1]+rnd->Uniform()-0.5);
-            Z6He=s::sqr_dist*cos(s::sqr_ang)+(30.-4.*(SQX_R_strip[1]+rnd->Uniform()-0.5))*sin(s::sqr_ang);
+            X6He=-s::sqr_dist*sin(s::sqr_ang)+(30.-4.*(SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5))*cos(s::sqr_ang);
+            Y6He=30.-4.*(SQY_R_strip[1]+rnd->Uniform(0.0,1.0));
+            Z6He=s::sqr_dist*cos(s::sqr_ang)+(30.-4.*(SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5))*sin(s::sqr_ang);
 
             TVector3 vect6He(X6He-evX, Y6He-evY, Z6He-evZ);
-            lv6he = TLorentzVector(vect6He,5606.59508+sqrde+sqretot);
+            lv6he.SetVectMag(vect6He,5606.59508+sqrde+sqretot);
             vect6He=beam_setting_array*vect6He;
 
             sqrphi=vect6He.Phi()*s::rad_to_deg;
@@ -440,8 +444,8 @@ void dE_E_angle::actual_work()
 
    }
 
-//printf("#    Creating file: %s with tree named \"dE_E\" \n",s::inFname.Copy().ReplaceAll("_cal","").Data());
-//printf("#    Goodbye ;)");
+printf("#    Creating file: %s with tree named \"dE_E\" \n",s::inFname.Copy().ReplaceAll("_cal","").Data());
+printf("#    Goodbye ;)");
 }
 /*
         double Tbeam=v2H->Energy();
