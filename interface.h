@@ -6,4 +6,5 @@ namespace s
 	static const float sqr_dist	=	200;
 	static const float rad_to_deg=	180.0	/ 3.1415927;
 	static const TString work_dir("/home/guar/Desktop/1217_data/");
+	static const TString inFname("he6_7_cal");
 }

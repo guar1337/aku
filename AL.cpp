@@ -5,7 +5,10 @@ AL::AL()
 {
 }
 
+AL::AL(TTree * inT, TTree * outT)
+{
+}
+
 AL::~AL()
 {
-;
 }

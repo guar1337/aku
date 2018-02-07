@@ -1,5 +1,4 @@
 #include "TFile.h"
-#include "TTree.h"
 #include "TH2D.h"
 #include "stdio.h"
 #include "Riostream.h"
@@ -7,12 +6,41 @@
 #include <iostream>
 #include "interface.h"
 
+ClassImp(dE_E_angle);
 
-bool create_input_tree(TTree *inTree)
+dE_E_angle::dE_E_angle()
 {
-   //inTree->Print();
+create_input_tree(NULL);
+create_output_tree(NULL);
+}
 
-   //Creating addresses of BEAM holding branches
+dE_E_angle::dE_E_angle(TTree *inT, TTree *outT)
+{
+	create_input_tree(inT);
+    create_output_tree(outT);
+	int deut_poly_Elo_Nel=2;
+	deut_poly_Elo_A[0]=2;
+	deut_poly_Elo_Z[0]=1;
+	deut_poly_Elo_W[0]=2;
+
+	deut_poly_Elo_A[1]=12;
+	deut_poly_Elo_Z[1]=6;
+	deut_poly_Elo_W[1]=1;
+
+	deut_poly_Elo = new ELC(6,2,deut_poly_Elo_Nel,1.0,
+	                 &deut_poly_Elo_A[1], &deut_poly_Elo_Z[1], &deut_poly_Elo_W[1],
+	                 500.,1000);
+}
+
+dE_E_angle::~dE_E_angle()
+{
+	delete deut_poly_Elo;
+}
+
+
+bool dE_E_angle::create_input_tree(TTree *in)
+{
+   inTree=in;
    inTree->SetMakeClass(1);
    inTree->SetBranchAddress("CsI_L",       CsI_L);
    inTree->SetBranchAddress("CsI_R",       CsI_R);
@@ -40,11 +68,12 @@ bool create_input_tree(TTree *inTree)
    inTree->SetBranchAddress("T",     &in_T);
    inTree->SetBranchAddress("tof",     &in_tof);
 
-   return 1;
+   return true;
 }
 
-bool create_output_tree(TTree *outTree)
+bool dE_E_angle::create_output_tree(TTree *out)
 {
+	outTree=out;
    outTree->SetMakeClass(1);
    outTree->Branch("SQX_L_m",     &SQX_L_mult,      "SQX_L_m/S");
    outTree->Branch("SQX_R_m",     &SQX_R_mult,      "SQX_R_m/S");
@@ -121,11 +150,11 @@ bool create_output_tree(TTree *outTree)
    outTree->Branch("c_SQY_R",       c_SQY_R,       "c_SQY_R[16]/D");
    outTree->Branch("c_CsI_L",       c_CsI_L,       "c_CsI_L[16]/D");
    outTree->Branch("c_CsI_R",       c_CsI_R,       "c_CsI_R[16]/D");
-   return 1;
+   return true;
 }
 
-void null_strips(  UShort_t *SQX_L,  UShort_t *SQY_L,  UShort_t *CsI_L,
-                   UShort_t *SQX_R,  UShort_t *SQY_R,  UShort_t *CsI_R)
+void dE_E_angle::null_strips(	UShort_t *SQX_L,  UShort_t *SQY_L,  UShort_t *CsI_L,
+                   				UShort_t *SQX_R,  UShort_t *SQY_R,  UShort_t *CsI_R)
 {
    fill(SQX_L,SQX_L+16,16);
    fill(SQY_L,SQY_L+16,16);
@@ -135,8 +164,8 @@ void null_strips(  UShort_t *SQX_L,  UShort_t *SQY_L,  UShort_t *CsI_L,
    fill(CsI_R,CsI_R+16,16);
 }
 
-void null_calib_data(Double_t  *SQX_L, Double_t  *SQY_L, Double_t  *CsI_L,
-                     Double_t  *SQX_R, Double_t  *SQY_R, Double_t  *CsI_R)
+void dE_E_angle::null_calib_data(Double_t  *SQX_L, Double_t  *SQY_L, Double_t  *CsI_L,
+								 Double_t  *SQX_R, Double_t  *SQY_R, Double_t  *CsI_R)
 {
    fill(SQX_L,SQX_L+16,0.0);
    fill(SQY_L,SQY_L+16,0.0);
@@ -146,7 +175,7 @@ void null_calib_data(Double_t  *SQX_L, Double_t  *SQY_L, Double_t  *CsI_L,
    fill(CsI_R,CsI_R+16,0.0);
 }
 
-void null_energy( Double_t  *SQX_L, Double_t  *SQY_L, Double_t  *CsI_L,
+void dE_E_angle::null_energy( Double_t  *SQX_L, Double_t  *SQY_L, Double_t  *CsI_L,
                   Double_t  *SQX_R, Double_t  *SQY_R, Double_t  *CsI_R)
 {
    fill(SQX_L,SQX_L+16,0.);
@@ -157,7 +186,7 @@ void null_energy( Double_t  *SQX_L, Double_t  *SQY_L, Double_t  *CsI_L,
    fill(CsI_R,CsI_R+16,0.);   
 }
 
-void null_MWPC(UShort_t *x1, UShort_t *x2, UShort_t *y1, UShort_t *y2 )
+void dE_E_angle::null_MWPC(UShort_t *x1, UShort_t *x2, UShort_t *y1, UShort_t *y2 )
 {
    fill(x1,x1+32,0.);
    fill(x2,x2+32,0.);
@@ -167,40 +196,25 @@ void null_MWPC(UShort_t *x1, UShort_t *x2, UShort_t *y1, UShort_t *y2 )
 
 // voron1392
 
-void dE_E_angle() 
+void dE_E_angle::actual_work() 
 {
-   gSystem->cd(s::work_dir.Data()); 
-   TString inFname("he6_7_cal");
-   TString outFname(inFname.Copy().ReplaceAll("_cal","").Data()); 
-
-   TFile *inF  = new TFile((inFname.Append(".root").Data()), "READ");
-   TFile *outF = new TFile(outFname.Append("_dE_work.root").Data(),"recreate");
-   TTree *inputTree = (TTree*)inF->Get("calibrated");
-   TTree *outputTree= new TTree("dE_E","he6");
-
-   create_input_tree(inputTree);
-   create_output_tree(outputTree);
-
-
    TVector3 zx(0.0,1.0,0.0);
    TVector3 v_beam(0.0,0.0,1.0);
    TRotation beam_setting_array;
    lvTar = TLorentzVector(0.0,0.0,0.0,1875.612928);
    //angle randomization
-   TF1 *f1 = new TF1("f1","x",0,1);
 
-
-   Long64_t nEntries = inputTree->GetEntries();
+   Long64_t nEntries = inTree->GetEntries();
    printf("##############################################################################\n");
-   printf("#    Loaded file %s has %lli entries. \n#    Processing...\n", inFname.Data(), nEntries);
+   printf("#    Loaded file %s has %lli entries. \n#    Processing...\n", s::inFname.Data(), nEntries);
    for (Long64_t entry=0; entry<nEntries; entry++)
    {
-      inputTree->GetEntry(entry);
-
-      if( entry % ( nEntries / 20 ) == 0)
-      {
-         cout<<"#    Progress: "<<double(entry * 100)/ nEntries<<" %"<<endl;
-      }   
+      inTree->GetEntry(entry);
+      TRandom *rnd;
+      //if( entry % ( nEntries / 20 ) == 0)
+      //{
+      //   cout<<"#    Progress: "<<double(entry * 100)/ nEntries<<" %"<<endl;
+      //}   
 
       //NULLing everything
       {
@@ -237,7 +251,7 @@ void dE_E_angle()
          sqretot=0.0;
          sqrang=0.0;
       }
-
+/*
       null_strips(SQX_L_strip,  SQY_L_strip,  CsI_L_strip,
                   SQX_R_strip,  SQY_R_strip,  CsI_R_strip);
 
@@ -248,6 +262,7 @@ void dE_E_angle()
                   SQX_R_Edep,  SQY_R_Edep,  CsI_R_Edep);
 
       null_MWPC(out_x1, out_x2, out_y1, out_y2);
+      */
          //1 channel loop
       out_nx1=in_nx1;
       out_nx2=in_nx2;
@@ -335,12 +350,12 @@ void dE_E_angle()
       {
          //displacement + go to corner of MWPC + follow wire order
          mwpc=true;
-         MWPC_1_X=(-1.0) + (15.5*1.25)-(out_x1[0]+f1->GetRandom()-0.5)*1.25;
-         MWPC_1_Y=(-2.5) + (-15.5*1.25)+(out_y1[0]+f1->GetRandom()-0.5)*1.25;
+         MWPC_1_X=(-1.0) + (15.5*1.25)-(out_x1[0]+rnd->Uniform()-0.5)*1.25;
+         MWPC_1_Y=(-2.5) + (-15.5*1.25)+(out_y1[0]+rnd->Uniform()-0.5)*1.25;
          MWPC_1_Z=-816.0;
 
-         MWPC_2_X=(-1.5) + (15.5*1.25)-(out_x2[0]+f1->GetRandom()-0.5)*1.25;
-         MWPC_2_Y=(-1.0) + (-15.5*1.25)+(out_y2[0]+f1->GetRandom()-0.5)*1.25;
+         MWPC_2_X=(-1.5) + (15.5*1.25)-(out_x2[0]+rnd->Uniform()-0.5)*1.25;
+         MWPC_2_Y=(-1.0) + (-15.5*1.25)+(out_y2[0]+rnd->Uniform()-0.5)*1.25;
          MWPC_2_Z=-270.0;
 
          dX=MWPC_2_X-MWPC_1_X;
@@ -369,9 +384,9 @@ void dE_E_angle()
 
          if(mwpc==1)
          {
-            X2H=s::sql_dist*sin(s::sql_ang) + (30.0-4.*(SQX_L_strip[1]+f1->GetRandom()-0.5)) * cos(s::sql_ang);
-            Y2H=-30.+4.* (SQY_L_strip[1]+f1->GetRandom()-0.5);
-            Z2H=s::sql_dist*cos(s::sql_ang) - (30.-4.*(SQX_L_strip[1]+f1->GetRandom()-0.5)) * sin(s::sql_ang);  
+            X2H=s::sql_dist*sin(s::sql_ang) + (30.0-4.*(SQX_L_strip[1]+rnd->Uniform()-0.5)) * cos(s::sql_ang);
+            Y2H=-30.+4.* (SQY_L_strip[1]+rnd->Uniform()-0.5);
+            Z2H=s::sql_dist*cos(s::sql_ang) - (30.-4.*(SQX_L_strip[1]+rnd->Uniform()-0.5)) * sin(s::sql_ang);  
 
             TVector3 vect2H(X2H-evX, Y2H-evY, Z2H-evZ);
             lv2h = TLorentzVector(vect2H,1875.612928+sqlde+sqletot);
@@ -399,9 +414,9 @@ void dE_E_angle()
 
          if(mwpc==1)
          {
-            X6He=-s::sqr_dist*sin(s::sqr_ang)+(30.-4.*(SQX_R_strip[1]+f1->GetRandom()-0.5))*cos(s::sqr_ang);
-            Y6He=30.-4.*(SQY_R_strip[1]+f1->GetRandom()-0.5);
-            Z6He=s::sqr_dist*cos(s::sqr_ang)+(30.-4.*(SQX_R_strip[1]+f1->GetRandom()-0.5))*sin(s::sqr_ang);
+            X6He=-s::sqr_dist*sin(s::sqr_ang)+(30.-4.*(SQX_R_strip[1]+rnd->Uniform()-0.5))*cos(s::sqr_ang);
+            Y6He=30.-4.*(SQY_R_strip[1]+rnd->Uniform()-0.5);
+            Z6He=s::sqr_dist*cos(s::sqr_ang)+(30.-4.*(SQX_R_strip[1]+rnd->Uniform()-0.5))*sin(s::sqr_ang);
 
             TVector3 vect6He(X6He-evX, Y6He-evY, Z6He-evZ);
             lv6he = TLorentzVector(vect6He,5606.59508+sqrde+sqretot);
@@ -421,16 +436,12 @@ void dE_E_angle()
       }
       missMass = lvBeam.E()+lvTar.E()-lv2h.E()-lv6he.E();
 
-      outputTree->Fill();
+      outTree->Fill();
 
    }
 
-printf("#    Creating file: %s with tree named \"dE_E\" \n",outFname.Data());
-printf("#    Goodbye ;)");
-
-outputTree->Write();
-//outF->cd();
-outF->Close();
+//printf("#    Creating file: %s with tree named \"dE_E\" \n",s::inFname.Copy().ReplaceAll("_cal","").Data());
+//printf("#    Goodbye ;)");
 }
 /*
         double Tbeam=v2H->Energy();

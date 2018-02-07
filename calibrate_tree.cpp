@@ -199,7 +199,7 @@ for (Long64_t entry=1; entry<nEntries; entry++)
 
 
    if(out_x1[1]<100 && out_x2[1]<100 && out_y1[1]<100 && out_y2[1]<100 &&
-      out_nx1<100 && out_nx2<100 && out_ny1<100 && out_ny2<100/* && in_trigger==2*/)
+      out_nx1<100 && out_nx2<100 && out_ny1<100 && out_ny2<100 && in_trigger==2)
    {
    outTree->Fill();
    }
