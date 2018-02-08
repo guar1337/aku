@@ -58,10 +58,10 @@ Double_t sqrde, sqretot, sqrphi, sqrtheta, sqrang;
 Double_t missMass;
 
 //TLorentzVector *lvBeam, *lv2h, *lv6he, *lvTar;
-AELC * deut_poly_Elo;	
-double deut_poly_Elo_A[2];
-double deut_poly_Elo_Z[2];
-double deut_poly_Elo_W[2];
+AELC * si_elo;	
+double si_A[1];
+double si_Z[1];
+double si_W[1];
 
   ClassDef(dE_E_angle,0);
  };
