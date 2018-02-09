@@ -155,7 +155,7 @@ for (Long64_t entry=1; entry<nEntries; entry++)
    out_ny2=in_ny2;
    out_trigger=in_trigger;
 
-   tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+93.2377;
+   tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+94.44;
 
    beta_squared=((12348/tof)/299.792)*((12348/tof)/299.792);
 

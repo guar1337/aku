@@ -23,7 +23,7 @@ dE_E_angle::dE_E_angle(TTree *inT, TTree *outT)
 	si_Z[0]=14;
 	si_W[0]=1;
 
-	si_elo = new ELC(6,2,s_Nel,1.0,
+	si_elo = new ELC(6,2,s_Nel,2.35,
 					 si_A, si_Z, si_W,
 					 1000.,1000);
 }
@@ -201,6 +201,9 @@ void dE_E_angle::actual_work()
  TLorentzVector lvBeam, lv2h, lv6he;
  TRandom3 *rnd = new TRandom3();
  float virt_E=0.0;
+float beta_squared, gamma, T, time;
+
+
 
  Long64_t nEntries = inTree->GetEntries();
  printf("##############################################################################\n");
@@ -208,7 +211,11 @@ void dE_E_angle::actual_work()
  for (Long64_t entry=0; entry<nEntries; entry++)
  {
 	inTree->GetEntry(entry);
-	
+	time=in_tof+1.21;
+	    beta_squared=((12348/time)/299.792)*((12348/time)/299.792);
+
+   gamma=1/sqrt(1-beta_squared);
+      T=6.0188891*931.494*(gamma-1.0);
 
 	if( entry % ( nEntries / 20 ) == 0)
 	{
@@ -270,7 +277,7 @@ void dE_E_angle::actual_work()
 
 	out_trigger=in_trigger;
 	out_tof = in_tof;
-	virt_E = si_elo->GetE(in_T, 252.48);
+	virt_E = si_elo->GetE(T, 252.48);
 
 	out_T = virt_E;
 
@@ -365,7 +372,7 @@ void dE_E_angle::actual_work()
 		 dZ=MWPC_2_Z-MWPC_1_Z;
 
 		 v_beam.SetXYZ(dX,dY,dZ);
-		 lvBeam.SetVectMag(v_beam,in_T+5606.59508);
+		 lvBeam.SetVectMag(v_beam,out_T+5606.59508);
 		 XZsum=-MWPC_1_X-MWPC_1_Z;
 
 		 evX=MWPC_1_X+(XZsum*dX)/(dX+dZ);
@@ -436,7 +443,7 @@ void dE_E_angle::actual_work()
 			}
 
 	}
-	missMass = lvBeam.E()+lvTar.E()-lv2h.E()-lv6he.E();
+	missMass = (lvBeam+lvTar).E()-(lv2h+lv6he).E();
 
 	outTree->Fill();
 

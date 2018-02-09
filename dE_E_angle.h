@@ -5,6 +5,7 @@
 #include "TLorentzVector.h"
 #include "ELC.h"
 #include "TF1.h"
+#include <gsl/gsl_sf_lambert.h>
 
 class dE_E_angle: public AL
 {
@@ -57,7 +58,11 @@ Double_t sqlde, sqletot, sqlphi, sqltheta, sqlang;
 Double_t sqrde, sqretot, sqrphi, sqrtheta, sqrang;
 Double_t missMass;
 
-//TLorentzVector *lvBeam, *lv2h, *lv6he, *lvTar;
+//double gsl_sf_lambert_Wm1(double in);
+
+
+
+
 AELC * si_elo;	
 double si_A[1];
 double si_Z[1];
