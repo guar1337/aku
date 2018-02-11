@@ -37,12 +37,14 @@ bool dE_E_angle::create_input_tree(TTree *in)
 {
 	inTree=in;
 	inTree->SetMakeClass(1);
-	inTree->SetBranchAddress("CsI_L",	 CsI_L);
-	inTree->SetBranchAddress("CsI_R",	 CsI_R);
-	inTree->SetBranchAddress("SQX_L",	 SQX_L);
-	inTree->SetBranchAddress("SQX_R",	 SQX_R);
-	inTree->SetBranchAddress("SQY_L",	 SQY_L);
-	inTree->SetBranchAddress("SQY_R",	 SQY_R);
+	inTree->SetBranchAddress("CsI_L",	CsI_L);
+	inTree->SetBranchAddress("CsI_R",	CsI_R);
+	inTree->SetBranchAddress("SQX_L",	SQX_L);
+	inTree->SetBranchAddress("SQX_R",	SQX_R);
+	inTree->SetBranchAddress("tSQX_L",	in_tSQX_L);
+	inTree->SetBranchAddress("tSQX_R",	in_tSQX_R);
+	inTree->SetBranchAddress("SQY_L",	SQY_L);
+	inTree->SetBranchAddress("SQY_R",	SQY_R);
 
 	inTree->SetBranchAddress("tF3",		 in_tF3);
 	inTree->SetBranchAddress("F3",		in_F3);
@@ -83,6 +85,10 @@ bool dE_E_angle::create_output_tree(TTree *out)
 
 	outTree->Branch("SQX_L_e",	 SQX_L_Edep,	 "SQX_L[16]/D");
 	outTree->Branch("SQX_R_e",	 SQX_R_Edep,	 "SQX_R[16]/D");
+
+	//outTree->Branch("tSQX_L",	 out_tSQX_L,	 "tSQX_L[16]/D");
+	//outTree->Branch("tSQX_R",	 out_tSQX_R,	 "tSQX_R[16]/D");
+
 	outTree->Branch("SQY_L_e",	 SQY_L_Edep,	 "SQY_L[16]/D");
 	outTree->Branch("SQY_R_e",	 SQY_R_Edep,	 "SQY_R[16]/D");
 	outTree->Branch("CsI_L_e",	 CsI_L_Edep,	 "CsI_L[16]/D");
@@ -100,6 +106,7 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("sqlde",		&sqlde,		 "sqlde/D");
 	outTree->Branch("sqletot",	&sqletot,	 "sqletot/D");
 	outTree->Branch("sqlang",	&sqlang,	 "sqlang/D");
+	outTree->Branch("sqltime",	&sqltime,	 "sqltime/D");
 
 	outTree->Branch("dX",	&dX,	 "dX/F");
 	outTree->Branch("dY",	&dY,	 "dY/F");
@@ -123,6 +130,7 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("sqrde",		&sqrde,		 "sqrde/D");
 	outTree->Branch("sqretot",	&sqretot,	 "sqretot/D");
 	outTree->Branch("sqrang",	&sqrang,	 "sqrang/D");
+	outTree->Branch("sqrtime",	&sqrtime,	 "sqrtime/D");
 
 	outTree->Branch("tF3",	in_tF3,	 "tF3[4]/D");
 	outTree->Branch("F3",	 in_F3,		"F3[4]/D");
@@ -154,7 +162,7 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Bronch("lv2h.",		"TLorentzVector",	&lv2h);
 	outTree->Bronch("lvTar.",	"TLorentzVector",	&lvTar);
 	outTree->Bronch("lvbeam.",	"TLorentzVector",	&lvbeam);
-return true;
+	return true;
 }
 
 void dE_E_angle::null_strips(	UShort_t *SQX_L,UShort_t *SQY_L,UShort_t *CsI_L,
@@ -303,6 +311,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			SQX_L_mult++;
 			SQX_L_Edep[SQX_L_mult]=SQX_L[iii];
 			SQX_L_strip[SQX_L_mult]=iii;
+			out_tSQX_L[SQX_L_mult]=in_tSQX_L[iii];
 		}
 
 		if (SQY_L[iii]>3.5)
@@ -310,7 +319,6 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			SQY_L_mult++;
 			SQY_L_Edep[SQY_L_mult]=SQY_L[iii];
 			SQY_L_strip[SQY_L_mult]=iii;
-			//cout<<SQY_L[iii]<<" "<<SQY_L[iii]+gRandom->Uniform()<<" "<<SQY_L_Edep[SQY_L_mult]<<endl;
 		}
 
 		if (CsI_L[iii]>4.5)
@@ -325,6 +333,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			SQX_R_mult++;
 			SQX_R_Edep[SQX_R_mult]=SQX_R[iii];
 			SQX_R_strip[SQX_R_mult]=iii;
+			out_tSQX_R[SQX_R_mult]=in_tSQX_R[iii];
 		}
 
 		if (SQY_R[iii]>3.5)
@@ -397,7 +406,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	{
 		sqlde=SQX_L_Edep[1];
 		sqletot=CsI_L[(SQY_L_strip[1]/4)*4+(3-SQX_L_strip[1]/4)];
-
+		sqltime=out_tSQX_L[1];
 		if(mwpc==1)
 		{
 			X2H=s::sql_dist*sin(s::sql_ang) + (30.0-4.*(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5)) * cos(s::sql_ang);
@@ -431,6 +440,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	{
 		sqrde=SQX_R_Edep[1];
 		sqretot=CsI_R[(3-SQY_R_strip[1]/4)*4+(3-SQX_R_strip[1]/4)];
+		sqrtime=out_tSQX_R[1];
 
 		if(mwpc==1)
 		{
@@ -452,8 +462,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			sqrang=0.0;
 			sqrtheta=0.0;
 		}
-
 	}
+
 	*lv6he=(*lvTar+*lvbeam)-*lv2h;
 	missMass=lv6he->M()- s::He6_mass;
 	outTree->Fill();	

@@ -54,9 +54,10 @@ Double_t in_tF3[4],	in_F3[4], in_tF5[4], in_F5[4];
 Double_t in_tof, out_tof, in_T, out_T;
 Double_t CsI_L_Edep[17], CsI_R_Edep[17], SQX_L_Edep[17], SQX_R_Edep[17], SQY_L_Edep[17], SQY_R_Edep[17];
 Double_t out_tF3[4], out_F3[4], out_tF5[4], out_F5[4];
-Double_t sqlde, sqletot, sqlphi, sqltheta, sqlang;
-Double_t sqrde, sqretot, sqrphi, sqrtheta, sqrang;
+Double_t sqlde, sqletot, sqlphi, sqltheta, sqlang, sqltime;
+Double_t sqrde, sqretot, sqrphi, sqrtheta, sqrang, sqrtime;
 Double_t missMass, He6_E, H2_E, He6_Mom, H2_Mom;
+Double_t in_tSQX_L[17], in_tSQX_R[17], out_tSQX_L[17], out_tSQX_R[17];
 
 //double gsl_sf_lambert_Wm1(double in);
 TLorentzVector *lv6he, *lv2h, *lvbeam, *lvTar;

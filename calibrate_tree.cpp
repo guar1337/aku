@@ -72,6 +72,9 @@ inTree->SetBranchAddress("NeEvent.SQX_R[16]",	    in_SQX_R);
 inTree->SetBranchAddress("NeEvent.SQY_L[16]",	    in_SQY_L);
 inTree->SetBranchAddress("NeEvent.SQY_R[16]",	    in_SQY_R);
 
+inTree->SetBranchAddress("NeEvent.tSQX_L[16]",       in_tSQX_L);
+inTree->SetBranchAddress("NeEvent.tSQX_R[16]",       in_tSQX_R);
+
 inTree->SetBranchAddress("NeEvent.tF3[4]",         in_tdcF3);
 inTree->SetBranchAddress("NeEvent.F3[4]",          in_aF3);
 inTree->SetBranchAddress("NeEvent.tF5[4]",         in_tdcF5);
@@ -93,8 +96,10 @@ inTree->SetBranchAddress("NeEvent.trigger",     &in_trigger);
 //ReCo - detectors
 outTree->SetMakeClass(1);
 //    CALIBRATED DATA
-outTree->Branch("SQX_L",	    out_SQX_L,       "SQX_L[16]/D");
-outTree->Branch("SQX_R",	    out_SQX_R,       "SQX_R[16]/D");
+outTree->Branch("SQX_L",       out_SQX_L,       "SQX_L[16]/D");
+outTree->Branch("SQX_R",       out_SQX_R,       "SQX_R[16]/D");
+outTree->Branch("tSQX_L",       out_tSQX_L,       "tSQX_L[16]/D");
+outTree->Branch("tSQX_R",       out_tSQX_R,       "tSQX_R[16]/D");
 outTree->Branch("SQY_L",	    out_SQY_L,       "SQY_L[16]/D");
 outTree->Branch("SQY_R",	    out_SQY_R,       "SQY_R[16]/D");
 outTree->Branch("CsI_L",	    out_CsI_L,       "CsI_L[16]/D");
@@ -186,6 +191,9 @@ for (Long64_t entry=1; entry<nEntries; entry++)
       out_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
       out_SQY_R[iii]=(in_SQY_R[iii]+gRandom->Uniform())*b_SQY_R[iii]+a_SQY_R[iii];
 
+      out_tSQX_R[iii]=in_tSQX_R[iii];
+      out_tSQX_L[iii]=in_tSQX_L[iii];
+      
       out_CsI_R[iii]=(in_CsI_R[iii]+gRandom->Uniform())*b_CsI_R[iii]+a_CsI_R[iii];
       out_CsI_L[iii]=(in_CsI_L[iii]+gRandom->Uniform())*b_CsI_L[iii]+a_CsI_L[iii];
 

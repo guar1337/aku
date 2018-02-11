@@ -5,6 +5,8 @@ UShort_t in_CsI_L[16];
 UShort_t in_CsI_R[16];
 UShort_t in_SQX_L[16];
 UShort_t in_SQX_R[16];
+UShort_t in_tSQX_L[16];
+UShort_t in_tSQX_R[16];
 UShort_t in_SQY_L[16];
 UShort_t in_SQY_R[16];
 
@@ -30,6 +32,8 @@ Double_t out_CsI_L[16];
 Double_t out_CsI_R[16];
 Double_t out_SQX_L[16];
 Double_t out_SQX_R[16];
+Double_t out_tSQX_L[16];
+Double_t out_tSQX_R[16];
 Double_t out_SQY_L[16];
 Double_t out_SQY_R[16];
 
