@@ -56,10 +56,10 @@ Double_t CsI_L_Edep[17], CsI_R_Edep[17], SQX_L_Edep[17], SQX_R_Edep[17], SQY_L_E
 Double_t out_tF3[4], out_F3[4], out_tF5[4], out_F5[4];
 Double_t sqlde, sqletot, sqlphi, sqltheta, sqlang;
 Double_t sqrde, sqretot, sqrphi, sqrtheta, sqrang;
-Double_t missMass;
+Double_t missMass, He6_E, H2_E, He6_Mom, H2_Mom;
 
 //double gsl_sf_lambert_Wm1(double in);
-
+TLorentzVector *lv6he, *lv2h, *lvbeam, *lvTar;
 
 
 
