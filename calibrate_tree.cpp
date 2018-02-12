@@ -134,6 +134,8 @@ outTree->Branch("T",     &T,        "T/D");
 
 loader("/home/guar/Desktop/1217_data/coefs/sqx_l_ec.clb", a_SQX_L, b_SQX_L);
 loader("/home/guar/Desktop/1217_data/coefs/sqx_r_ec.clb", a_SQX_R, b_SQX_R);
+loader("/home/guar/Desktop/1217_data/coefs/sqx_l_ec.clb", a_tSQX_L, b_tSQX_L);
+loader("/home/guar/Desktop/1217_data/coefs/sqx_r_ec.clb", a_tSQX_R, b_tSQX_R);
 loader("/home/guar/Desktop/1217_data/coefs/sqy_l_ec.clb", a_SQY_L, b_SQY_L);
 loader("/home/guar/Desktop/1217_data/coefs/sqy_r_ec.clb", a_SQY_R, b_SQY_R);
 loader("/home/guar/Desktop/1217_data/coefs/csi_r_ec.clb", a_CsI_R, b_CsI_R);
@@ -191,8 +193,8 @@ for (Long64_t entry=1; entry<nEntries; entry++)
       out_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
       out_SQY_R[iii]=(in_SQY_R[iii]+gRandom->Uniform())*b_SQY_R[iii]+a_SQY_R[iii];
 
-      out_tSQX_R[iii]=in_tSQX_R[iii];
-      out_tSQX_L[iii]=in_tSQX_L[iii];
+      out_tSQX_R[iii]=((in_tSQX_R[iii]+gRandom->Uniform())+a_tSQX_R[iii]-(in_tdcF5[0]+in_tdcF5[1])/2)*0.125;
+      out_tSQX_L[iii]=((in_tSQX_L[iii]+gRandom->Uniform())+a_tSQX_L[iii]-(in_tdcF5[0]+in_tdcF5[1])/2)*0.125;
       
       out_CsI_R[iii]=(in_CsI_R[iii]+gRandom->Uniform())*b_CsI_R[iii]+a_CsI_R[iii];
       out_CsI_L[iii]=(in_CsI_L[iii]+gRandom->Uniform())*b_CsI_L[iii]+a_CsI_L[iii];

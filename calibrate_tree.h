@@ -63,6 +63,8 @@ float a_CsI_L[16];
 float a_CsI_R[16];
 float a_SQX_L[16];
 float a_SQX_R[16];
+float a_tSQX_L[16];
+float a_tSQX_R[16];
 float a_SQY_L[16];
 float a_SQY_R[16];
 float pede_CsI_L[16];
@@ -71,6 +73,8 @@ float b_CsI_L[16];
 float b_CsI_R[16];
 float b_SQX_L[16];
 float b_SQX_R[16];
+float b_tSQX_L[16];
+float b_tSQX_R[16];
 float b_SQY_L[16];
 float b_SQY_R[16];
 
