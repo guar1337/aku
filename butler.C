@@ -12,11 +12,13 @@ TTree * outTree=NULL;
 void butler()
 {
   gSystem->cd(s::work_dir.Data()); 
-  TString inFname("he6_7_cal");
+  TString inFname(s::inFname.Data());
   TString outFname(inFname.Copy().ReplaceAll("_cal","").Data()); 
 
   TFile *inF  = new TFile((inFname.Append(".root").Data()), "READ");
   TFile *outF = new TFile(outFname.Append("_dE_work.root").Data(),"recreate");
+
+
   TTree *inTree = (TTree*)inF->Get("calibrated");
   TTree *outTree= new TTree("dE_E","he6");
 
@@ -29,7 +31,3 @@ void butler()
   outF->Close();
 
 }
-
-
-
-

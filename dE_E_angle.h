@@ -31,6 +31,8 @@ void null_MWPC(UShort_t *x1, UShort_t *x2, UShort_t *y1, UShort_t *y2);
 
 void actual_work();
 
+Double_t getT(Double_t tof, Double_t mass);
+
 Bool_t mwpc;
 
 int out_trigger, in_trigger;
@@ -47,6 +49,9 @@ Float_t evX,  evY,  evZ;
 Float_t Xpos,  Ypos,  Zpos;
 Float_t X6He,  Y6He,  Z6He;
 Float_t X2H,  Y2H,  Z2H;
+Float_t lx, ly, lz;
+Float_t rx, ry, rz;
+Float_t virt_E, beta_squared, gamma, T, time;
 
 Double_t CsI_L[16], CsI_R[16], SQX_L[16], SQX_R[16], SQY_L[16],	SQY_R[16];
 Double_t c_CsI_L[16], c_CsI_R[16], c_SQX_L[16], c_SQX_R[16], c_SQY_L[16], c_SQY_R[16];
@@ -58,6 +63,8 @@ Double_t sqlde, sqletot, sqlphi, sqltheta, sqlang, sqltime;
 Double_t sqrde, sqretot, sqrphi, sqrtheta, sqrang, sqrtime;
 Double_t missMass, He6_E, H2_E, He6_Mom, H2_Mom;
 Double_t in_tSQX_L[17], in_tSQX_R[17], out_tSQX_L[17], out_tSQX_R[17];
+Double_t sqr_ang, sql_ang, sqr_dist, sql_dist;
+
 
 //double gsl_sf_lambert_Wm1(double in);
 TLorentzVector *lv6he, *lv2h, *lvbeam, *lvTar;

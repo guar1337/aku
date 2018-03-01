@@ -25,7 +25,7 @@ dE_E_angle::dE_E_angle(TTree *inT, TTree *outT)
 
 	si_elo = new ELC(6,2,s_Nel,2.35,
 					 si_A, si_Z, si_W,
-					 1000.,1000);
+					 500.,1000);
 }
 
 dE_E_angle::~dE_E_angle()
@@ -83,16 +83,16 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("CsI_L_m",	 &CsI_L_mult,	"CsI_L_m/S");
 	outTree->Branch("CsI_R_m",	 &CsI_R_mult,	"CsI_R_m/S");
 
-	outTree->Branch("SQX_L_e",	 SQX_L_Edep,	 "SQX_L[16]/D");
-	outTree->Branch("SQX_R_e",	 SQX_R_Edep,	 "SQX_R[16]/D");
+	outTree->Branch("SQX_L_e",	 SQX_L_Edep,	 "SQX_L_e[16]/D");
+	outTree->Branch("SQX_R_e",	 SQX_R_Edep,	 "SQX_R_e[16]/D");
 
 	//outTree->Branch("tSQX_L",	 out_tSQX_L,	 "tSQX_L[16]/D");
 	//outTree->Branch("tSQX_R",	 out_tSQX_R,	 "tSQX_R[16]/D");
 
-	outTree->Branch("SQY_L_e",	 SQY_L_Edep,	 "SQY_L[16]/D");
-	outTree->Branch("SQY_R_e",	 SQY_R_Edep,	 "SQY_R[16]/D");
-	outTree->Branch("CsI_L_e",	 CsI_L_Edep,	 "CsI_L[16]/D");
-	outTree->Branch("CsI_R_e",	CsI_R_Edep,	 "CsI_R[16]/D");
+	outTree->Branch("SQY_L_e",	SQY_L_Edep,	 "SQY_L_e[16]/D");
+	outTree->Branch("SQY_R_e",	SQY_R_Edep,	 "SQY_R_e[16]/D");
+	outTree->Branch("CsI_L_e",	CsI_L_Edep,	 "CsI_L_e[16]/D");
+	outTree->Branch("CsI_R_e",	CsI_R_Edep,	 "CsI_R_e[16]/D");
 
 	outTree->Branch("SQX_L_s",	SQX_L_strip,	"SQX_L_s[16]/S");
 	outTree->Branch("SQX_R_s",	SQX_R_strip,	"SQX_R_s[16]/S");
@@ -108,17 +108,21 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("sqlang",	&sqlang,	 "sqlang/D");
 	outTree->Branch("sqltime",	&sqltime,	 "sqltime/D");
 
-	outTree->Branch("dX",	&dX,	 "dX/F");
-	outTree->Branch("dY",	&dY,	 "dY/F");
-	outTree->Branch("dZ",	&dZ,	 "dZ/F");
+	outTree->Branch("rx",	&rx,	 "rx/F");
+	outTree->Branch("ry",	&ry,	 "ry/F");
+	outTree->Branch("ry",	&ry,	 "ry/F");
 
-	outTree->Branch("lx",	&X2H,	 "lx/F");
-	outTree->Branch("ly",	&Y2H,	 "lx/F");
-	outTree->Branch("lz",	&Z2H,	 "lz/F");
+	outTree->Branch("lx",	&lx,	 "lx/F");
+	outTree->Branch("ly",	&ly,	 "ly/F");
+	outTree->Branch("lz",	&lz,	 "lz/F");
 
-	outTree->Branch("rx",	&X6He,	 "rx/F");
-	outTree->Branch("ry",	&Y6He,	 "ry/F");
-	outTree->Branch("rz",	&Z6He,	 "rz/F");
+	outTree->Branch("X2H",	&X2H,	 "X2H/F");
+	outTree->Branch("Y2H",	&Y2H,	 "Y2H/F");
+	outTree->Branch("Z2H",	&Z2H,	 "Z2H/F");
+
+	outTree->Branch("X6He",	&X6He,	 "X6He/F");
+	outTree->Branch("Y6He",	&Y6He,	 "Y6He/F");
+	outTree->Branch("Z6He",	&Z6He,	 "Z6He/F");
 
 	outTree->Branch("evX",	&evX,	 "evX/F");
 	outTree->Branch("evY",	&evY,	 "evY/F");
@@ -200,21 +204,54 @@ void dE_E_angle::null_energy( Double_t*SQX_L, Double_t*SQY_L, Double_t*CsI_L,
 
 void dE_E_angle::null_MWPC(UShort_t *x1, UShort_t *x2, UShort_t *y1, UShort_t *y2 )
 {
-	fill(x1,x1+32,0.);
-	fill(x2,x2+32,0.);
-	fill(y1,y1+32,0.);
-	fill(y2,y2+32,0.);
+	fill(x1,x1+32,0);
+	fill(x2,x2+32,0);
+	fill(y1,y1+32,0);
+	fill(y2,y2+32,0);
+}
+
+Double_t dE_E_angle::getT(Double_t tof, Double_t mass)
+{
+	beta_squared= pow((s::tofBase/tof)/s::c, 2.0);
+	gamma=1.0/sqrt(1.0-beta_squared);
+	return mass*s::u_to_MeV*(gamma-1.0);
 }
 
 void dE_E_angle::actual_work() 
 {
+
 	TVector3 zx(0.0,1.0,0.0);
 	TVector3 v_beam(0.0,0.0,1.0);
 	TRotation beam_setting_array;
 	TRandom3 *rnd = new TRandom3();
 	lvTar->SetPxPyPzE(0.0,0.0,0.0,s::H2_mass);
-	float virt_E=0.0;
-	float beta_squared, gamma, T, time;
+	int runNo = s::runNo;
+
+	//Read detectors geometry parameters depending on run
+	switch (runNo)
+	{
+		case 7:
+		printf("Loaded exprimental setup parameters for run 7\n");
+		sqr_ang=s::sqr_ang7;
+		sql_ang=s::sql_ang7;
+
+		sqr_dist=s::sqr_dist;
+		sql_dist=s::sql_dist;
+		break;
+
+		case 9:
+		printf("Loaded exprimental setup parameters for run 9\n");
+		sqr_ang=s::sqr_ang9;
+		sql_ang=s::sql_ang9;
+		
+		sqr_dist=s::sqr_dist;
+		sql_dist=s::sql_dist;
+		break;
+
+		default:
+		printf("Error: NO EXPERIMENTAL SETUP PARAMETERS\n");
+		break;
+	}
 
 
 Long64_t nEntries = inTree->GetEntries();
@@ -225,22 +262,15 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 {
 	inTree->GetEntry(entry);
 	
-	time=in_tof;
-	beta_squared=((12348.0/time)/299.792)*((12348.0/time)/299.792);
-
-	gamma=1.0/sqrt(1.0-beta_squared);
-	T=6.0188891*931.494*(gamma-1.0);
-
 	if( entry % ( nEntries / 20 ) == 0)
 	{
-		cout<<"#	Progress: "<<double(entry * 100)/ nEntries<<" %"<<endl;
+		cout<<"#	Progress: "<<static_cast<int>(ceil((entry * 100)/ nEntries))<<" %"<<endl;
 	}
 
 	//NULLing everything
-	{
-		dX=0.0;dY=0.0;dZ=0.0;evX=0.0;
-		evY=0.0;
-		evZ=0.0;
+	
+		dX=0.0;dY=0.0;dZ=0.0;
+		evX=0.0;evY=0.0;evZ=0.0;
 		mwpc=false;
 
 		SQX_L_mult=0;
@@ -270,7 +300,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		sqrde=0.0;
 		sqretot=0.0;
 		sqrang=0.0;
-	}
+	
 
 	null_strips(SQX_L_strip,SQY_L_strip,CsI_L_strip,
 				SQX_R_strip,SQY_R_strip,CsI_R_strip);
@@ -288,12 +318,14 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	out_nx2=in_nx2;
 	out_ny1=in_ny1;
 	out_ny2=in_ny2;
-
 	out_trigger=in_trigger;
 	out_tof = in_tof;
-	virt_E = si_elo->GetE(T, 252.48);
 
-	out_T = virt_E;
+	T = getT(in_tof, s::He6_mass);
+	T = si_elo->GetE(T, 252.48);
+
+
+
 
 	//4 channels loop
 	for (int iii=0; iii<4; iii++)
@@ -329,7 +361,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			CsI_L_strip[CsI_L_mult]=iii;
 		}
 
-		if (SQX_R[iii]>3.5)
+		if (SQX_R[iii]>5.0)
 		{
 			SQX_R_mult++;
 			SQX_R_Edep[SQX_R_mult]=SQX_R[iii];
@@ -337,16 +369,16 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			out_tSQX_R[SQX_R_mult]=in_tSQX_R[iii];
 		}
 
-		if (SQY_R[iii]>3.5)
+		if (SQY_R[iii]>5.0)
 		{
 			SQY_R_mult++;
 			SQY_R_Edep[SQY_R_mult]=SQY_R[iii];
-			SQY_R_strip[SQY_R_mult]=iii;	
+			SQY_R_strip[SQY_R_mult]=iii;
 		}
 
-		if (CsI_R[iii]>6.5)
+		if (CsI_R[iii]>15.0)
 		{
-			++CsI_R_mult;
+			CsI_R_mult++;
 			CsI_R_Edep[CsI_R_mult]=CsI_R[iii];
 			CsI_R_strip[CsI_R_mult]=iii;
 		}
@@ -371,7 +403,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	//MWPC
 	if(out_nx1*out_ny1*out_nx2*out_ny2!=0)
 	{
-		//displacement + go to corner of MWPC + follow wire order
+		//displacement + go to corner of MWPC + follow wire order - get event point
 		mwpc=true;
 		MWPC_1_X=(-1.0) + (15.5*1.25)-(out_x1[0]+rnd->Uniform(0.0,1.0)-0.5)*1.25;
 		MWPC_1_Y=(-2.5) + (-15.5*1.25)+(out_y1[0]+rnd->Uniform(0.0,1.0)-0.5)*1.25;
@@ -391,83 +423,81 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		He6_Mom = sqrt(He6_E*He6_E-s::He6_mass*s::He6_mass);
 		v_beam.SetMag(He6_Mom);
 		lvbeam->SetVectM(v_beam,s::He6_mass);
-		XZsum=-MWPC_1_X-MWPC_1_Z;
 
-		evX=MWPC_1_X+(XZsum*dX)/(dX+dZ);
-		evY=MWPC_1_Y+(XZsum*dY)/(dX+dZ);
-		evZ=MWPC_1_Z+(XZsum*dZ)/(dX+dZ);
+		switch (runNo)
+		{
+			case 7:
+			//for target at 45 deg
+			XZsum=-MWPC_1_X-MWPC_1_Z;
+			evX=MWPC_1_X+(XZsum*dX)/(dX+dZ);
+			evY=MWPC_1_Y+(XZsum*dY)/(dX+dZ);
+			evZ=MWPC_1_Z+(XZsum*dZ)/(dX+dZ);
+			break;
 
-		//rotation matrix that will convert 2H or 6He particle so that they will see 
+			case 9:
+			//for target at 0 deg
+			XZsum=-MWPC_1_Z;
+			evX=MWPC_1_X+(XZsum*dX)/(dZ);
+			evY=MWPC_1_Y+(XZsum*dY)/(dZ);
+			evZ=MWPC_1_Z+(XZsum*dZ)/(dZ);
+			break;
+		}
+
+
+		//rotation matrix that will convert 2H or 6He particle so that they will see beam as Z axis
 		beam_setting_array.SetZAxis(v_beam.Unit(),zx);
 		beam_setting_array.Invert();
 	}
 	
 	//SQL energy - deuterium
-	if (SQX_L_mult*SQY_L_mult==1)
+	if (SQX_L_mult*SQY_L_mult*mwpc==1)
 	{
 		sqlde=SQX_L_Edep[1];
-		sqletot=CsI_L[(SQY_L_strip[1]/4)*4+(3-SQX_L_strip[1]/4)];
+		sqletot=CsI_L[  (SQY_L_strip[1]/4)*4  +  (3-SQX_L_strip[1]%4)];
 		sqltime=out_tSQX_L[1];
-		if(mwpc==1)
-		{
-			X2H=s::sql_dist*sin(s::sql_ang) + (30.0-4.*(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5)) * cos(s::sql_ang);
-			Y2H=-30.+4.* (SQY_L_strip[1]+rnd->Uniform(0.0,1.0));
-			Z2H=s::sql_dist*cos(s::sql_ang) - (30.-4.*(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5)) * sin(s::sql_ang);
 
-			TVector3 vect2H(X2H-evX, Y2H-evY, Z2H-evZ);
-			H2_E = s::H2_mass+sqlde;
-			H2_Mom = sqrt(H2_E*H2_E-s::H2_mass*s::H2_mass);
-			vect2H.SetMag(H2_Mom);
-			lv2h->SetVectM(vect2H,s::H2_mass);
-			vect2H=beam_setting_array*vect2H; 
+		X2H=sql_dist*sin(sql_ang) + (30.0-4.*(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5)) * cos(sql_ang);
+		Y2H=-30.+4.* (SQY_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5);
+		Z2H=sql_dist*cos(sql_ang) - (30.-4.*(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5)) * sin(sql_ang);
 
-			sqlphi=vect2H.Phi()*s::rad_to_deg;
-			sqlang=vect2H.Angle(v_beam)*s::rad_to_deg;
-			sqltheta=vect2H.Theta()*s::rad_to_deg;
+		TVector3 vect2H(X2H-evX, Y2H-evY, Z2H-evZ);
+		H2_E = s::H2_mass+sqlde+sqletot;
+		H2_Mom = sqrt(H2_E*H2_E-s::H2_mass*s::H2_mass);
+		vect2H.SetMag(H2_Mom);
+		lv2h->SetVectM(vect2H,s::H2_mass);
+		vect2H=beam_setting_array*vect2H; 
 
+		sqlphi=vect2H.Phi()*s::rad_to_deg;
+		sqltheta=vect2H.Theta()*s::rad_to_deg;		
 
-			
-		}
-		else
-		{
-			sqlphi=0.0;
-			sqlang=0.0;
-			sqltheta=0.0;
-		}
 	}
 
 	//SQR energy - helium
-	if(SQX_R_mult*SQY_R_mult==1)
+	if(SQX_R_mult*SQY_R_mult*mwpc==1)
 	{
 		sqrde=SQX_R_Edep[1];
-		sqretot=CsI_R[(3-SQY_R_strip[1]/4)*4+(3-SQX_R_strip[1]/4)];
+		sqretot=CsI_R[    4*(3-SQY_R_strip[1]/4)+   (3-(SQX_R_strip[1]/4))    ];
 		sqrtime=out_tSQX_R[1];
 
-		if(mwpc==1)
-		{
-			X6He=-s::sqr_dist*sin(s::sqr_ang)+(30.-4.*(SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5))*cos(s::sqr_ang);
-			Y6He=30.-4.*(SQY_R_strip[1]+rnd->Uniform(0.0,1.0));
-			Z6He=s::sqr_dist*cos(s::sqr_ang)+(30.-4.*(SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5))*sin(s::sqr_ang);
 
-			TVector3 vect6He(X6He-evX, Y6He-evY, Z6He-evZ);
-			lv6he->SetVectMag(vect6He,s::He6_mass);
-			vect6He=beam_setting_array*vect6He;
+		X6He=-sqr_dist*sin(sqr_ang)+(30.-4.*(SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5))*cos(sqr_ang);
+		Y6He=30.-4.*(SQY_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5);
+		Z6He=sqr_dist*cos(sqr_ang)+(30.-4.*(SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5))*sin(sqr_ang);
 
-			sqrphi=vect6He.Phi()*s::rad_to_deg;
-			sqrtheta=vect6He.Theta()*s::rad_to_deg;
-			sqrang=vect6He.Angle(v_beam)*s::rad_to_deg;
-		}
-		else
-		{
-			sqrphi=0.0;
-			sqrang=0.0;
-			sqrtheta=0.0;
-		}
+		TVector3 vect6He(X6He-evX, Y6He-evY, Z6He-evZ);
+		lv6he->SetVectMag(vect6He,s::He6_mass);
+		vect6He=beam_setting_array*vect6He;
+
+		sqrtheta=vect6He.Theta()*s::rad_to_deg;
+		sqrphi=vect6He.Phi()*s::rad_to_deg;
+
 	}
 
 	*lv6he=(*lvTar+*lvbeam)-*lv2h;
 	missMass=lv6he->M()- s::He6_mass;
-	outTree->Fill();	
+
+
+	outTree->Fill();
 }
 
 printf("#	Creating file: %s with tree named \"dE_E\" \n",s::inFname.Copy().ReplaceAll("_cal","").Data());

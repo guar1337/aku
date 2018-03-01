@@ -5,7 +5,7 @@
 #include "TH2D.h"
 #include "stdio.h"
 #include "Riostream.h"
-#include "calibrate_tree.h"
+#include "calibrate_sqr.h"
 #include <iostream>
 #include "interface.h"
 #include <vector>
@@ -38,10 +38,10 @@ void loader(TString fname, float *AConst, float *BConst)
     printf("Finishing %s\n\n",fname.Data() );
 }
 
-void calibrate_tree() 
+void calibrate_sqr() 
 {
 gSystem->cd(s::work_dir.Data());
-TString outFname("he6_9_cal.root");
+TString outFname("sqr.root");
 TFile *outF = new TFile(outFname.Data(),"RECREATE");
 TTree *outTree= new TTree("calibrated","he6");
 TFile *inF = new TFile("he6_9.root");
@@ -111,13 +111,13 @@ inTree->SetBranchAddress("NeEvent.trigger",     &in_trigger);
 //ReCo - detectors
 outTree->SetMakeClass(1);
 //    CALIBRATED DATA
-outTree->Branch("SQX_L",       out_SQX_L,       "SQX_L[16]/D");
+
 outTree->Branch("SQX_R",       out_SQX_R,       "SQX_R[16]/D");
-outTree->Branch("tSQX_L",       out_tSQX_L,       "tSQX_L[16]/D");
+
 outTree->Branch("tSQX_R",       out_tSQX_R,       "tSQX_R[16]/D");
-outTree->Branch("SQY_L",	    out_SQY_L,       "SQY_L[16]/D");
+
 outTree->Branch("SQY_R",	    out_SQY_R,       "SQY_R[16]/D");
-outTree->Branch("CsI_L",	    out_CsI_L,       "CsI_L[16]/D");
+
 outTree->Branch("CsI_R",        out_CsI_R,       "CsI_R[16]/D");
 
 outTree->Branch("tF3",	    out_tF3,       "tF3[4]/D");
@@ -136,25 +136,20 @@ outTree->Branch("ny1",    &out_ny1,      "ny1/s");
 outTree->Branch("ny2",    &out_ny2,      "ny2/s");
 
 //    RAW DATA
-outTree->Branch("r_SQX_L",       r_SQX_L,       "r_SQX_L[16]/D");
+
 outTree->Branch("r_SQX_R",       r_SQX_R,       "r_SQX_R[16]/D");
-outTree->Branch("r_SQY_L",       r_SQY_L,       "r_SQY_L[16]/D");
 outTree->Branch("r_SQY_R",       r_SQY_R,       "r_SQY_R[16]/D");
-outTree->Branch("r_CsI_L",       r_CsI_L,       "r_CsI_L[16]/D");
 outTree->Branch("r_CsI_R",       r_CsI_R,       "r_CsI_R[16]/D");
 
 outTree->Branch("trigger",	    &out_trigger,        "trigger/I");
 outTree->Branch("tof",     &tof,        "tof/D");
-outTree->Branch("T",     &T,        "T/D");
 
-loader("sqx_l_ec.clb", a_SQX_L, b_SQX_L);
+
 loader("sqx_r_ec.clb", a_SQX_R, b_SQX_R);
-loader("sqx_l_tc.clb", a_tSQX_L, b_tSQX_L);
 loader("sqx_r_tc.clb", a_tSQX_R, b_tSQX_R);
-loader("sqy_l_ec.clb", a_SQY_L, b_SQY_L);
 loader("sqy_r_ec.clb", a_SQY_R, b_SQY_R);
 loader("csi_r_ec.clb", a_CsI_R, b_CsI_R);
-loader("csi_l_ec.clb", a_CsI_L, b_CsI_L);
+
 printf(".\n..\n...\n");
 
 double gamma, beta_squared;
@@ -202,49 +197,43 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
    for (int iii=0; iii<16; iii++)
    {    
-      out_SQX_L[iii]=(in_SQX_L[iii]+gRandom->Uniform())*b_SQX_L[iii]+a_SQX_L[iii];
-      out_SQY_L[iii]=(in_SQY_L[iii]+gRandom->Uniform())*b_SQY_L[iii]+a_SQY_L[iii];
+
+
       out_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
       out_SQY_R[iii]=(in_SQY_R[iii]+gRandom->Uniform())*b_SQY_R[iii]+a_SQY_R[iii];
 
       out_tSQX_R[iii]=((in_tSQX_R[iii]+gRandom->Uniform())+a_tSQX_R[iii]-(in_tdcF5[0]+in_tdcF5[1])/2)*0.125;
-      out_tSQX_L[iii]=((in_tSQX_L[iii]+gRandom->Uniform())+a_tSQX_L[iii]-(in_tdcF5[0]+in_tdcF5[1])/2)*0.125;
+
       
       out_CsI_R[iii]=(in_CsI_R[iii]+gRandom->Uniform())*b_CsI_R[iii]+a_CsI_R[iii];
-      out_CsI_L[iii]=(in_CsI_L[iii]+gRandom->Uniform())*b_CsI_L[iii]+a_CsI_L[iii];
 
-      r_SQX_L[iii]=in_SQX_L[iii];
-      r_SQY_L[iii]=in_SQY_L[iii];
+
+
       r_SQX_R[iii]=in_SQX_R[iii];
       r_SQY_R[iii]=in_SQY_R[iii];
       r_CsI_R[iii]=in_CsI_R[iii];
-      r_CsI_L[iii]=in_CsI_L[iii];
    }
 
 
    if(out_x1[1]<100 && out_x2[1]<100 && out_y1[1]<100 && out_y2[1]<100 &&
-      out_nx1<100 && out_nx2<100 && out_ny1<100 && out_ny2<100 && in_aF5[0]>0 && tof>100 && tof<180 && in_aF5[0]>0.0)
+      out_nx1<100 && out_nx2<100 && out_ny1<100 && out_ny2<100 && tof>146 && tof<154 && in_aF5[0]>400 && in_aF5[0]<1100)
    {
    outTree->Fill();
    }
-   fill(out_SQX_L,out_SQX_L+16,16);
-   fill(out_SQY_L,out_SQY_L+16,16);
+
    fill(out_SQX_R,out_SQX_R+16,16);
    fill(out_SQY_R,out_SQY_R+16,16);
    fill(out_CsI_R,out_CsI_R+16,16);
-   fill(out_CsI_L,out_CsI_L+16,16);
 
-   fill(r_SQX_L,r_SQX_L+16,16);
-   fill(r_SQY_L,r_SQY_L+16,16);
-   fill(r_SQX_R,r_SQX_R+16,16);
-   fill(r_SQY_R,r_SQY_R+16,16);
-   fill(r_CsI_R,r_CsI_R+16,16);
-   fill(r_CsI_L,r_CsI_L+16,16);
 
-   fill(out_x1,out_x1+32,0.);
-   fill(out_x2,out_x2+32,0.);
-   fill(out_y1,out_y1+32,0.);
-   fill(out_y2,out_y2+32,0.);
+   fill(r_SQX_R,r_SQX_R+16,0);
+   fill(r_SQY_R,r_SQY_R+16,0);
+   fill(r_CsI_R,r_CsI_R+16,0);
+
+   fill(out_x1,out_x1+32,0);
+   fill(out_x2,out_x2+32,0);
+   fill(out_y1,out_y1+32,0);
+   fill(out_y2,out_y2+32,0);
 
    fill(out_tF3,out_tF3,0);
    fill(out_F3,out_F3,0);
@@ -256,7 +245,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 printf("#    Creating file: %s with tree named \"calibrated\"\n",outFname.Data());
 printf("#    We got from %lli entries to %lli entries with trigger cut\n",inTree->GetEntries(), outTree->GetEntries());
 printf("#    Goodbye ;)\n");
-outF->Write();
+outTree->Write();
 //outF
 //inF->Close();
 }
