@@ -1,19 +1,20 @@
 #include "TFile.h"
+#include "TObjArray.h"
 #include "TString.h"
 #include "TTree.h"
 #include "TH2D.h"
 #include "stdio.h"
 #include "Riostream.h"
-#include "calibrate_tree.hh"
+#include "calibrate_tree.h"
 #include <iostream>
-#include "interface.hh"
-
+#include "interface.h"
+#include <vector>
 
 // voron1392
 
 void loader(TString fname, float *AConst, float *BConst)
 {
-   ifstream plik(fname.Data());
+   ifstream plik(fname.Copy().Prepend("/home/guar/Desktop/1217_data/coefs/").Data());
    string dummy;
    float CConst;
    if (!plik) 
@@ -30,23 +31,37 @@ void loader(TString fname, float *AConst, float *BConst)
    for (int iii=0; iii<16; iii++)
       {      
       plik>>AConst[iii]>>BConst[iii]>>CConst;
-      //cout<<AConst[iii]<<"  "<<BConst[iii]<<endl;
+      cout<<AConst[iii]<<"  "<<BConst[iii]<<endl;
       }
     plik.close();
     //cout<<endl;
+    printf("Finishing %s\n\n",fname.Data() );
 }
 
 void calibrate_tree() 
 {
 gSystem->cd(s::work_dir.Data());
-
-TString inFname("he6_7");
-TString outFname(inFname.Copy().Append("_cal").Data()); 
-
-TFile *inF  = new TFile((inFname.Append(".root").Data()), "READ");
-TFile *outF = new TFile(outFname.Append(".root").Data(),"recreate");
-TTree *inTree = (TTree*)inF->Get("AnalysisxTree");
+TString outFname("he6_9_cal.root");
+TFile *outF = new TFile(outFname.Data(),"RECREATE");
 TTree *outTree= new TTree("calibrated","he6");
+TFile *inF = new TFile("he6_9.root");
+TTree *inTree = (TTree*)inF->Get("AnalysisxTree");
+printf(".\n..\n...\n");
+/*
+vector<string> fNames{"he6_9_0.root" ,"he6_9_1.root", "he6_9_2.root"};
+for (vector<string>::iterator iii = fNames.begin(); iii != fNames.end(); ++iii)
+{
+   cout << inFiles->Add(iii->c_str());
+   printf("Adding file %s to my p00l \n", iii->c_str());
+}
+*/
+printf(".\n..\n...\n");
+
+//TObjArray *fileList= new TObjArray(*inFiles->GetListOfFiles());
+//printf("ooo %s\n",fileList[0].GetName());
+
+
+//inFiles
 
 out_nx1=0;
 out_nx2=0;
@@ -72,6 +87,9 @@ inTree->SetBranchAddress("NeEvent.SQX_R[16]",	    in_SQX_R);
 inTree->SetBranchAddress("NeEvent.SQY_L[16]",	    in_SQY_L);
 inTree->SetBranchAddress("NeEvent.SQY_R[16]",	    in_SQY_R);
 
+inTree->SetBranchAddress("NeEvent.tSQX_L[16]",       in_tSQX_L);
+inTree->SetBranchAddress("NeEvent.tSQX_R[16]",       in_tSQX_R);
+
 inTree->SetBranchAddress("NeEvent.tF3[4]",         in_tdcF3);
 inTree->SetBranchAddress("NeEvent.F3[4]",          in_aF3);
 inTree->SetBranchAddress("NeEvent.tF5[4]",         in_tdcF5);
@@ -93,8 +111,10 @@ inTree->SetBranchAddress("NeEvent.trigger",     &in_trigger);
 //ReCo - detectors
 outTree->SetMakeClass(1);
 //    CALIBRATED DATA
-outTree->Branch("SQX_L",	    out_SQX_L,       "SQX_L[16]/D");
-outTree->Branch("SQX_R",	    out_SQX_R,       "SQX_R[16]/D");
+outTree->Branch("SQX_L",       out_SQX_L,       "SQX_L[16]/D");
+outTree->Branch("SQX_R",       out_SQX_R,       "SQX_R[16]/D");
+outTree->Branch("tSQX_L",       out_tSQX_L,       "tSQX_L[16]/D");
+outTree->Branch("tSQX_R",       out_tSQX_R,       "tSQX_R[16]/D");
 outTree->Branch("SQY_L",	    out_SQY_L,       "SQY_L[16]/D");
 outTree->Branch("SQY_R",	    out_SQY_R,       "SQY_R[16]/D");
 outTree->Branch("CsI_L",	    out_CsI_L,       "CsI_L[16]/D");
@@ -127,23 +147,24 @@ outTree->Branch("trigger",	    &out_trigger,        "trigger/I");
 outTree->Branch("tof",     &tof,        "tof/D");
 outTree->Branch("T",     &T,        "T/D");
 
-loader("/home/guar/Desktop/1217_data/coefs/sqx_l_ec.clb", a_SQX_L, b_SQX_L);
-loader("/home/guar/Desktop/1217_data/coefs/sqx_r_ec.clb", a_SQX_R, b_SQX_R);
-loader("/home/guar/Desktop/1217_data/coefs/sqy_l_ec.clb", a_SQY_L, b_SQY_L);
-loader("/home/guar/Desktop/1217_data/coefs/sqy_r_ec.clb", a_SQY_R, b_SQY_R);
-loader("/home/guar/Desktop/1217_data/calib/CsI_R_pedestals.par", a_CsI_R, b_CsI_R);
-loader("/home/guar/Desktop/1217_data/calib/CsI_L_pedestals.par", a_CsI_L, b_CsI_L);
-printf("\n");
+loader("sqx_l_ec.clb", a_SQX_L, b_SQX_L);
+loader("sqx_r_ec.clb", a_SQX_R, b_SQX_R);
+loader("sqx_l_tc.clb", a_tSQX_L, b_tSQX_L);
+loader("sqx_r_tc.clb", a_tSQX_R, b_tSQX_R);
+loader("sqy_l_ec.clb", a_SQY_L, b_SQY_L);
+loader("sqy_r_ec.clb", a_SQY_R, b_SQY_R);
+loader("csi_r_ec.clb", a_CsI_R, b_CsI_R);
+loader("csi_l_ec.clb", a_CsI_L, b_CsI_L);
+printf(".\n..\n...\n");
 
 double gamma, beta_squared;
-
 Long64_t nEntries = inTree->GetEntries();
 printf("##############################################################################\n");
-printf("#    Loaded file %s has %lli entries. \n#    Processing...\n", inFname.Data(), nEntries);
-for (Long64_t entry=1; entry<nEntries; entry++)
+printf("#    Loaded files have %lli entries. \n#    Processing...\n", nEntries);
+for (Long64_t entry=0; entry<nEntries; entry++)
 {
 
-   inTree->GetEntry(entry);
+   inTree->GetTree()->GetEntry(entry);
    if( entry % ( nEntries / 20 ) == 0)
    {
       cout<<"#    Progress: "<<double(entry * 100)/ nEntries<<" %"<<endl;
@@ -155,9 +176,12 @@ for (Long64_t entry=1; entry<nEntries; entry++)
    out_ny2=in_ny2;
    out_trigger=in_trigger;
 
-   tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+96.76207;
+   tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+94.44;
+
    beta_squared=((12348/tof)/299.792)*((12348/tof)/299.792);
+
    gamma=1/sqrt(1-beta_squared);
+   
    T=6.0188891*931.494*(gamma-1.0);
 
    for (int iii=0; iii<32; iii++)
@@ -183,8 +207,11 @@ for (Long64_t entry=1; entry<nEntries; entry++)
       out_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
       out_SQY_R[iii]=(in_SQY_R[iii]+gRandom->Uniform())*b_SQY_R[iii]+a_SQY_R[iii];
 
-      out_CsI_R[iii]=(in_CsI_R[iii]/*+gRandom->Uniform()*/)*b_CsI_R[iii]-a_CsI_R[iii];
-      out_CsI_L[iii]=(in_CsI_L[iii]/*+gRandom->Uniform()*/)*b_CsI_L[iii]-a_CsI_L[iii];
+      out_tSQX_R[iii]=((in_tSQX_R[iii]+gRandom->Uniform())+a_tSQX_R[iii]-(in_tdcF5[0]+in_tdcF5[1])/2)*0.125;
+      out_tSQX_L[iii]=((in_tSQX_L[iii]+gRandom->Uniform())+a_tSQX_L[iii]-(in_tdcF5[0]+in_tdcF5[1])/2)*0.125;
+      
+      out_CsI_R[iii]=(in_CsI_R[iii]+gRandom->Uniform())*b_CsI_R[iii]+a_CsI_R[iii];
+      out_CsI_L[iii]=(in_CsI_L[iii]+gRandom->Uniform())*b_CsI_L[iii]+a_CsI_L[iii];
 
       r_SQX_L[iii]=in_SQX_L[iii];
       r_SQY_L[iii]=in_SQY_L[iii];
@@ -196,7 +223,7 @@ for (Long64_t entry=1; entry<nEntries; entry++)
 
 
    if(out_x1[1]<100 && out_x2[1]<100 && out_y1[1]<100 && out_y2[1]<100 &&
-      out_nx1<100 && out_nx2<100 && out_ny1<100 && out_ny2<100/* && in_trigger==2*/)
+      out_nx1<100 && out_nx2<100 && out_ny1<100 && out_ny2<100 && in_aF5[0]>0 && tof>100 && tof<180 && in_aF5[0]>0.0)
    {
    outTree->Fill();
    }
@@ -227,12 +254,14 @@ for (Long64_t entry=1; entry<nEntries; entry++)
 }
 
 printf("#    Creating file: %s with tree named \"calibrated\"\n",outFname.Data());
+printf("#    We got from %lli entries to %lli entries with trigger cut\n",inTree->GetEntries(), outTree->GetEntries());
 printf("#    Goodbye ;)\n");
-outTree->Write();
-outF->Close();
-
-
+outF->Write();
+//outF
+//inF->Close();
 }
+
+//}
 /*
         double Tbeam=v2H->Energy();
     double invariant = (m2H+m6He)*(m2H+m6He)+2.*m2H*Tbeam;

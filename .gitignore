@@ -1,0 +1,7 @@
+# Formats excluded from aku repo
+*.pcm
+*.so
+*.o
+*.d
+linkdef.h
+ElossCint.cpp
