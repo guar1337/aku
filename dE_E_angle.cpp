@@ -454,13 +454,13 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		sqltheta=vect2H.Theta()*s::rad_to_deg;
 
 
-		TVector3 vectBoost((LV_beam + LV_Tar).BoostVector());
+		//TVector3 vectBoost((LV_beam + LV_Tar).BoostVector());
 		//printf("o a co tu sie %f dzieje: %f\n", LV_beam.M() + LV_Tar.M()-(s::mass_2H+s::mass_6He), sqlde);
-		LV_ghost.Boost(-vectBoost);
-		LV_ghost.SetTheta(vect2H.Theta());
-		LV_ghost.Boost(vectBoost);
+		//LV_ghost.Boost(-vectBoost);
+		//LV_ghost.SetTheta(vect2H.Theta());
+		//LV_ghost.Boost(vectBoost);
 		//printf("o kurla %f a tu porshe: %f\n\n", LV_ghost.E()-LV_ghost.M(), TMath::Pi());
-		ene_2Hth = LV_ghost.M() - s::mass_2H;
+		//ene_2Hth = LV_ghost.M() - s::mass_2H;
 		//LV_ghost = LV_Tar;
 	}
 /*
