@@ -67,13 +67,13 @@ bool TOOL::Get_MWPC_pos(UShort_t multi, UShort_t *wireNo,
 			if (MWPC_id == 0 || MWPC_id == 2)
 			{
 				*MWPC_pos = zero_position + displacement -
-				((wireNo[0]+wireNo[multi-1])/2)*1.25;
+				wireNo[0]*1.25;
 			}
 
 			else
 			{
 				*MWPC_pos = zero_position + displacement +
-				((wireNo[0]+wireNo[multi-1])/2)*1.25;
+				wireNo[0]*1.25;
 			}
 			
 			return 1;

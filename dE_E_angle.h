@@ -74,7 +74,7 @@ Float_t tar_angle, ene_2Hth;
 Double_t cut_SQX_L, cut_SQX_R, cut_SQY_L, cut_SQY_R, cut_CsI_L, cut_CsI_R; 
 
 //double gsl_sf_lambert_Wm1(double in);
-TLorentzVector LV_6He, LV_2H, LV_beam, LV_Tar, LV_ghost;
+TLorentzVector *LV_6He, *LV_2H, *LV_beam, *LV_Tar, *LV_ghost;
 TRotation beam_setting_array;
 
 

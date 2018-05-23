@@ -87,13 +87,13 @@ bool dE_E_angle::create_input_tree(TTree *in)
 bool dE_E_angle::create_output_tree(TTree *out)
 {
 	outTree=out;
-	/*
+	
 	LV_6He = new TLorentzVector();
 	LV_2H = new TLorentzVector();
 	LV_Tar = new TLorentzVector();
 	LV_beam = new TLorentzVector();
 	LV_ghost = new TLorentzVector();
-	*/
+	
 	outTree->SetMakeClass(1);
 	outTree->Branch("SQX_L_m",	 &SQX_L_mult,	"SQX_L_m/S");
 	outTree->Branch("SQX_R_m",	 &SQX_R_mult,	"SQX_R_m/S");
@@ -202,10 +202,10 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("r_CsI_L",	 raw_CsI_L,	 "r_CsI_L[16]/D");
 	outTree->Branch("r_CsI_R",	 raw_CsI_R,	 "r_CsI_R[16]/D");
 
-	//outTree->Bronch("LV_6He.",		"TLorentzVector",	&LV_6He);
-	//outTree->Bronch("LV_2H.",		"TLorentzVector",	&LV_2H);
-	//outTree->Bronch("LV_Tar.",	"TLorentzVector",	&LV_Tar);
-	//outTree->Bronch("LV_beam.",	"TLorentzVector",	&LV_beam);
+	outTree->Bronch("LV_6He.",		"TLorentzVector",	&LV_6He);
+	outTree->Bronch("LV_2H.",		"TLorentzVector",	&LV_2H);
+	outTree->Bronch("LV_Tar.",	"TLorentzVector",	&LV_Tar);
+	outTree->Bronch("LV_beam.",	"TLorentzVector",	&LV_beam);
 	return true;
 }
 
@@ -219,9 +219,10 @@ void dE_E_angle::actual_work()
 
 	TVector3 zx(0.0,1.0,0.0);
 	TVector3 v_beam(0.0,0.0,1.0);
+	TVector3 v_tar(0.0, 0.0, 0.0);
 	TRandom3 *rnd = new TRandom3();
-	TLorentzVector LV_Tar(1.0,0.0,0.0,s::mass_2H);
-	TLorentzVector LV_ghost(1.0,0.0,0.0,s::mass_2H);
+	LV_Tar->SetVectM(v_tar,s::mass_2H);
+	LV_ghost->SetVectM(v_beam,s::mass_2H);
 
 for (Long64_t entry=0; entry<nEntries; entry++)
 	{
@@ -371,7 +372,6 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			out_tSQX_L[iii]=in_tSQX_L[iii];
 			out_tSQX_R[iii]=in_tSQX_R[iii];
 	}
-	TLorentzVector LV_beam;
 	//MWPC
 	if(	maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, s::MWPC_1_X_id)*
 		maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, s::MWPC_1_Y_id)*
@@ -393,23 +393,26 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		dZ=MWPC_2_Z-MWPC_1_Z;
 		
 		v_beam.SetXYZ(dX,dY,dZ);
+		//rotation matrix that will convert 2H or 6He particle so that they will see beam as Z axis
+		beam_setting_array.SetZAxis(v_beam.Unit(),zx);
+		beam_setting_array.Invert();
+
+		v_beam.Transform(beam_setting_array);
 		ene_beam = s::mass_6He + out_T;
 		mom_beam = sqrt(ene_beam*ene_beam - s::mass_6He*s::mass_6He);
 		v_beam.SetMag(mom_beam);
 		
-		//LV_beam->SetRho(mom_beam);
-		//LV_beam->SetVectM(v_beam, s::mass_6He);
-		LV_beam.SetVectM(v_beam, s::mass_6He);
+		LV_beam->SetVectM(v_beam, s::mass_6He);
 		Tcoef=(cos(tar_angle)*s::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
 		XZsum= - sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z;
 
 		evX = MWPC_1_X + dX*Tcoef;
 		evY = MWPC_1_Y + dY*Tcoef;
 		evZ = MWPC_1_Z + dZ*Tcoef;
-
-		//rotation matrix that will convert 2H or 6He particle so that they will see beam as Z axis
-		beam_setting_array.SetZAxis(v_beam.Unit(),zx);
-		beam_setting_array.Invert();
+		if (evZ>-12.0 && evZ<10 && evX>-12.0 && evX<20)
+		{
+			tar=true;
+		}
 	}
 
 	//SQL energy - deuterium
@@ -425,9 +428,9 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		Y2H_lab = s::SQL_start_Y;
 		Z2H_lab = SQL_dist*cos(SQL_ang) - s::SQL_start_X * sin(SQL_ang);		
 
-		X2H_det= -2.*	(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * cos(SQL_ang);
-		Y2H_det= 4.	* 	(SQY_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5);
-		Z2H_det= 2.	*	(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * sin(SQL_ang);
+		X2H_det=-2. *	(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * cos(SQL_ang);
+		Y2H_det=4.	* 	(SQY_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5);
+		Z2H_det=2.	*	(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * sin(SQL_ang);
 
 		X2H = X2H_lab + X2H_det;
 		Y2H = Y2H_lab + Y2H_det;
@@ -439,29 +442,28 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 		//setting deuterium vector
 		TVector3 vect2H(X2H-evX, Y2H-evY, Z2H-evZ);
-
+		vect2H.Transform(beam_setting_array);
 		ene_2H = sqlde + s::mass_2H;
 		mom_2H = sqrt(ene_2H*ene_2H-s::mass_2H*s::mass_2H);
 		vect2H.SetMag(mom_2H);
 
-		TLorentzVector LV_2H(vect2H, s::mass_2H);
-		TLorentzVector LV_6He = LV_Tar + LV_beam - LV_2H;
-		missMass = LV_6He.M() - s::mass_6He;
+		LV_2H->SetVectM(vect2H, s::mass_2H);
+		*LV_6He = *LV_Tar + *LV_beam - *LV_2H;
+		missMass = LV_6He->M() - s::mass_6He;
 
 		//setting LAB angles of scattered deuterium - reference is beam vector
-		vect2H=beam_setting_array*vect2H;
 		sqlphi=vect2H.Phi()*s::rad_to_deg;
 		sqltheta=vect2H.Theta()*s::rad_to_deg;
 
 
-		//TVector3 vectBoost((LV_beam + LV_Tar).BoostVector());
-		//printf("o a co tu sie %f dzieje: %f\n", LV_beam.M() + LV_Tar.M()-(s::mass_2H+s::mass_6He), sqlde);
-		//LV_ghost.Boost(-vectBoost);
-		//LV_ghost.SetTheta(vect2H.Theta());
-		//LV_ghost.Boost(vectBoost);
-		//printf("o kurla %f a tu porshe: %f\n\n", LV_ghost.E()-LV_ghost.M(), TMath::Pi());
-		//ene_2Hth = LV_ghost.M() - s::mass_2H;
-		//LV_ghost = LV_Tar;
+		TVector3 vectBoost((*LV_beam + *LV_ghost).BoostVector());
+		//printf("o a co tu sie %f dzieje: %f\n", LV_beam->M() + LV_Tar->M()-(s::mass_2H+s::mass_6He), sqlde);
+		LV_ghost->Boost(-vectBoost);
+		LV_ghost->SetTheta((TMath::Pi()-vect2H.Theta())*2.0);
+		LV_ghost->Boost(vectBoost);
+		//printf("o kurla %f a tu porshe: %f\n\n", LV_ghost->E()-LV_ghost->M(), sqlde);
+		ene_2Hth = LV_ghost->E() - s::mass_2H;
+		*LV_ghost = *LV_Tar;
 	}
 /*
 	//SQR energy - helium
