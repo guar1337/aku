@@ -435,9 +435,6 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		X2H = X2H_lab + X2H_det;
 		Y2H = Y2H_lab + Y2H_det;
 		Z2H = Z2H_lab + Z2H_det;
-		//printf("SQX_L_strip: %i\n", SQX_L_strip[1]);
-		//printf("SQL_dist*sin(SQL_ang)= %f, SQL_start_X * cos(SQL_ang) = %f\n", SQL_dist*sin(SQL_ang), s::SQL_start_X * cos(SQL_ang));
-		//printf("X2H_lab= %f, X2H_det = %f, X2H= %f\n", X2H_lab, X2H_det, X2H);
 
 
 		//setting deuterium vector
@@ -457,15 +454,13 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 
 		TVector3 vectBoost((*LV_beam + *LV_ghost).BoostVector());
-		//printf("o a co tu sie %f dzieje: %f\n", LV_beam->M() + LV_Tar->M()-(s::mass_2H+s::mass_6He), sqlde);
 		LV_ghost->Boost(-vectBoost);
 		LV_ghost->SetTheta((TMath::Pi()-vect2H.Theta())*2.0);
 		LV_ghost->Boost(vectBoost);
-		//printf("o kurla %f a tu porshe: %f\n\n", LV_ghost->E()-LV_ghost->M(), sqlde);
 		ene_2Hth = LV_ghost->E() - s::mass_2H;
 		*LV_ghost = *LV_Tar;
 	}
-/*
+
 	//SQR energy - helium
 	if(SQX_R_mult*SQY_R_mult==1 && mwpc)
 	{		
@@ -495,7 +490,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		sqrtheta=vect6He.Theta()*s::rad_to_deg;
 		sqrphi=vect6He.Phi()*s::rad_to_deg;
 	}
-*/
+
 	outTree->Fill();
 
 
