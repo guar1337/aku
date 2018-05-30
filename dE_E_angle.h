@@ -39,7 +39,7 @@ UShort_t CsI_L_strip[17], CsI_R_strip[17], SQX_L_strip[33], SQX_R_strip[17], SQY
 UShort_t out_nx1, out_nx2, out_ny1, out_ny2, out_x1[32], out_x2[32], out_y1[32], out_y2[32];
 UShort_t CsI_L_mult, CsI_R_mult, SQX_L_mult, SQX_R_mult, SQY_L_mult, SQY_R_mult;
 
-Float_t blur;
+Float_t blur, dist_tar_det;
 Float_t dX,  dY,  dZ,  XZsum;
 Float_t evX,  evY,  evZ;
 Float_t Xpos,  Ypos,  Zpos;
@@ -69,12 +69,13 @@ Double_t in_tSQX_L[32], in_tSQX_R[32], out_tSQX_L[32], out_tSQX_R[32];
 Double_t in_tSQY_L[16], in_tSQY_R[16], out_tSQY_L[16], out_tSQY_R[16];
 Double_t in_tCsI_L[16], in_tCsI_R[16], out_tCsI_L[16], out_tCsI_R[16];
 Double_t SQR_ang, SQL_ang, SQR_dist, SQL_dist;
-Float_t tar_angle, ene_2Hth;
+Double_t t_Tar, t_2H, t_6He, dist_tar_det6He, dist_tar_det2H;
+Float_t tar_angle, ene_draw, out_tMWPC[4],  in_tMWPC[4];
 
 Double_t cut_SQX_L, cut_SQX_R, cut_SQY_L, cut_SQY_R, cut_CsI_L, cut_CsI_R; 
 
 //double gsl_sf_lambert_Wm1(double in);
-TLorentzVector *LV_6He, *LV_2H, *LV_beam, *LV_Tar, *LV_ghost;
+TLorentzVector *LV_6He, *LV_2H, *LV_beam, *LV_Tar, *LV_draw;
 TRotation beam_setting_array;
 
 

@@ -99,16 +99,18 @@ namespace s
 	static const float		u_to_MeV	=	931.4936;
 	static const float 		mass_2H 	=	1875.61292;
 	static const float 		mass_6He 	=	5606.55667;
-	static const float		c			=	299.792;
+	static const float 		mass_1H 	=	938.782;
+	static const float		c			=	299.792;	// mm/ns
 	
-	static const float		tofBase		=	12348.0;
+	static const float		tofBase			=	12348.0;
+	static const float		dist_Tar_to_F5	=	953.0;
 
 	static const TString 	rootF_dir("/home/guar/data/mar2018/rawroot");
 	static const TString 	misc_dir("/home/guar/data/mar2018/miscroot");
-	static const TString 	inFname("run19");
+	static const TString 	inFname("run02");
 	static const TString	playground("/home/guar/data/tools/");
 
 
-	static const int		runNo=	4;	
+	static const int		runNo=	1;	
 }
 #endif

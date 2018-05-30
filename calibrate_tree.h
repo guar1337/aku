@@ -45,6 +45,7 @@ UShort_t in_x1[32];
 UShort_t in_x2[32];
 UShort_t in_y1[32];
 UShort_t in_y2[32];
+UShort_t in_tMWPC[4];
 
 int in_trigger, counter;
 
@@ -88,6 +89,8 @@ Double_t out_tF5[4];
 Double_t out_F5[4];
 Double_t out_tF6[4];
 Double_t out_F6[4];
+
+Float_t out_tMWPC[4];
 
 float a_CsI_L[16];
 float a_CsI_R[16];

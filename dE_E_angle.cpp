@@ -72,6 +72,8 @@ bool dE_E_angle::create_input_tree(TTree *in)
 	inTree->SetBranchAddress("nx2",		&in_nx2);
 	inTree->SetBranchAddress("ny2",		&in_ny2);
 
+	inTree->SetBranchAddress("tMWPC",	in_tMWPC);
+
 	inTree->SetBranchAddress("x1",	 in_x1);
 	inTree->SetBranchAddress("y1",	 in_y1);
 	inTree->SetBranchAddress("x2",	 in_x2);
@@ -80,6 +82,7 @@ bool dE_E_angle::create_input_tree(TTree *in)
 	inTree->SetBranchAddress("trigger",	 &in_trigger);
 	inTree->SetBranchAddress("T",	 &in_T);
 	inTree->SetBranchAddress("tof",	 &in_tof);
+
 
  	return true;
 }
@@ -92,7 +95,7 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	LV_2H = new TLorentzVector();
 	LV_Tar = new TLorentzVector();
 	LV_beam = new TLorentzVector();
-	LV_ghost = new TLorentzVector();
+	LV_draw = new TLorentzVector();
 	
 	outTree->SetMakeClass(1);
 	outTree->Branch("SQX_L_m",	 &SQX_L_mult,	"SQX_L_m/S");
@@ -133,7 +136,10 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("rx",	&rx,	 "rx/F");
 	outTree->Branch("ry",	&ry,	 "ry/F");
 	outTree->Branch("ry",	&ry,	 "ry/F");
-	outTree->Branch("ene_2Hth", &ene_2Hth, "ene_2Hth/F");
+
+	outTree->Branch("ene_draw", &ene_draw, "ene_draw/F");
+	outTree->Branch("t_2H", &t_2H, "t_2H/F");
+	outTree->Branch("t_6He", &t_6He, "t_6He/F");
 
 	outTree->Branch("lx",	&lx,	 "lx/F");
 	outTree->Branch("ly",	&ly,	 "ly/F");
@@ -162,6 +168,8 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("sqrang",	&sqrang,	 "sqrang/D");
 	outTree->Branch("sqrtime",	&sqrtime,	 "sqrtime/D");
 
+	outTree->Branch("dist_tar_det",	&dist_tar_det,	 "dist_tar_det/F");
+
 	outTree->Branch("sqrtheo",	&sqrtheo,	 "sqrtheo/D");
 	outTree->Branch("sqltheo",	&sqltheo,	 "sqltheo/D");
 
@@ -181,11 +189,14 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("y1",	out_y1,	"y1[32]/s");
 	outTree->Branch("y2",	out_y2,	"y2[32]/s");
 
+	outTree->Branch("tMWPC",	out_tMWPC,	 "tMWPC[4]/F");	
+
 	outTree->Branch("nx1",	&out_nx1,	"nx1/s");
 	outTree->Branch("nx2",	&out_nx2,	"nx2/s");
 	outTree->Branch("ny1",	&out_ny1,	"ny1/s");
 	outTree->Branch("ny2",	&out_ny2,	"ny2/s");
-	outTree->Branch("trigger",	&out_trigger,	"trigger/S");
+
+		outTree->Branch("trigger",	&out_trigger,	"trigger/S");
 	outTree->Branch("missMass",	 &missMass,	"missMass/D");
 
 	outTree->Branch("c_SQX_L",	 c_SQX_L,	 "c_SQX_L[32]/D");
@@ -222,7 +233,7 @@ void dE_E_angle::actual_work()
 	TVector3 v_tar(0.0, 0.0, 0.0);
 	TRandom3 *rnd = new TRandom3();
 	LV_Tar->SetVectM(v_tar,s::mass_2H);
-	LV_ghost->SetVectM(v_beam,s::mass_2H);
+	LV_draw->SetVectM(v_tar,s::mass_1H);
 
 for (Long64_t entry=0; entry<nEntries; entry++)
 	{
@@ -234,6 +245,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			counter++;
 		}
 	//NULLing everything
+		dist_tar_det = 0.0;
 		evX=0.0;evY=0.0;evZ=0.0;
 		mwpc=false;
 		ms=false;
@@ -282,6 +294,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	//MWPC, ToF total energy loss is equal to 347.15 mkm of Si
 	in_tof>0.0 ? T = maynard->getT(in_tof, s::mass_6He) : T=0.0; 
 	out_T = Si_Ecalc->GetE(T, 347.15);
+	t_Tar = in_tof + maynard->gettime(out_T, s::mass_6He, s::dist_Tar_to_F5);
 
 	//4 channels loop
 	for (int iii=0; iii<4; iii++)
@@ -292,6 +305,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		out_F5[iii]=in_F5[iii];
 		out_tF6[iii]=in_tF6[iii];
 		out_F6[iii]=in_F6[iii];
+		out_tMWPC[iii] = in_tMWPC[iii];
 	}
 
 	//16 channels loop
@@ -397,7 +411,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		beam_setting_array.SetZAxis(v_beam.Unit(),zx);
 		beam_setting_array.Invert();
 
-		v_beam.Transform(beam_setting_array);
+		//v_beam.Transform(beam_setting_array);
 		ene_beam = s::mass_6He + out_T;
 		mom_beam = sqrt(ene_beam*ene_beam - s::mass_6He*s::mass_6He);
 		v_beam.SetMag(mom_beam);
@@ -421,7 +435,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		//printf("\n\n# Entry No: %i %%\n", entry);
 		sqlde=SQX_L_Edep[1];
 		sqletot=CsI_L[  (SQY_L_strip[1]/4)*4  +  (3-SQX_L_strip[1]/8)];
-		sqltime=out_tSQX_L[1];
+		sqltime=out_tSQX_L[SQX_L_strip[1]];
 
 		// coordinates of hit in LAB system
 		X2H_lab = SQL_dist*sin(SQL_ang) + s::SQL_start_X * cos(SQL_ang);
@@ -439,26 +453,29 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 		//setting deuterium vector
 		TVector3 vect2H(X2H-evX, Y2H-evY, Z2H-evZ);
-		vect2H.Transform(beam_setting_array);
+		dist_tar_det2H = vect2H.Mag();
+		t_2H = t_Tar + maynard->gettime(sqlde, s::mass_2H, dist_tar_det);
 		ene_2H = sqlde + s::mass_2H;
 		mom_2H = sqrt(ene_2H*ene_2H-s::mass_2H*s::mass_2H);
 		vect2H.SetMag(mom_2H);
+
 
 		LV_2H->SetVectM(vect2H, s::mass_2H);
 		*LV_6He = *LV_Tar + *LV_beam - *LV_2H;
 		missMass = LV_6He->M() - s::mass_6He;
 
 		//setting LAB angles of scattered deuterium - reference is beam vector
+		vect2H.Transform(beam_setting_array);
 		sqlphi=vect2H.Phi()*s::rad_to_deg;
 		sqltheta=vect2H.Theta()*s::rad_to_deg;
 
 
-		TVector3 vectBoost((*LV_beam + *LV_ghost).BoostVector());
-		LV_ghost->Boost(-vectBoost);
-		LV_ghost->SetTheta((TMath::Pi()-vect2H.Theta())*2.0);
-		LV_ghost->Boost(vectBoost);
-		ene_2Hth = LV_ghost->E() - s::mass_2H;
-		*LV_ghost = *LV_Tar;
+		TVector3 vectBoost((*LV_beam + *LV_draw).BoostVector());
+		LV_draw->Boost(-vectBoost);
+		LV_draw->SetTheta((TMath::Pi()-vect2H.Theta())*2.0);
+		LV_draw->Boost(vectBoost);
+		ene_draw = LV_draw->E() - s::mass_1H;
+		LV_draw->SetVectM(v_tar,s::mass_1H);
 	}
 
 	//SQR energy - helium
@@ -466,7 +483,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	{		
 		sqrde=SQY_R_Edep[1];
 		sqretot=CsI_R[    4*(SQY_R_strip[1]/4)+   ((SQX_R_strip[1]/8))    ];
-		sqrtime=out_tCsI_R[    4*(3-SQY_R_strip[1]/4)+   (SQX_R_strip[1]/4)    ];
+		sqrtime=out_tCsI_R[SQX_R_strip[1]];
 		
 
 		// coordinates of hit in LAB system
@@ -484,7 +501,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 		//setting deuterium vector
 		TVector3 vect6He(X6He-evX, Y6He-evY, Z6He-evZ);
-
+		dist_tar_det6He = vect6He.Mag();
+		t_6He = t_Tar + maynard->gettime(sqrde+sqretot, s::mass_6He, dist_tar_det6He);
 		//setting LAB angles of scattered 6 He - reference is beam vector
 		vect6He=beam_setting_array*vect6He;
 		sqrtheta=vect6He.Theta()*s::rad_to_deg;

@@ -34,12 +34,12 @@ bool loader(TString fname, float *AConst, float *BConst, short chNo)
 
 void calibrate_tree() 
 {
-gSystem->cd(s::misc_dir.Data());
-TString outFname("csi00_0002.root");
+gSystem->cd(s::rootF_dir.Data());
+TString outFname("run02_cal.root");
 TFile *outF = new TFile(outFname.Data(),"RECREATE");
 TTree *outTree= new TTree("calibrated","he6");
-TFile *inF = new TFile("csi00_0002.root");
-printf("Can open file %s\n",outF->GetName());
+TFile *inF = new TFile("run02.root");
+printf("Succesfully opened file %s\n",outF->GetName());
 if (inF->IsZombie())
 {
    printf("Cannot open file \n");
@@ -112,6 +112,7 @@ inTree->SetBranchAddress("NeEvent.x1[32]",     in_x1);
 inTree->SetBranchAddress("NeEvent.y1[32]",     in_y1);
 inTree->SetBranchAddress("NeEvent.x2[32]",     in_x2);
 inTree->SetBranchAddress("NeEvent.y2[32]",     in_y2);
+inTree->SetBranchAddress("NeEvent.tMWPC[4]",     in_tMWPC);
 
 inTree->SetBranchAddress("NeEvent.trigger",     &in_trigger);
 
@@ -149,6 +150,7 @@ outTree->Branch("nx1",    &out_nx1,      "nx1/s");
 outTree->Branch("nx2",    &out_nx2,      "nx2/s");
 outTree->Branch("ny1",    &out_ny1,      "ny1/s");
 outTree->Branch("ny2",    &out_ny2,      "ny2/s");
+outTree->Branch("tMWPC",    out_tMWPC,      "tMWPC[4]/f");
 
 //    RAW DATA
 outTree->Branch("r_SQX_L",       r_SQX_L,       "r_SQX_L[32]/D");
@@ -210,12 +212,13 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
    for (int iii=0; iii<4; iii++)
    { 
-      out_tF3[iii]=in_tdcF3[iii];
-      out_F3[iii]=in_aF3[iii];
-      out_tF5[iii]=in_tdcF5[iii];
-      out_F5[iii]=in_aF5[iii];
-      out_tF6[iii]=in_tdcF6[iii];
-      out_F6[iii]=in_aF6[iii];
+      out_tF3[iii]=in_tdcF3[iii]*0.125;
+      out_F3[iii]=in_aF3[iii]*0.125;
+      out_tF5[iii]=in_tdcF5[iii]*0.125;
+      out_F5[iii]=in_aF5[iii]*0.125;
+      out_tF6[iii]=in_tdcF6[iii]*0.125;
+      out_F6[iii]=in_aF6[iii]*0.125;
+      out_tMWPC[iii] = in_tMWPC[iii]/3.4133;
    }
 
    for (int iii=0; iii<16; iii++)

@@ -14,7 +14,7 @@
 class TOOL
 {
 protected:
-Double_t beta_squared, gamma;
+Double_t beta, beta_squared, gamma, gamma_squared;
 Float_t displacement, zero_position, alpha_inSi[4];
 void printSetup(Double_t , Double_t , Double_t , Double_t , Float_t );
 
@@ -25,6 +25,7 @@ virtual ~TOOL();
 TString containerName, histName, histFillcmd;
 
 Double_t getT(Double_t , Float_t );
+Double_t gettime(Double_t , Float_t , Float_t);
 bool Get_MWPC_pos(UShort_t, UShort_t *, Float_t *, Short_t);
 bool initializeGeometry(Double_t *, Double_t *, Double_t *, Double_t *, Float_t *);
 bool getDeadLayer(TString, TString, double *, Short_t);

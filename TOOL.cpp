@@ -31,6 +31,13 @@ Double_t TOOL::getT(Double_t tof, Float_t mass)
 	return mass*(gamma-1.0);
 }
 
+Double_t TOOL::gettime(Double_t T, Float_t mass, Float_t dist)
+{
+	gamma_squared = pow(T/mass+1.0, 2.0);
+	beta = sqrt(1-1/gamma_squared);
+	return dist/(beta*s::c);
+}
+
 bool TOOL::Get_MWPC_pos(UShort_t multi, UShort_t *wireNo,
 						Float_t *MWPC_pos,Short_t MWPC_id)
 {
