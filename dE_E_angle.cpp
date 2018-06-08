@@ -133,6 +133,9 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("sqlang",	&sqlang,	 "sqlang/D");
 	outTree->Branch("sqltime",	&sqltime,	 "sqltime/D");
 
+	outTree->Branch("s_csir",	 &memS_CsI_R,	"s_csir/S");
+	outTree->Branch("s_csil",	 &memS_CsI_L,	"s_csil/S");
+
 	outTree->Branch("rx",	&rx,	 "rx/F");
 	outTree->Branch("ry",	&ry,	 "ry/F");
 	outTree->Branch("ry",	&ry,	 "ry/F");
@@ -220,7 +223,7 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	return true;
 }
 
-void dE_E_angle::actual_work()
+bool dE_E_angle::actual_work()
 {
 	Long64_t nEntries = inTree->GetEntries();
 	maynard->initializeGeometry(&SQR_ang, &SQL_ang, &SQR_dist, &SQL_dist, &tar_angle);
@@ -234,7 +237,7 @@ void dE_E_angle::actual_work()
 	TRandom3 *rnd = new TRandom3();
 	LV_Tar->SetVectM(v_tar,s::mass_2H);
 	LV_draw->SetVectM(v_tar,s::mass_1H);
-
+	counter = 0;
 for (Long64_t entry=0; entry<nEntries; entry++)
 	{
 	inTree->GetEntry(entry);
@@ -245,38 +248,19 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			counter++;
 		}
 	//NULLing everything
+		memE_CsI_R=0.0; memE_CsI_R=0.0; memS_CsI_R=20; memS_CsI_R=20;
 		dist_tar_det = 0.0;
 		evX=0.0;evY=0.0;evZ=0.0;
-		mwpc=false;
-		ms=false;
-		tar=false;
+		mwpc=false; ms=false; tar=false;
 
-		X6He=0.0;
-		Y6He=0.0;
-		Z6He=0.0;
+		X6He=0.0; Y6He=0.0; Z6He=0.0; X2H=0.0; Y2H=0.0; Z2H=0.0;
 
-		X2H=0.0;
-		Y2H=0.0;
-		Z2H=0.0;
+		sqrphi=0.0; sqlphi=0.0; sqrtheta=0.0; sqltheta=0.0;
+		sqrang=0.0; sqlang=0.0; sqrde=0.0; sqlde=0.0;
+		sqretot=0.0; sqletot=0.0;
 
-		sqrphi=0.0;
-		sqlphi=0.0;		
-		sqrtheta=0.0;
-		sqltheta=0.0;
-		sqrang=0.0;
-		sqlang=0.0;
-		sqrde=0.0;
-		sqlde=0.0;
-		sqretot=0.0;		
-		sqletot=0.0;
-
-		SQX_L_mult=0;
-		SQY_L_mult=0;
-		CsI_L_mult=0;
-
-		SQX_R_mult=0;
-		SQY_R_mult=0;
-		CsI_R_mult=0;
+		SQX_L_mult=0; SQY_L_mult=0; CsI_L_mult=0;
+		SQX_R_mult=0; SQY_R_mult=0; CsI_R_mult=0;
 
 		maynard->null_energy(	SQX_L_Edep,SQY_L_Edep,CsI_L_Edep,
 								SQX_R_Edep,SQY_R_Edep,CsI_R_Edep);
@@ -293,8 +277,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	out_tof = in_tof;
 	//MWPC, ToF total energy loss is equal to 347.15 mkm of Si
 	in_tof>0.0 ? T = maynard->getT(in_tof, s::mass_6He) : T=0.0; 
-	out_T = Si_Ecalc->GetE(T, 347.15);
-	t_Tar = in_tof + maynard->gettime(out_T, s::mass_6He, s::dist_Tar_to_F5);
+	//out_T = Si_Ecalc->GetE(T, 347.15);
+	//t_Tar = in_tof + maynard->gettime(out_T, s::mass_6He, s::dist_Tar_to_F5);
 
 	//4 channels loop
 	for (int iii=0; iii<4; iii++)
@@ -318,14 +302,6 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			SQY_L_strip[SQY_L_mult]=iii;
 		}
 
-		if (in_tCsI_L[iii]>s::tc_CsI_L)
-		{
-			CsI_L_mult++;
-			CsI_L_Edep[CsI_L_mult]=CsI_L[iii];
-			CsI_L_strip[CsI_L_mult]=iii;
-		}
-
-
 		if (in_tSQY_R[iii]>s::tc_SQY_R)
 		{
 			SQY_R_mult++;
@@ -335,9 +311,27 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 		if (in_tCsI_R[iii]>s::tc_CsI_R)
 		{
+			if (memE_CsI_R<r_CsI_R[iii])
+			{
+				memE_CsI_R = r_CsI_R[iii];
+				memS_CsI_R = iii;
+			}
+
 			CsI_R_mult++;
 			CsI_R_Edep[CsI_R_mult]=CsI_R[iii];
 			CsI_R_strip[CsI_R_mult]=iii;
+		}
+
+		if (in_tCsI_L[iii]>s::tc_CsI_L)
+		{
+			if (memE_CsI_L<r_CsI_L[iii])
+			{
+				memE_CsI_L = r_CsI_L[iii];
+				memS_CsI_L = iii;
+			}
+			CsI_L_mult++;
+			CsI_L_Edep[CsI_L_mult]=CsI_L[iii];
+			CsI_L_strip[CsI_L_mult]=iii;
 		}
 
 		c_SQX_L[iii]=SQX_L[iii];
@@ -434,7 +428,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	{
 		//printf("\n\n# Entry No: %i %%\n", entry);
 		sqlde=SQX_L_Edep[1];
-		sqletot=CsI_L[  (SQY_L_strip[1]/4)*4  +  (3-SQX_L_strip[1]/8)];
+		sqletot=memE_CsI_L;
+		//CsI_L[  (SQY_L_strip[1]/4)*4  +  (3-SQX_L_strip[1]/8)];
 		sqltime=out_tSQX_L[SQX_L_strip[1]];
 
 		// coordinates of hit in LAB system
@@ -482,7 +477,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	if(SQX_R_mult*SQY_R_mult==1 && mwpc)
 	{		
 		sqrde=SQY_R_Edep[1];
-		sqretot=CsI_R[    4*(SQY_R_strip[1]/4)+   ((SQX_R_strip[1]/8))    ];
+		sqretot=memE_CsI_R;
+		//CsI_R[    4*(SQY_R_strip[1]/4)+   ((SQX_R_strip[1]/8))    ];
 		sqrtime=out_tCsI_R[SQX_R_strip[1]];
 		
 
@@ -513,8 +509,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 
 }
-TString outFname(s::inFname.Copy().ReplaceAll("_cal.root","").Append("_dE_work.root").Data());
+TString outFname(s::inFname.Copy().ReplaceAll("cal_","dE_").Data());
 printf("#	Creating file: %s with tree named \"dE_E\" \n",outFname.Data());
-printf("#	Goodbye ;)\n");
+return 1;
 }
 

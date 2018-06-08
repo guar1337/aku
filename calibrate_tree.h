@@ -11,8 +11,17 @@
 #include "constants.h"
 #include "TOOL.h"
 #include "dE_E_angle.h"
+#include <TString.h>
 
+#include </home/guar/aku/ELC/AELC.h>
+#include </home/guar/aku/ELC/ELC.h>
+
+AELC *Si_Ecalc;
 TOOL *maynard;
+
+double si_A[1];
+double si_Z[1];
+double si_W[1];
 
 UShort_t in_CsI_L[16];
 UShort_t in_CsI_R[16];

@@ -225,6 +225,18 @@ bool TOOL::initializeGeometry(	Double_t *sqr_ang, Double_t *sql_ang,
 		return 1;
 		break;
 
+		case 0:
+		printf("\nLoaded exprimental setup parameters for geometry 0:\n");
+		*sqr_ang=s::sqr_ang_s0;
+		*sql_ang=s::sql_ang_s0;
+		
+		*sqr_dist=s::sqr_dist_s0;
+		*sql_dist=s::sql_dist_s0;
+		*tar_angle=s::tar_ang_s3;
+		printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
+		return 1;
+		break;
+
 		default:
 		printf("\nError: NO EXPERIMENTAL SETUP PARAMETERS\n");
 		return 0;
@@ -285,6 +297,34 @@ void TOOL::null_energy( Double_t *SQX_L, Double_t *SQY_L, Double_t *CsI_L,
 	fill(CsI_R,CsI_R+16,0.); 
 }
 
+bool TOOL::params_loader(TString fname, float *AConst, float *BConst, short chNo)
+{
+	ifstream plik(fname.Copy().Prepend(s::params_dir.Data()).Data());
+	string dummy;
+	float CConst;
+
+	if (!plik) 
+	{
+		printf ("#Cannot open %s coefficient file\n",fname.Copy().Prepend(s::params_dir.Data()).Data());
+		return 0;
+	}
+
+	else
+	{
+		printf("*Opening %s calibration file...\n",fname.Data() );
+	}
+	getline(plik, dummy);
+	getline(plik, dummy);
+	for (int iii=0; iii<chNo; iii++)
+	{
+		plik>>AConst[iii]>>BConst[iii]>>CConst;
+		//cout<<AConst[iii]<<"  "<<BConst[iii]<<endl;
+	}
+
+	plik.close();
+	printf("Finishing %s\n\n",fname.Data() );
+	return 1;
+}
 
 TOOL::~TOOL()
 {

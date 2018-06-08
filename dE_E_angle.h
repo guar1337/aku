@@ -20,7 +20,7 @@ public:
 dE_E_angle();
 dE_E_angle(TTree *inTree, TTree *outTree);
 virtual ~dE_E_angle();
-void actual_work();
+bool actual_work();
 
 private:
 TTree *inTree;
@@ -38,7 +38,9 @@ UShort_t in_x1[32], in_x2[32], in_y1[32], in_y2[32];
 UShort_t CsI_L_strip[17], CsI_R_strip[17], SQX_L_strip[33], SQX_R_strip[17], SQY_L_strip[17], SQY_R_strip[17];
 UShort_t out_nx1, out_nx2, out_ny1, out_ny2, out_x1[32], out_x2[32], out_y1[32], out_y2[32];
 UShort_t CsI_L_mult, CsI_R_mult, SQX_L_mult, SQX_R_mult, SQY_L_mult, SQY_R_mult;
+UShort_t memS_CsI_R, memS_CsI_L;
 
+Float_t memE_CsI_R, memE_CsI_L;
 Float_t blur, dist_tar_det;
 Float_t dX,  dY,  dZ,  XZsum;
 Float_t evX,  evY,  evZ;

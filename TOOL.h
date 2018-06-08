@@ -3,12 +3,12 @@
 #include "constants.h"
 #include <TSystem.h>
 #include <TString.h>
-#include <iostream>
 #include <TH1I.h>
 #include <TF1.h>
 #include <TTree.h>
 #include <TFile.h>
 #include <algorithm>
+#include "Riostream.h"
 
 
 class TOOL
@@ -35,7 +35,7 @@ void null_strips(	UShort_t *, UShort_t *, UShort_t *,
 void null_energy(	Double_t *, Double_t *, Double_t *,
 					Double_t *, Double_t *, Double_t *);
 
-
+bool params_loader(TString , float *, float *, short);
 ClassDef(TOOL,0);
 };
 #endif

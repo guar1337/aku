@@ -11,6 +11,9 @@ namespace s
 	static const float		sql_ang9		=	35.0	* (3.1415/180.0);
 	static const float		sqr_ang9		=	18.0	* (3.1415/180.0);
 
+	static const float		sql_ang_s0		=	0.0	* (3.1415/180.0);
+	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
+
 	static const float		sql_ang_s1		=	65.0	* (3.1415/180.0);
 	static const float		sqr_ang_s1		=	15.0	* (3.1415/180.0);
 
@@ -30,6 +33,9 @@ namespace s
 	static const float		tar_pos_Z		=	0.0;
 
 	//*************************DETS geometry**********************************************
+	static const float		sql_dist_s0	=	170.0;
+	static const float		sqr_dist_s0	=	300.0;
+
 	static const float		sql_dist_s1	=	170.0;
 	static const float		sqr_dist_s1	=	250.0;
 
@@ -104,13 +110,18 @@ namespace s
 	
 	static const float		tofBase			=	12348.0;
 	static const float		dist_Tar_to_F5	=	953.0;
+	static const float		tof_const	=	89.165;
 
-	static const TString 	rootF_dir("/home/guar/data/mar2018/rawroot");
-	static const TString 	misc_dir("/home/guar/data/mar2018/miscroot");
-	static const TString 	inFname("run02");
+	static const TString 	runs_dir("/home/guar/data/mar2018/rawroot");
+	static const TString 	CsI_dir("/home/guar/data/mar2018/miscroot/CsI");
+	static const TString 	params_dir("/home/guar/data/mar2018/calib/params/");	
+	static const TString 	inFname("cal_csi00_0002");
 	static const TString	playground("/home/guar/data/tools/");
 
+	static const TString	len_data("/home/guar/data/");
+	static const TString	len_calib("/home/guar/aku/calib_files/");
 
-	static const int		runNo=	1;	
+
+	static const int		runNo=	0;	
 }
 #endif
