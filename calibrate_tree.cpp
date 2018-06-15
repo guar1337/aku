@@ -9,31 +9,36 @@ R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
 // voron1392
 
 
-void wrk(TString fname) 
+void wrk(TString fname, TString dir_current) 
 {
+//TTree *inTree;
 
-gSystem->cd(s::CsI_dir.Data());
-//TString fname {"csi00_0001"};
+gSystem->cd(dir_current.Data());
+if (!fname.Contains(".root"))
+{
+	fname.Append(".root");
 
+}
 TFile *inF = new TFile(fname.Copy());
-TFile *outF = new TFile(fname.Copy().Prepend("cal_"),"RECREATE");
-
 if (inF->IsZombie())
 {
 	printf("\n#Cannot open file: %s\n", fname.Copy().Prepend("inF: ").Data());
 	return 0;
 }
-else {printf("\n*Succesfully opened file %s\n",inF->GetName());}
 
+printf("\n*Succesfully opened file %s\n",inF->GetName());
+TFile *outF = new TFile(fname.Copy().Prepend("cal_"),"RECREATE");
 if (outF->IsZombie())
 {
 	printf("#Cannot open file: %s\n", fname.Copy().Prepend("outF: ").Data());
 	return 0;
 }
-else {printf("*Succesfully opened file %s\n",outF->GetName());}
+printf("*Succesfully opened file %s\n\n",outF->GetName());
+
 
 TTree *inTree = (TTree*)inF->Get("AnalysisxTree");
 TTree *outTree= new TTree("calibrated","he6");
+
 
 if (inTree->IsZombie())
 {
@@ -162,13 +167,26 @@ outTree->Branch("T",     &T,        "T/D");
 
 if (maynard->params_loader("SQX_L_ec.clb", a_SQX_L, b_SQX_L, 32)!=1){return 0;}
 if (maynard->params_loader("SQX_R_ec.clb", a_SQX_R, b_SQX_R, 32)!=1){return 0;}
-//maynard->params_loader("sqx_l_tc.clb", a_tSQX_L, b_tSQX_L, 32);
-//maynard->params_loader("sqx_r_tc.clb", a_tSQX_R, b_tSQX_R, 32);
+if (maynard->params_loader("SQX_L_tc.clb", a_tSQX_L, b_tSQX_L, 32)!=1){return 0;}
+if (maynard->params_loader("SQX_R_tc.clb", a_tSQX_R, b_tSQX_R, 32)!=1){return 0;}
+
 if (maynard->params_loader("SQY_L_ec.clb", a_SQY_L, b_SQY_L, 16)!=1){return 0;}
 if (maynard->params_loader("SQY_R_ec.clb", a_SQY_R, b_SQY_R, 16)!=1){return 0;}
+if (maynard->params_loader("SQY_L_tc.clb", a_tSQY_L, b_tSQY_L, 16)!=1){return 0;}
+if (maynard->params_loader("SQY_R_tc.clb", a_tSQY_R, b_tSQY_R, 16)!=1){return 0;}
 
-//if (maynard->params_loader("csi_r_ec.clb", a_CsI_R, b_CsI_R, 16)!=1){return 0;}
-//if (maynard->params_loader("csi_l_ec.clb", a_CsI_L, b_CsI_L, 16)!=1){return 0;}
+if (maynard->params_loader("csi_r_tc.clb", a_tCsI_R, b_tCsI_R, 16)!=1){return 0;}
+if (maynard->params_loader("csi_l_tc.clb", a_tCsI_L, b_tCsI_L, 16)!=1){return 0;}
+
+if (s::runNo==0)
+{
+	if (maynard->params_loader("csi_r_0ec.clb", a_CsI_R, b_CsI_R, 16)!=1){return 0;}
+	if (maynard->params_loader("csi_l_0ec.clb", a_CsI_L, b_CsI_L, 16)!=1){return 0;}
+
+}
+
+if (maynard->params_loader("csi_r_ec.clb", a_CsI_R, b_CsI_R, 16)!=1){return 0;}
+if (maynard->params_loader("csi_l_ec.clb", a_CsI_L, b_CsI_L, 16)!=1){return 0;}
 
 Long64_t nEntries = inTree->GetEntries();
 counter = 0;
@@ -194,11 +212,11 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	for (int iii=0; iii<4; iii++)
 	{ 
 		out_tF3[iii]=in_tdcF3[iii]*0.125;
-		out_F3[iii]=in_aF3[iii]*0.125;
+		out_F3[iii]=in_aF3[iii];
 		out_tF5[iii]=in_tdcF5[iii]*0.125;
-		out_F5[iii]=in_aF5[iii]*0.125;
+		out_F5[iii]=in_aF5[iii];
 		out_tF6[iii]=in_tdcF6[iii]*0.125;
-		out_F6[iii]=in_aF6[iii]*0.125;
+		out_F6[iii]=in_aF6[iii];
 		out_tMWPC[iii] = in_tMWPC[iii]/3.4133;
 	}
 
@@ -210,10 +228,10 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		out_CsI_R[iii]=(in_CsI_R[iii]+gRandom->Uniform())*b_CsI_R[iii]+a_CsI_R[iii];
 		out_CsI_L[iii]=(in_CsI_L[iii]+gRandom->Uniform())*b_CsI_L[iii]+a_CsI_L[iii];
 
-		out_tSQY_L[iii]=in_tSQY_L[iii]+gRandom->Uniform();
-		out_tSQY_R[iii]=in_tSQY_R[iii]+gRandom->Uniform();
-		out_tCsI_R[iii]=in_tCsI_R[iii]+gRandom->Uniform();
-		out_tCsI_L[iii]=in_tCsI_L[iii]+gRandom->Uniform();
+		out_tSQY_L[iii]=(in_tSQY_L[iii]+gRandom->Uniform())*b_tSQY_L[iii]+a_tSQY_L[iii];
+		out_tSQY_R[iii]=(in_tSQY_R[iii]+gRandom->Uniform())*b_tSQY_R[iii]+a_tSQY_R[iii];
+		out_tCsI_R[iii]=(in_tCsI_R[iii]+gRandom->Uniform())*b_tCsI_R[iii]+a_tCsI_R[iii];
+		out_tCsI_L[iii]=(in_tCsI_L[iii]+gRandom->Uniform())*b_tCsI_L[iii]+a_tCsI_L[iii];
 
 		r_SQY_L[iii]=in_SQY_L[iii];
 		r_SQY_R[iii]=in_SQY_R[iii];
@@ -229,8 +247,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		out_y2[iii]=in_y2[iii];
 		out_SQX_L[iii]=(in_SQX_L[iii]+gRandom->Uniform())*b_SQX_L[iii]+a_SQX_L[iii];
 		out_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
-		out_tSQX_R[iii]=in_tSQX_R[iii]+gRandom->Uniform();
-		out_tSQX_L[iii]=in_tSQX_L[iii]+gRandom->Uniform();
+		out_tSQX_R[iii]=(in_tSQX_R[iii]+gRandom->Uniform())*b_tSQX_R[iii]+a_tSQX_R[iii];
+		out_tSQX_L[iii]=(in_tSQX_L[iii]+gRandom->Uniform())*b_tSQX_L[iii]+a_tSQX_L[iii];
 		r_SQX_L[iii]=in_SQX_L[iii];
 		r_SQX_R[iii]=in_SQX_R[iii];
 	}
@@ -243,7 +261,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		(maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, s::MWPC_1_X_id)*
 		maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, s::MWPC_1_Y_id)*
 		maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, s::MWPC_2_X_id)*
-		maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, s::MWPC_2_Y_id))/* &&
+		maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, s::MWPC_2_Y_id))
+		&& in_aF5[0]>0/* &&
 
 
 		(in_tdcF5[0]-in_tdcF3[0])>630 && (in_tdcF5[0]-in_tdcF3[0])<740 &&
@@ -288,27 +307,57 @@ outF->Write();
 
 void calibrate_tree()
 {
-	gSystem->cd(s::CsI_dir.Data());
-	TSystemDirectory *dir_data = new TSystemDirectory("data", s::CsI_dir.Data());
+	TString dir_current;
+	switch (s::runNo)
+	{
+		case 0:
+			dir_current = s::dir_CsI;
+			wrk(s::s_inFname.Data(), dir_current);
+			return 1;
+			break;
+
+		case 1:
+			dir_current = s::dir_runs.Copy().Append("/geo1").Data();
+			break;
+
+		case 2:
+			dir_current = s::dir_runs.Copy().Append("/geo2").Data();
+			break;
+
+		case 3:
+			dir_current = s::dir_runs.Copy().Append("/geo3").Data();
+			break;
+
+		case 4:
+			dir_current = s::dir_runs.Copy().Append("/geo4").Data();
+			break;
+
+		default:
+			printf("\nError: WTF amigo\n");
+			return 0;
+			break;
+	}
+
+	gSystem->cd(dir_current.Data());
+	TSystemDirectory *dir_data = new TSystemDirectory("data", dir_current.Data());
+
 	TIter bluster(dir_data->GetListOfFiles());
 	while (TObject *obj = bluster())
 	{
 		TString inFname = obj->GetName();
-		if (inFname.Contains("run02")/* && !inFname.Contains("cal_")*/)
-		{
+		//if (inFname.Contains("run00")/* && !inFname.Contains("cal_")*/)
+		//{
 			printf("%s\n",inFname.Data());
-		}
+		//}
 	}
 	TIter next(dir_data->GetListOfFiles());
 	while (TObject *obj = next())
 	{
 		TString str_name = obj->GetName();
-		if (str_name.Contains("run02")/* && !str_name.Contains("cal_")*/)
+		if (str_name.Contains("run19") && !str_name.Contains("_"))
 		{
-			wrk(obj->GetName());
-			printf("Loool: %s\n",str_name.Data());
+			wrk(obj->GetName(), dir_current);
 		}
-		//printf("TEXACO\n");
 
 		
 	}

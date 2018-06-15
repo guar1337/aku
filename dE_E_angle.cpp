@@ -9,10 +9,11 @@ dE_E_angle::dE_E_angle()
 	create_output_tree(NULL);
 }
 
-dE_E_angle::dE_E_angle(TTree *inT, TTree *outT)
+dE_E_angle::dE_E_angle(TTree *inT, TTree *outT, TString inFile)
 {
 	create_input_tree(inT);
 	create_output_tree(outT);
+	s_curFile = inFile;
 
 	int s_Nel=1;
 	si_A[0]=28;
@@ -93,9 +94,10 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	
 	LV_6He = new TLorentzVector();
 	LV_2H = new TLorentzVector();
-	LV_Tar = new TLorentzVector();
+	LV_tar_1H = new TLorentzVector();
+	LV_tar_2H = new TLorentzVector();
 	LV_beam = new TLorentzVector();
-	LV_draw = new TLorentzVector();
+
 	
 	outTree->SetMakeClass(1);
 	outTree->Branch("SQX_L_m",	 &SQX_L_mult,	"SQX_L_m/S");
@@ -131,7 +133,18 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("sqlde",		&sqlde,		 "sqlde/D");
 	outTree->Branch("sqletot",	&sqletot,	 "sqletot/D");
 	outTree->Branch("sqlang",	&sqlang,	 "sqlang/D");
-	outTree->Branch("sqltime",	&sqltime,	 "sqltime/D");
+	outTree->Branch("sqlxtime",	&sqlxtime,	 "sqlxtime/D");
+	outTree->Branch("sqlytime",	&sqlytime,	 "sqlytime/D");
+
+
+	outTree->Branch("sqrtheta",	 &sqrtheta,	"sqrtheta/D");
+	outTree->Branch("sqrtheta2",	 &sqrtheta2,	"sqrtheta2/D");
+	outTree->Branch("sqrphi",	 &sqrphi,		"sqrphi/D");
+	outTree->Branch("sqrde",		&sqrde,		 "sqrde/D");
+	outTree->Branch("sqretot",	&sqretot,	 "sqretot/D");
+	outTree->Branch("sqrang",	&sqrang,	 "sqrang/D");
+	outTree->Branch("sqrxtime",	&sqrxtime,	 "sqrxtime/D");
+	outTree->Branch("sqrytime",	&sqrytime,	 "sqrytime/D");
 
 	outTree->Branch("s_csir",	 &memS_CsI_R,	"s_csir/S");
 	outTree->Branch("s_csil",	 &memS_CsI_L,	"s_csil/S");
@@ -140,7 +153,8 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("ry",	&ry,	 "ry/F");
 	outTree->Branch("ry",	&ry,	 "ry/F");
 
-	outTree->Branch("ene_draw", &ene_draw, "ene_draw/F");
+	outTree->Branch("kine_1H", &kine_1H, "kine_1H/F");
+	outTree->Branch("kine_2H", &kine_2H, "kine_2H/F");
 	outTree->Branch("t_2H", &t_2H, "t_2H/F");
 	outTree->Branch("t_6He", &t_6He, "t_6He/F");
 
@@ -159,17 +173,6 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("evX",	&evX,	 "evX/F");
 	outTree->Branch("evY",	&evY,	 "evY/F");
 	outTree->Branch("evZ",	&evZ,	 "evZ/F");
-	outTree->Branch("mwpc",	&mwpc,	 "mwpc/B");
-	outTree->Branch("ms",	&ms,	 "ms/B");
-	outTree->Branch("tar",	&tar,	 "tar/B");
-
-	outTree->Branch("sqrtheta",	 &sqrtheta,	"sqrtheta/D");
-	outTree->Branch("sqrtheta2",	 &sqrtheta2,	"sqrtheta2/D");
-	outTree->Branch("sqrphi",	 &sqrphi,		"sqrphi/D");
-	outTree->Branch("sqrde",		&sqrde,		 "sqrde/D");
-	outTree->Branch("sqretot",	&sqretot,	 "sqretot/D");
-	outTree->Branch("sqrang",	&sqrang,	 "sqrang/D");
-	outTree->Branch("sqrtime",	&sqrtime,	 "sqrtime/D");
 
 	outTree->Branch("dist_tar_det",	&dist_tar_det,	 "dist_tar_det/F");
 
@@ -199,7 +202,7 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("ny1",	&out_ny1,	"ny1/s");
 	outTree->Branch("ny2",	&out_ny2,	"ny2/s");
 
-		outTree->Branch("trigger",	&out_trigger,	"trigger/S");
+	outTree->Branch("trigger",	&out_trigger,	"trigger/S");
 	outTree->Branch("missMass",	 &missMass,	"missMass/D");
 
 	outTree->Branch("c_SQX_L",	 c_SQX_L,	 "c_SQX_L[32]/D");
@@ -218,8 +221,12 @@ bool dE_E_angle::create_output_tree(TTree *out)
 
 	outTree->Bronch("LV_6He.",		"TLorentzVector",	&LV_6He);
 	outTree->Bronch("LV_2H.",		"TLorentzVector",	&LV_2H);
-	outTree->Bronch("LV_Tar.",	"TLorentzVector",	&LV_Tar);
 	outTree->Bronch("LV_beam.",	"TLorentzVector",	&LV_beam);
+
+	outTree->Branch("mwpc",	&mwpc,	 "mwpc/B");
+	outTree->Branch("ms",	&ms,	 "ms/B");
+	outTree->Branch("tar",	&tar,	 "tar/B");
+	outTree->Branch("the6",	&the6,	 "the6/B");
 	return true;
 }
 
@@ -227,16 +234,16 @@ bool dE_E_angle::actual_work()
 {
 	Long64_t nEntries = inTree->GetEntries();
 	maynard->initializeGeometry(&SQR_ang, &SQL_ang, &SQR_dist, &SQL_dist, &tar_angle);
+	maynard->getTarCuts(&tar_cut_lo_X, &tar_cut_hi_X, &tar_cut_lo_Y, &tar_cut_hi_Y);
+	maynard->getTimeCorrectionForDets(	&tcor_sqLX_I, &tcor_sqLX_II, &tcor_sqRX_I,
+										&tcor_sqRX_II, &tcor_sqLY, &tcor_sqRY);
 
 	printf("##############################################################################\n");
-	printf("#	Loaded file %s has %lli entries. \n#	Processing...\n", s::inFname.Data(), nEntries);
+	printf("#	Loaded file %s has %lli entries. \n#	Processing...\n", s_curFile.Data(), nEntries);
 
-	TVector3 zx(0.0,1.0,0.0);
-	TVector3 v_beam(0.0,0.0,1.0);
-	TVector3 v_tar(0.0, 0.0, 0.0);
+	TVector3 zx(0.0,1.0,0.0), v_beam(0.0,0.0,1.0), v_tar(0.0, 0.0, 0.0);
 	TRandom3 *rnd = new TRandom3();
-	LV_Tar->SetVectM(v_tar,s::mass_2H);
-	LV_draw->SetVectM(v_tar,s::mass_1H);
+
 	counter = 0;
 for (Long64_t entry=0; entry<nEntries; entry++)
 	{
@@ -248,8 +255,10 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			counter++;
 		}
 	//NULLing everything
-		memE_CsI_R=0.0; memE_CsI_R=0.0; memS_CsI_R=20; memS_CsI_R=20;
-		dist_tar_det = 0.0;
+		LV_tar_2H->SetVectM(v_tar,s::mass_2H);
+		LV_tar_1H->SetVectM(v_tar,s::mass_1H);
+		memE_CsI_R=0.0; memE_CsI_L=0.0; memS_CsI_R=20; memS_CsI_L=20;
+		dist_tar_det = 0.0, kine_2H=0.0, kine_1H=0.0;
 		evX=0.0;evY=0.0;evZ=0.0;
 		mwpc=false; ms=false; tar=false;
 
@@ -275,6 +284,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	out_ny2=in_ny2;
 	out_trigger=in_trigger;
 	out_tof = in_tof;
+
+	
 	//MWPC, ToF total energy loss is equal to 347.15 mkm of Si
 	in_tof>0.0 ? T = maynard->getT(in_tof, s::mass_6He) : T=0.0; 
 	//out_T = Si_Ecalc->GetE(T, 347.15);
@@ -311,9 +322,9 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 		if (in_tCsI_R[iii]>s::tc_CsI_R)
 		{
-			if (memE_CsI_R<r_CsI_R[iii])
+			if (memE_CsI_R<CsI_R[iii])
 			{
-				memE_CsI_R = r_CsI_R[iii];
+				memE_CsI_R = CsI_R[iii];
 				memS_CsI_R = iii;
 			}
 
@@ -324,9 +335,9 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 		if (in_tCsI_L[iii]>s::tc_CsI_L)
 		{
-			if (memE_CsI_L<r_CsI_L[iii])
+			if (memE_CsI_L<CsI_L[iii])
 			{
-				memE_CsI_L = r_CsI_L[iii];
+				memE_CsI_L = CsI_L[iii];
 				memS_CsI_L = iii;
 			}
 			CsI_L_mult++;
@@ -401,14 +412,17 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		dZ=MWPC_2_Z-MWPC_1_Z;
 		
 		v_beam.SetXYZ(dX,dY,dZ);
+
 		//rotation matrix that will convert 2H or 6He particle so that they will see beam as Z axis
 		beam_setting_array.SetZAxis(v_beam.Unit(),zx);
 		beam_setting_array.Invert();
 
 		//v_beam.Transform(beam_setting_array);
-		ene_beam = s::mass_6He + out_T;
+		ene_beam = s::mass_6He + T;
 		mom_beam = sqrt(ene_beam*ene_beam - s::mass_6He*s::mass_6He);
+
 		v_beam.SetMag(mom_beam);
+		//printf("Wat wat wat%f\n",v_beam.Mag());	
 		
 		LV_beam->SetVectM(v_beam, s::mass_6He);
 		Tcoef=(cos(tar_angle)*s::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
@@ -417,7 +431,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		evX = MWPC_1_X + dX*Tcoef;
 		evY = MWPC_1_Y + dY*Tcoef;
 		evZ = MWPC_1_Z + dZ*Tcoef;
-		if (evZ>-12.0 && evZ<10 && evX>-12.0 && evX<20)
+		if (evX > tar_cut_lo_X && evX < tar_cut_hi_X	&&
+			evY > tar_cut_lo_Y && evY < tar_cut_lo_Y	)
 		{
 			tar=true;
 		}
@@ -426,11 +441,19 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	//SQL energy - deuterium
 	if (SQX_L_mult*SQY_L_mult==1 && mwpc)
 	{
-		//printf("\n\n# Entry No: %i %%\n", entry);
 		sqlde=SQX_L_Edep[1];
 		sqletot=memE_CsI_L;
-		//CsI_L[  (SQY_L_strip[1]/4)*4  +  (3-SQX_L_strip[1]/8)];
-		sqltime=out_tSQX_L[SQX_L_strip[1]];
+		if (SQX_L_strip[1]<16)
+		{
+			sqlxtime=out_tSQX_L[SQX_L_strip[1]]-tcor_sqLX_I/sqlde;
+		}
+		else if (SQX_L_strip[1]>15)
+		{
+			sqlxtime=out_tSQX_L[SQX_L_strip[1]]-tcor_sqLX_II/sqlde;
+		}
+		else
+		return 0;
+		sqlytime=out_tSQY_L[SQY_L_strip[1]]-tcor_sqLY/sqlde;
 
 		// coordinates of hit in LAB system
 		X2H_lab = SQL_dist*sin(SQL_ang) + s::SQL_start_X * cos(SQL_ang);
@@ -456,31 +479,51 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 
 		LV_2H->SetVectM(vect2H, s::mass_2H);
-		*LV_6He = *LV_Tar + *LV_beam - *LV_2H;
+		*LV_6He = *LV_tar_2H + *LV_beam - *LV_2H;
 		missMass = LV_6He->M() - s::mass_6He;
 
 		//setting LAB angles of scattered deuterium - reference is beam vector
-		vect2H.Transform(beam_setting_array);
+		//vect2H.Transform(beam_setting_array);
 		sqlphi=vect2H.Phi()*s::rad_to_deg;
 		sqltheta=vect2H.Theta()*s::rad_to_deg;
+		sqlang = vect2H.Angle(v_beam)*s::rad_to_deg;
 
+		TLorentzVector LV_dummy(*LV_2H);
+		LV_dummy.Transform(beam_setting_array);
 
-		TVector3 vectBoost((*LV_beam + *LV_draw).BoostVector());
-		LV_draw->Boost(-vectBoost);
-		LV_draw->SetTheta((TMath::Pi()-vect2H.Theta())*2.0);
-		LV_draw->Boost(vectBoost);
-		ene_draw = LV_draw->E() - s::mass_1H;
-		LV_draw->SetVectM(v_tar,s::mass_1H);
-	}
+		//proton kinematics
+		TVector3 vectBoost_1H((*LV_beam + *LV_tar_1H).BoostVector());
+		LV_tar_1H->Boost(-vectBoost_1H);
+		LV_tar_1H->SetTheta((TMath::Pi()-LV_dummy.Theta())*2.0);
+		LV_tar_1H->Boost(vectBoost_1H);
+		kine_1H = LV_tar_1H->E() - s::mass_1H;
+
+		//deuterium kinematics
+		TVector3 vectBoost_2H((*LV_beam + *LV_tar_2H).BoostVector());
+		LV_tar_2H->Boost(-vectBoost_2H);
+		LV_tar_2H->SetTheta((TMath::Pi()-LV_dummy.Theta())*2.0);
+		LV_tar_2H->Boost(vectBoost_2H);
+		kine_2H = LV_tar_2H->E() - s::mass_2H;
+
+		}
 
 	//SQR energy - helium
 	if(SQX_R_mult*SQY_R_mult==1 && mwpc)
 	{		
 		sqrde=SQY_R_Edep[1];
 		sqretot=memE_CsI_R;
-		//CsI_R[    4*(SQY_R_strip[1]/4)+   ((SQX_R_strip[1]/8))    ];
-		sqrtime=out_tCsI_R[SQX_R_strip[1]];
-		
+
+		if (SQX_R_strip[1]<16)
+		{
+			sqrxtime=out_tSQX_R[SQX_R_strip[1]]-tcor_sqRX_I/sqrde;
+		}
+		else if (SQX_R_strip[1]>15)
+		{
+			sqrxtime=out_tSQX_R[SQX_R_strip[1]]-tcor_sqRX_II/sqrde;
+		}
+		else
+		return 0;
+		sqrytime=out_tSQY_R[SQY_R_strip[1]]-tcor_sqRY/sqrde;
 
 		// coordinates of hit in LAB system
 		X6He_lab = SQR_dist*(-sin(SQR_ang)) + s::SQR_start_X * cos(SQR_ang);
@@ -500,16 +543,21 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		dist_tar_det6He = vect6He.Mag();
 		t_6He = t_Tar + maynard->gettime(sqrde+sqretot, s::mass_6He, dist_tar_det6He);
 		//setting LAB angles of scattered 6 He - reference is beam vector
-		vect6He=beam_setting_array*vect6He;
+		//vect6He=beam_setting_array*vect6He;
 		sqrtheta=vect6He.Theta()*s::rad_to_deg;
 		sqrphi=vect6He.Phi()*s::rad_to_deg;
+		sqrang = vect6He.Angle(v_beam)*s::rad_to_deg;
+	}
+	if (in_tof>160 && in_tof<175 && in_F5[0]>600 && in_F5[0]<1500)
+	{
+		the6=true;
 	}
 
 	outTree->Fill();
 
 
 }
-TString outFname(s::inFname.Copy().ReplaceAll("cal_","dE_").Data());
+TString outFname(s_curFile.Copy().ReplaceAll("cal_","dE_").Data());
 printf("#	Creating file: %s with tree named \"dE_E\" \n",outFname.Data());
 return 1;
 }

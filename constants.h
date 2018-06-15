@@ -32,6 +32,26 @@ namespace s
 	static const float		tar_ang_s4		=	32.0	* (3.1415/180.0);
 	static const float		tar_pos_Z		=	0.0;
 
+	static const float		tar_gcut_low_X_1	=	-13.0;
+	static const float		tar_gcut_high_X_1	=	18.0;
+	static const float		tar_gcut_low_Y_1	=	-14.0;
+	static const float		tar_gcut_high_Y_1	=	17.0;
+
+	static const float		tar_gcut_low_X_2	=	-20.0;
+	static const float		tar_gcut_high_X_2	=	21.0;
+	static const float		tar_gcut_low_Y_2	=	-16.0;
+	static const float		tar_gcut_high_Y_2	=	20.0;
+
+	static const float		tar_gcut_low_X_3	=	0.0;
+	static const float		tar_gcut_high_X_3	=	0.0;
+	static const float		tar_gcut_low_Y_3	=	0.0;
+	static const float		tar_gcut_high_Y_3	=	0.0;
+
+	static const float		tar_gcut_low_X_4	=	-17.5;
+	static const float		tar_gcut_high_X_4	=	22.0;
+	static const float		tar_gcut_low_Y_4	=	-16.0;
+	static const float		tar_gcut_high_Y_4	=	20.0;
+
 	//*************************DETS geometry**********************************************
 	static const float		sql_dist_s0	=	170.0;
 	static const float		sqr_dist_s0	=	300.0;
@@ -76,12 +96,49 @@ namespace s
 	//DETS DISPLACEMENT - MADE FOR SQR dist = 250. Same for 300? Prolly
 
 	//************************* CUTS FOR FOR 0-2*******************************************
-	static const float		tc_SQX_L	=	500.0;
-	static const float		tc_SQX_R	=	500.0;
-	static const float		tc_SQY_L	=	900.0;
-	static const float		tc_SQY_R	=	900.0;
+	static const float		tc_SQX_L	=	200.0;
+	static const float		tc_SQX_R	=	200.0;
+	static const float		tc_SQY_L	=	200.0;
+	static const float		tc_SQY_R	=	200.0;
 	static const float		tc_CsI_L	=	1500.0;
 	static const float		tc_CsI_R	=	1500.0;
+	static const float		gc_CsI_R	=	1500.0;
+	//************************* dets time correction *******************************************
+	// 1st geo
+	static const float		tcor_sqLX_I_1	=	120.0;
+	static const float		tcor_sqLX_II_1	=	0.0;
+	static const float		tcor_sqRX_I_1	=	400.0;
+	static const float		tcor_sqRX_II_1	=	0.0;
+
+	static const float		tcor_sqLY_1	=	120.0;
+	static const float		tcor_sqRY_1	=	400.0;
+
+	//	2nd geo
+	static const float		tcor_sqLX_I_2	=	150.0;
+	static const float		tcor_sqLX_II_2	=	0.0;
+	static const float		tcor_sqRX_I_2	=	450.0;
+	static const float		tcor_sqRX_II_2	=	0.0;
+
+	static const float		tcor_sqLY_2	=	150.0;
+	static const float		tcor_sqRY_2	=	450.0;
+
+	//	3rd geo
+	static const float		tcor_sqLX_I_3	=	0.0;
+	static const float		tcor_sqLX_II_3	=	0.0;
+	static const float		tcor_sqRX_I_3	=	0.0;
+	static const float		tcor_sqRX_II_3	=	0.0;
+
+	static const float		tcor_sqLY_3	=	350.0;
+	static const float		tcor_sqRY_3	=	400.0;
+
+	//4th geo
+	static const float		tcor_sqLX_I_4	=	90.0;
+	static const float		tcor_sqLX_II_4	=	10.0;
+	static const float		tcor_sqRX_I_4	=	100.0;
+	static const float		tcor_sqRX_II_4	=	0.0;
+
+	static const float		tcor_sqLY_4	=	100.0;
+	static const float		tcor_sqRY_4	=	400.0;
 
 	//*************************MWPC******************************************************
 	static const float		MWPC1_X_displacement	=	-1.0;
@@ -112,16 +169,16 @@ namespace s
 	static const float		dist_Tar_to_F5	=	953.0;
 	static const float		tof_const	=	89.165;
 
-	static const TString 	runs_dir("/home/guar/data/mar2018/rawroot");
-	static const TString 	CsI_dir("/home/guar/data/mar2018/miscroot/CsI");
-	static const TString 	params_dir("/home/guar/data/mar2018/calib/params/");	
-	static const TString 	inFname("cal_csi00_0002");
-	static const TString	playground("/home/guar/data/tools/");
+	static const TString 	dir_runs("/home/guar/data/mar2018/raw");
+	static const TString 	dir_CsI("/home/guar/data/mar2018/miscroot/CsI");
+	static const TString 	dir_params("/home/guar/data/mar2018/calib/params/");	
+	static const TString 	s_inFname("run00");
+	static const TString	s_playground("/home/guar/data/tools/");
 
-	static const TString	len_data("/home/guar/data/");
-	static const TString	len_calib("/home/guar/aku/calib_files/");
+	static const TString	dir_len_data("/home/guar/data/");
+	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
 
 
-	static const int		runNo=	0;	
+	static const int		runNo=	1;	
 }
 #endif

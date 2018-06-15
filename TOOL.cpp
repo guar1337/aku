@@ -16,11 +16,11 @@ void TOOL::printSetup(	Double_t sqr_ang, Double_t sql_ang,
 			"Left telescope distance from target = %i mm\n"
 			"Target at %i deg\n"
 			"*****************************************\n",
-			static_cast<int>(sqr_ang*s::rad_to_deg),
-			static_cast<int>(sql_ang*s::rad_to_deg),
-			static_cast<int>(sqr_dist),
-			static_cast<int>(sql_dist),
-			static_cast<int>(tar_angle*s::rad_to_deg));
+			static_cast<int>(round(sqr_ang*s::rad_to_deg)),
+			static_cast<int>(round(sql_ang*s::rad_to_deg)),
+			static_cast<int>(round(sqr_dist)),
+			static_cast<int>(round(sql_dist)),
+			static_cast<int>(round(tar_angle*s::rad_to_deg)));
 }
 
 
@@ -99,41 +99,22 @@ bool TOOL::Get_MWPC_pos(UShort_t multi, UShort_t *wireNo,
 			//
 			if (sizeof_clust==multi)
 			{
-				/*
-				printf("Good job. sizeof: %i\t pos.: %f\n", sizeof_clust, static_cast<float>(wireNo[0]+wireNo[multi-1])/2);
-				for (int jjj = 0; jjj < multi; jjj++)
-				{					
-					printf("wireNo[%i]: %i\n", jjj, wireNo[jjj]);
+				if (MWPC_id == 0 || MWPC_id == 2)
+				{
+					*MWPC_pos = zero_position + displacement -
+					((wireNo[0]+wireNo[multi-1])/2)*1.25;
 				}
-				*/
-			if (MWPC_id == 0 || MWPC_id == 2)
-			{
-				*MWPC_pos = zero_position + displacement -
-				((wireNo[0]+wireNo[multi-1])/2)*1.25;
-			}
 
-			else
-			{
-				*MWPC_pos = zero_position + displacement +
-				((wireNo[0]+wireNo[multi-1])/2)*1.25;
-			}
+				else
+				{
+					*MWPC_pos = zero_position + displacement +
+					((wireNo[0]+wireNo[multi-1])/2)*1.25;
+				}
 				return 1;
 
 			}
 			else if (sizeof_clust<multi)
 			{
-				/*
-				printf("\n\nNEWGAME\n");
-				printf("Two clusters? sizeof: %i\t mult.: %i\n", sizeof_clust, multi);
-				if (multi==2)
-				{
-					printf("***************AWESOME!*************************\n");
-				}
-				for (int jjj = 0; jjj < multi; jjj++)
-				{
-					printf("wireNo"[%i]: %i\n", jjj, wireNo[jjj]);
-				}
-				*/
 				return 0;
 			}
 		}
@@ -244,6 +225,149 @@ bool TOOL::initializeGeometry(	Double_t *sqr_ang, Double_t *sql_ang,
 	}
 }
 
+bool TOOL::getTarCuts(	Float_t *tar_cut_lo_X, Float_t *tar_cut_hi_X,
+						Float_t *tar_cut_lo_Y, Float_t *tar_cut_hi_Y) 
+{
+	printf("\n*****************************************");
+	//Read detectors geometry parameters depending on run
+	switch (s::runNo)
+	{
+		case 7:
+		printf("\nLoaded geometrical cuts on target for geometry 7:\n");
+		return 1;
+		break;
+
+		case 9:
+		printf("\nLoaded geometrical cuts on target for geometry 9:\n");
+		return 1;
+		break;
+
+		case 1:
+		printf("\nLoaded geometrical cuts on target for geometry 1:\n");
+		*tar_cut_lo_X=s::tar_gcut_low_X_1;
+		*tar_cut_hi_X=s::tar_gcut_high_X_1;
+		
+		*tar_cut_lo_Y=s::tar_gcut_low_Y_1;
+		*tar_cut_hi_Y=s::tar_gcut_high_Y_1;
+		return 1;
+		break;
+
+		case 2:
+		printf("\nLoaded geometrical cuts on target for geometry 2:\n");
+		*tar_cut_lo_X=s::tar_gcut_low_X_2;
+		*tar_cut_hi_X=s::tar_gcut_high_X_2;
+		
+		*tar_cut_lo_Y=s::tar_gcut_low_Y_2;
+		*tar_cut_hi_Y=s::tar_gcut_high_Y_2;
+		return 1;
+		break;
+
+		case 3:
+		printf("\nLoaded geometrical cuts on target for geometry 3:\n");
+		*tar_cut_lo_X=s::tar_gcut_low_X_3;
+		*tar_cut_hi_X=s::tar_gcut_high_X_3;
+		
+		*tar_cut_lo_Y=s::tar_gcut_low_Y_3;
+		*tar_cut_hi_Y=s::tar_gcut_high_Y_3;
+		return 1;
+		break;
+
+		case 4:
+		printf("\nLoaded geometrical cuts on target for geometry 4:\n");
+		*tar_cut_lo_X=s::tar_gcut_low_X_4;
+		*tar_cut_hi_X=s::tar_gcut_high_X_4;
+		
+		*tar_cut_lo_Y=s::tar_gcut_low_Y_4;
+		*tar_cut_hi_Y=s::tar_gcut_high_Y_4;
+		return 1;
+		break;
+
+		case 0:
+		printf("\nLoaded geometrical cuts on target for geometry 0:\n");
+		return 1;
+		break;
+
+		default:
+		printf("\n#getTarCuts_Error: Wrong geometry\n");
+		return 0;
+		break;
+	}
+}
+
+bool TOOL::getTimeCorrectionForDets(Float_t *tcor_sqLX_I, Float_t *tcor_sqLX_II,
+									Float_t *tcor_sqRX_I, Float_t *tcor_sqRX_II,
+									Float_t *tcor_sqLY, Float_t *tcor_sqRY ) 
+{
+	printf("\n*****************************************");
+	//Read detectors geometry parameters depending on run
+	switch (s::runNo)
+	{
+		case 7:
+		printf("\nLoaded Si detectors time corrections for geometry 7...\n");
+		return 1;
+		break;
+
+		case 9:
+		printf("\nLoaded Si detectors time corrections for geometry 9...\n");
+		return 1;
+		break;
+
+		case 1:
+		printf("\nLoaded Si detectors time corrections for geometry 1...\n");
+		*tcor_sqLX_I	= s::tcor_sqLX_I_1;
+		*tcor_sqLX_II	= s::tcor_sqLX_II_1;
+		*tcor_sqRX_I	= s::tcor_sqRX_I_1;
+		*tcor_sqRX_II	= s::tcor_sqRX_II_1;
+		*tcor_sqLY		= s::tcor_sqLY_1;
+		*tcor_sqRY		= s::tcor_sqRY_1;
+		return 1;
+		break;
+
+		case 2:
+		printf("\nLoaded Si detectors time corrections for geometry 2...\n");
+		*tcor_sqLX_I	= s::tcor_sqLX_I_2;
+		*tcor_sqLX_II	= s::tcor_sqLX_II_2;
+		*tcor_sqRX_I	= s::tcor_sqRX_I_2;
+		*tcor_sqRX_II	= s::tcor_sqRX_II_2;
+		*tcor_sqLY		= s::tcor_sqLY_2;
+		*tcor_sqRY		= s::tcor_sqRY_2;
+		return 1;
+		break;
+
+		case 3:
+		printf("\nLoaded Si detectors time corrections for geometry 3...\n");
+		*tcor_sqLX_I	= s::tcor_sqLX_I_3;
+		*tcor_sqLX_II	= s::tcor_sqLX_II_3;
+		*tcor_sqRX_I	= s::tcor_sqRX_I_3;
+		*tcor_sqRX_II	= s::tcor_sqRX_II_3;
+		*tcor_sqLY		= s::tcor_sqLY_3;
+		*tcor_sqRY		= s::tcor_sqRY_3;
+		return 1;
+		break;
+
+		case 4:
+		printf("\nLoaded Si detectors time corrections for geometry 4...\n");
+		*tcor_sqLX_I	= s::tcor_sqLX_I_4;
+		*tcor_sqLX_II	= s::tcor_sqLX_II_4;
+		*tcor_sqRX_I	= s::tcor_sqRX_I_4;
+		*tcor_sqRX_II	= s::tcor_sqRX_II_4;
+		*tcor_sqLY		= s::tcor_sqLY_4;
+		*tcor_sqRY		= s::tcor_sqRY_4;
+		return 1;
+		break;
+
+		case 0:
+		printf("\nLoaded Si detectors time corrections for geometry 0...n");
+		return 1;
+		break;
+
+		default:
+		printf("\n#getTimeCorrectionForDets_Error: Wrong geometry\n");
+		return 0;
+		break;
+	}
+}
+
 bool TOOL::getDeadLayer(TString inFileName, TString leafName,
 						double *alpha_energies, Short_t chnlNo)
 {
@@ -251,12 +375,12 @@ bool TOOL::getDeadLayer(TString inFileName, TString leafName,
 	chnlNo--;
 
 
-	gSystem->cd(s::playground.Data());
+	gSystem->cd(s::s_playground.Data());
 	TFile *inF= new TFile((inFileName.Data()), "READ");
 	TTree *inTree = (TTree*)inF->Get("AnalysisxTree");
 
 
-	TF1 *linFit_Func = new TF1("linFit", "pol1", 0.0, 10.0);
+	//TF1 *linFit_Func = new TF1("linFit", "pol1", 0.0, 10.0);
 	TH1I *raw_Si_spec = new TH1I("name", "title", 4096, 0, 4095);
 	for (int iii = 0; iii <= chnlNo; iii++)
 	{
@@ -299,13 +423,13 @@ void TOOL::null_energy( Double_t *SQX_L, Double_t *SQY_L, Double_t *CsI_L,
 
 bool TOOL::params_loader(TString fname, float *AConst, float *BConst, short chNo)
 {
-	ifstream plik(fname.Copy().Prepend(s::params_dir.Data()).Data());
+	ifstream plik(fname.Copy().Prepend(s::dir_params.Data()).Data());
 	string dummy;
 	float CConst;
 
 	if (!plik) 
 	{
-		printf ("#Cannot open %s coefficient file\n",fname.Copy().Prepend(s::params_dir.Data()).Data());
+		printf ("#Cannot open %s coefficient file\n",fname.Copy().Prepend(s::dir_params.Data()).Data());
 		return 0;
 	}
 

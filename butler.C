@@ -14,9 +14,40 @@ R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
 void butler()
 {
 
-gSystem->cd(s::CsI_dir.Data());
-TSystemDirectory *dir_data = new TSystemDirectory("data", s::CsI_dir.Data());
-printf("Entering directory: %s\nLooping over following files:\n",s::CsI_dir.Data());
+	TString dir_cur;
+	switch (s::runNo)
+	{
+		case 0:
+			dir_cur = s::dir_CsI;
+			//wrk(s::inFname.Data(), dir_cur);
+			return 1;
+			break;
+
+		case 1:
+			dir_cur = s::dir_runs.Copy().Append("/geo1").Data();
+			break;
+
+		case 2:
+			dir_cur = s::dir_runs.Copy().Append("/geo2").Data();
+			break;
+
+		case 3:
+			dir_cur = s::dir_runs.Copy().Append("/geo3").Data();
+			break;
+
+		case 4:
+			dir_cur = s::dir_runs.Copy().Append("/geo4").Data();
+			break;
+
+		default:
+			printf("\nError: WTF amigo\n");
+			return 0;
+			break;
+	}
+
+gSystem->cd(dir_cur.Data());
+TSystemDirectory *dir_data = new TSystemDirectory("data", dir_cur.Data());
+printf("Entering directory: %s\nLooping over following files:\n",dir_cur.Data());
 TIter bluster(dir_data->GetListOfFiles());
 while (TObject *obj = bluster())
 {
@@ -30,7 +61,7 @@ TIter next(dir_data->GetListOfFiles());
 while (TObject *obj = next())
 {
 	TString inFname = obj->GetName();
-	TString outFname = inFname.Copy().ReplaceAll("cal_", "").Prepend("de_");
+	TString outFname = inFname.Copy().ReplaceAll("cal_", "").Prepend("dE_");
 
 	if (inFname.Contains("cal_")) 
 	{
@@ -43,7 +74,7 @@ while (TObject *obj = next())
 		else {return 0;}
 		TTree *inTree = (TTree*)inF->Get("calibrated");
 		TTree *outTree= new TTree("dE_E","he6");
-		dE_E_angle *Hermes= new dE_E_angle(inTree,outTree);
+		dE_E_angle *Hermes= new dE_E_angle(inTree,outTree, inFname);
 		Hermes->actual_work();
 		inF->Close();
 		outF->cd();
