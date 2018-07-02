@@ -38,6 +38,15 @@ Double_t TOOL::gettime(Double_t T, Float_t mass, Float_t dist)
 	return dist/(beta*s::c);
 }
 
+Double_t TOOL::getVelo(Double_t T, Float_t mass)
+{
+	gamma_squared = pow(T/(mass*mass)+1,2.0);
+
+	beta = sqrt(1-1/gamma_squared);
+	return beta*s::c;
+}
+
+
 bool TOOL::Get_MWPC_pos(UShort_t multi, UShort_t *wireNo,
 						Float_t *MWPC_pos,Short_t MWPC_id)
 {
@@ -294,6 +303,7 @@ bool TOOL::getTarCuts(	Float_t *tar_cut_lo_X, Float_t *tar_cut_hi_X,
 	}
 }
 
+
 bool TOOL::getTimeCorrectionForDets(Float_t *tcor_sqLX_I, Float_t *tcor_sqLX_II,
 									Float_t *tcor_sqRX_I, Float_t *tcor_sqRX_II,
 									Float_t *tcor_sqLY, Float_t *tcor_sqRY ) 
@@ -413,12 +423,12 @@ void TOOL::null_strips(	UShort_t *SQX_L, UShort_t *SQY_L, UShort_t *CsI_L,
 void TOOL::null_energy( Double_t *SQX_L, Double_t *SQY_L, Double_t *CsI_L,
 						Double_t *SQX_R, Double_t *SQY_R, Double_t *CsI_R)
 {
-	fill(SQX_L,SQX_L+32,0.);
-	fill(SQY_L,SQY_L+16,0.);
-	fill(CsI_L,CsI_L+16,0.);
-	fill(SQX_R,SQX_R+32,0.);
-	fill(SQY_R,SQY_R+16,0.);
-	fill(CsI_R,CsI_R+16,0.); 
+	fill(SQX_L,SQX_L+32,0.0);
+	fill(SQY_L,SQY_L+16,0.0);
+	fill(CsI_L,CsI_L+16,0.0);
+	fill(SQX_R,SQX_R+32,0.0);
+	fill(SQY_R,SQY_R+16,0.0);
+	fill(CsI_R,CsI_R+16,0.0); 
 }
 
 bool TOOL::params_loader(TString fname, float *AConst, float *BConst, short chNo)
@@ -433,10 +443,6 @@ bool TOOL::params_loader(TString fname, float *AConst, float *BConst, short chNo
 		return 0;
 	}
 
-	else
-	{
-		printf("*Opening %s calibration file...\n",fname.Data() );
-	}
 	getline(plik, dummy);
 	getline(plik, dummy);
 	for (int iii=0; iii<chNo; iii++)
@@ -446,8 +452,76 @@ bool TOOL::params_loader(TString fname, float *AConst, float *BConst, short chNo
 	}
 
 	plik.close();
-	printf("Finishing %s\n\n",fname.Data() );
 	return 1;
+}
+
+bool TOOL::gcuts_loader(TString fName, TCutG *gcut, TString ion)
+{
+	fName.ReplaceAll("cal_","").ReplaceAll(".root","/");
+	string dummy, dummy2;
+	int points;
+	ifstream plik((s::dir_gcut+fName+ion).Data());
+	//printf("Patrz co kot przyniosl: %s\n",(s::dir_gcut+fName+ion).Data() );
+
+	if (!plik) 
+	{
+		printf ("#Cannot open %s coefficient file\n",(s::dir_gcut+fName+ion).Data());
+		return false;
+	}
+	for (int iii = 0; iii < 4; ++iii)//clean lines before No of points
+	{
+		getline(plik, dummy);
+	}
+
+	getline(plik, dummy, ',');
+	getline(plik, dummy, ')');
+	points = stoi(dummy);//"I am number of points now"
+
+	for (int iii = 0; iii < 5; ++iii)//clean lines after No of points
+	{
+		getline(plik, dummy);
+	}
+
+	for (int iii = 0; iii < points; ++iii)
+	{
+		getline(plik, dummy, '(');
+		getline(plik, dummy, ',');
+		getline(plik, dummy, ',');
+		getline(plik, dummy2, ')');
+		//printf("gcut->SetPoint(%i, %f, %f);\n",iii, stof(dummy), stof(dummy2));
+		gcut->SetPoint(iii, stof(dummy), stof(dummy2));
+
+	}
+
+	plik.close();
+	
+	return true;
+
+}
+
+int TOOL::gcut_noPoints(TString fName, TString ion)
+{
+	fName.ReplaceAll("cal_","").ReplaceAll(".root","/");
+	string dummy, dummy2;
+	int points;
+	ifstream plik((s::dir_gcut+fName+ion).Data());
+	//printf("Patrz co kot przyniosl: %s\n",(s::dir_gcut+fName+ion).Data() );
+
+	if (!plik) 
+	{
+		printf ("#Cannot open %s coefficient file\n",(s::dir_gcut+fName+ion).Data());
+		return 0;
+	}
+	for (int iii = 0; iii < 4; ++iii)//clean lines before No of points
+	{
+		getline(plik, dummy);
+	}
+
+	getline(plik, dummy, ',');
+	getline(plik, dummy, ')');
+	points = stoi(dummy);//"I am number of points now"
+	return points;
+
 }
 
 TOOL::~TOOL()

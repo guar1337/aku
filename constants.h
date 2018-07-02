@@ -30,7 +30,7 @@ namespace s
 	static const float		tar_ang_s2		=	6.0		* (3.1415/180.0);
 	static const float		tar_ang_s3		=	0.0		* (3.1415/180.0);
 	static const float		tar_ang_s4		=	32.0	* (3.1415/180.0);
-	static const float		tar_pos_Z		=	0.0;
+	static const float		tar_pos_Z		=	170.0;
 
 	static const float		tar_gcut_low_X_1	=	-13.0;
 	static const float		tar_gcut_high_X_1	=	18.0;
@@ -159,10 +159,21 @@ namespace s
 	//*************************PHYSICS**************************************************
 	static const float		alpha_from_Ra226[4]{4.415, 5.153, 5.683, 7.419};
 	static const float		rad_to_deg	=	180.0	/ 3.1415927;
+	static const float		deg_to_rad	=	3.1415927/180.0;
+	static const float		PI 			=	3.1415927;
 	static const float		u_to_MeV	=	931.4936;
-	static const float 		mass_2H 	=	1875.61292;
-	static const float 		mass_6He 	=	5606.55667;
-	static const float 		mass_1H 	=	938.782;
+
+	static const float 		mass_1H 	= 1.00782503*u_to_MeV;
+	static const float 		mass_2H 	= 2.01410177*u_to_MeV;
+	static const float 		mass_3H 	= 3.01604927*u_to_MeV;
+	static const float 		mass_4He 	= 4.00260325*u_to_MeV;
+	static const float 		mass_6He 	= 6.01888589*u_to_MeV;
+	static const float 		mass_7Li 	= 7.01600343*u_to_MeV;
+	static const float 		mass_8Li 	= 8.02248624*u_to_MeV;
+	static const float 		mass_9Li 	= 9.02679019*u_to_MeV;
+	static const float 		mass_9Be 	= 9.01218306*u_to_MeV;
+
+
 	static const float		c			=	299.792;	// mm/ns
 	
 	static const float		tofBase			=	12348.0;
@@ -170,15 +181,16 @@ namespace s
 	static const float		tof_const	=	89.165;
 
 	static const TString 	dir_runs("/home/guar/data/mar2018/raw");
-	static const TString 	dir_CsI("/home/guar/data/mar2018/miscroot/CsI");
+	static const TString 	dir_CsI("/home/guar/data/mar2018/miscroot/CsI/parts");
 	static const TString 	dir_params("/home/guar/data/mar2018/calib/params/");	
-	static const TString 	s_inFname("run00");
+	static const TString 	s_inFname("csiL0");
 	static const TString	s_playground("/home/guar/data/tools/");
+	static const TString	dir_gcut("/home/guar/data/mar2018/miscroot/CsI/gcuts/");
 
 	static const TString	dir_len_data("/home/guar/data/");
 	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
 
 
-	static const int		runNo=	1;	
+	static const int		runNo=	0;
 }
 #endif

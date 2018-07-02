@@ -5,209 +5,183 @@ R__LOAD_LIBRARY(libgsl.so);
 R__LOAD_LIBRARY(/home/guar/aku/ELC/libEloss.so);
 R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
 
-
-// voron1392
-
-
-void wrk(TString fname, TString dir_current) 
+void wrk(TString in_fname, TString dir_current) 
 {
-//TTree *inTree;
 
 gSystem->cd(dir_current.Data());
-if (!fname.Contains(".root"))
+if (!in_fname.Contains(".root"))
 {
-	fname.Append(".root");
+	in_fname.Append(".root");
 
 }
-TFile *inF = new TFile(fname.Copy());
+TString out_fname = in_fname.Copy().ReplaceAll("cln","cal");
+TFile *inF = new TFile(in_fname.Copy());
 if (inF->IsZombie())
 {
-	printf("\n#Cannot open file: %s\n", fname.Copy().Prepend("inF: ").Data());
+	printf("\n!!Cannot open file: %s\n", in_fname.Copy().Prepend("inF: ").Data());
 	return 0;
 }
 
 printf("\n*Succesfully opened file %s\n",inF->GetName());
-TFile *outF = new TFile(fname.Copy().Prepend("cal_"),"RECREATE");
+TFile *outF = new TFile(in_fname.Copy().ReplaceAll("cln","cal"),"RECREATE");
 if (outF->IsZombie())
 {
-	printf("#Cannot open file: %s\n", fname.Copy().Prepend("outF: ").Data());
+	printf("!!Cannot open file: %s\n", in_fname.Copy().Prepend("outF: ").Data());
 	return 0;
 }
 printf("*Succesfully opened file %s\n\n",outF->GetName());
 
 
-TTree *inTree = (TTree*)inF->Get("AnalysisxTree");
-TTree *outTree= new TTree("calibrated","he6");
+TTree *inTree = (TTree*)inF->Get("cleaned");
+TTree *outTree= new TTree("calibrated","calibrated");
 
 
 if (inTree->IsZombie())
 {
-	printf("#Cannot open tree: %s\n", fname.Copy().Prepend("inTree: ").Data());
+	printf("!!Cannot open tree: %s\n", in_fname.Copy().Prepend("inTree: ").Data());
 	return 0;
 }
 else {printf("*Succesfully opened tree %s\n",inTree->GetName());}
 
 if (outTree->IsZombie())
 {
-	printf("#Cannot open tree: %s\n", fname.Copy().Prepend("outTree: ").Data());
+	printf("!!Cannot open tree: %s\n", in_fname.Copy().Prepend("outTree: ").Data());
 	return 0;
 }
 else {printf("*Succesfully opened tree %s\n\n",outTree->GetName());}
 
-//inFiles
-
-TOOL *maynard = new TOOL();
-	int s_Nel=1;
-	si_A[0]=28;
-	si_Z[0]=14;
-	si_W[0]=1;
-
-	Si_Ecalc = new ELC(6,2,s_Nel,2.35,
-					 si_A, si_Z, si_W,
-					 1000.,1500);
-
-out_nx1=0;
-out_nx2=0;
-out_ny1=0;
-out_ny2=0;
-out_trigger=0;
-
-in_nx1=0;
-in_nx2=0;
-in_ny1=0;
-in_ny2=0;
-in_trigger=0;
-
-
-//inTree->Print();
-
 //Creating addresses of BEAM holding branches
 inTree->SetMakeClass(1);
-inTree->SetBranchAddress("NeEvent.CsI_L[16]",	    in_CsI_L);
-inTree->SetBranchAddress("NeEvent.CsI_R[16]",	    in_CsI_R);
-inTree->SetBranchAddress("NeEvent.SQX_L[32]",	    in_SQX_L);
-inTree->SetBranchAddress("NeEvent.SQX_R[32]",	    in_SQX_R);
-inTree->SetBranchAddress("NeEvent.SQY_L[16]",	    in_SQY_L);
-inTree->SetBranchAddress("NeEvent.SQY_R[16]",	    in_SQY_R);
+//inTree->Print();
+inTree->SetBranchAddress("CsI_L",	in_CsI_L);
+inTree->SetBranchAddress("CsI_R",	in_CsI_R);
+inTree->SetBranchAddress("SQX_L",	in_SQX_L);
+inTree->SetBranchAddress("SQX_R",	in_SQX_R);
+inTree->SetBranchAddress("SQY_L",	in_SQY_L);
+inTree->SetBranchAddress("SQY_R",	in_SQY_R);
 
-inTree->SetBranchAddress("NeEvent.tSQX_L[32]",       in_tSQX_L);
-inTree->SetBranchAddress("NeEvent.tSQX_R[32]",       in_tSQX_R);
-inTree->SetBranchAddress("NeEvent.tCsI_L[16]",       in_tCsI_L);
-inTree->SetBranchAddress("NeEvent.tCsI_R[16]",       in_tCsI_R);
-inTree->SetBranchAddress("NeEvent.tSQY_L[16]",       in_tSQY_L);
-inTree->SetBranchAddress("NeEvent.tSQY_R[16]",       in_tSQY_R);
+inTree->SetBranchAddress("tSQX_L",	in_tSQX_L);
+inTree->SetBranchAddress("tSQX_R",	in_tSQX_R);
+inTree->SetBranchAddress("tCsI_L",	in_tCsI_L);
+inTree->SetBranchAddress("tCsI_R",	in_tCsI_R);
+inTree->SetBranchAddress("tSQY_L",	in_tSQY_L);
+inTree->SetBranchAddress("tSQY_R",	in_tSQY_R);
 
-inTree->SetBranchAddress("NeEvent.tF3[4]",         in_tdcF3);
-inTree->SetBranchAddress("NeEvent.F3[4]",          in_aF3);
-inTree->SetBranchAddress("NeEvent.tF5[4]",         in_tdcF5);
-inTree->SetBranchAddress("NeEvent.F5[4]",          in_aF5);
-inTree->SetBranchAddress("NeEvent.tF6[4]",         in_tdcF6);
-inTree->SetBranchAddress("NeEvent.F6[4]",          in_aF6);
+inTree->SetBranchAddress("tF3",	in_tdcF3);
+inTree->SetBranchAddress("F3",	in_aF3);
+inTree->SetBranchAddress("tF5",	in_tdcF5);
+inTree->SetBranchAddress("F5",	in_aF5);
+inTree->SetBranchAddress("tF6",	in_tdcF6);
+inTree->SetBranchAddress("F6",	in_aF6);
 
-inTree->SetBranchAddress("NeEvent.nx1",          &in_nx1);
-inTree->SetBranchAddress("NeEvent.ny1",          &in_ny1);
-inTree->SetBranchAddress("NeEvent.nx2",          &in_nx2);
-inTree->SetBranchAddress("NeEvent.ny2",          &in_ny2);
+inTree->SetBranchAddress("nx1",	&in_nx1);
+inTree->SetBranchAddress("ny1",	&in_ny1);
+inTree->SetBranchAddress("nx2",	&in_nx2);
+inTree->SetBranchAddress("ny2",	&in_ny2);
 
-inTree->SetBranchAddress("NeEvent.x1[32]",     in_x1);
-inTree->SetBranchAddress("NeEvent.y1[32]",     in_y1);
-inTree->SetBranchAddress("NeEvent.x2[32]",     in_x2);
-inTree->SetBranchAddress("NeEvent.y2[32]",     in_y2);
-inTree->SetBranchAddress("NeEvent.tMWPC[4]",     in_tMWPC);
+inTree->SetBranchAddress("x1",		in_x1);
+inTree->SetBranchAddress("y1",		in_y1);
+inTree->SetBranchAddress("x2",		in_x2);
+inTree->SetBranchAddress("y2",		in_y2);
+inTree->SetBranchAddress("tMWPC",	in_tMWPC);
+inTree->SetBranchAddress("trig",	&in_trig);
+inTree->SetBranchAddress("tof",		&in_tof);
+inTree->SetBranchAddress("sumF5",		&sumF5);
 
-inTree->SetBranchAddress("NeEvent.trigger",     &in_trigger);
+
 
 
 //ReCo - detectors
 outTree->SetMakeClass(1);
-//    CALIBRATED DATA
-outTree->Branch("SQX_L",       out_SQX_L,       "SQX_L[32]/D");
-outTree->Branch("SQX_R",       out_SQX_R,       "SQX_R[32]/D");
-outTree->Branch("SQY_L",       out_SQY_L,       "SQY_L[16]/D");
-outTree->Branch("SQY_R",       out_SQY_R,       "SQY_R[16]/D");
-outTree->Branch("CsI_L",       out_CsI_L,       "CsI_L[16]/D");
-outTree->Branch("CsI_R",       out_CsI_R,       "CsI_R[16]/D");
+//CALIBRATED DATA
+outTree->Branch("SQX_L",	out_SQX_L,	"SQX_L[32]/D");
+outTree->Branch("SQX_R",	out_SQX_R,	"SQX_R[32]/D");	
+outTree->Branch("SQY_L",	out_SQY_L,	"SQY_L[16]/D");
+outTree->Branch("SQY_R",	out_SQY_R,	"SQY_R[16]/D");
+outTree->Branch("CsI_L",	out_CsI_L,	"CsI_L[16]/D");
+outTree->Branch("CsI_R",	out_CsI_R,	"CsI_R[16]/D");
 
-outTree->Branch("tSQX_L",      out_tSQX_L,      "tSQX_L[32]/D");
-outTree->Branch("tSQX_R",      out_tSQX_R,      "tSQX_R[32]/D");
-outTree->Branch("tSQY_L",      out_tSQY_L,      "tSQY_L[16]/D");
-outTree->Branch("tSQY_R",      out_tSQY_R,      "tSQY_R[16]/D");
-outTree->Branch("tCsI_L",      out_tCsI_L,      "tCsI_L[16]/D");
-outTree->Branch("tCsI_R",      out_tCsI_R,      "tCsI_R[16]/D");
+outTree->Branch("tSQX_L",	out_tSQX_L,	"tSQX_L[32]/D");
+outTree->Branch("tSQX_R",	out_tSQX_R,	"tSQX_R[32]/D");
+outTree->Branch("tSQY_L",	out_tSQY_L,	"tSQY_L[16]/D");
+outTree->Branch("tSQY_R",	out_tSQY_R,	"tSQY_R[16]/D");
+outTree->Branch("tCsI_L",	out_tCsI_L,	"tCsI_L[16]/D");
+outTree->Branch("tCsI_R",	out_tCsI_R,	"tCsI_R[16]/D");
 
-outTree->Branch("tF3",	    out_tF3,       "tF3[4]/D");
-outTree->Branch("F3",	    out_F3,        "F3[4]/D");
-outTree->Branch("tF5",      out_tF5,       "tF5[4]/D");
-outTree->Branch("F5",       out_F5,        "F5[4]/D");
-outTree->Branch("tF6",      out_tF6,       "tF6[4]/D");
-outTree->Branch("F6",       out_F6,        "F6[4]/D");
+outTree->Branch("tF3",	out_tF3,	"tF3[4]/D");
+outTree->Branch("F3",	out_F3,		"F3[4]/D");
+outTree->Branch("tF5",	out_tF5,	"tF5[4]/D");
+outTree->Branch("F5",	out_F5,		"F5[4]/D");
+outTree->Branch("tF6",	out_tF6,	"tF6[4]/D");
+outTree->Branch("F6",	out_F6,		"F6[4]/D");
 
-outTree->Branch("x1",    out_x1,      "x1[32]/s");
-outTree->Branch("x2",    out_x2,      "x2[32]/s");
-outTree->Branch("y1",    out_y1,      "y1[32]/s");
-outTree->Branch("y2",    out_y2,      "y2[32]/s");
+outTree->Branch("x1",	out_x1,	"x1[32]/s");
+outTree->Branch("x2",	out_x2,	"x2[32]/s");
+outTree->Branch("y1",	out_y1,	"y1[32]/s");
+outTree->Branch("y2",	out_y2,	"y2[32]/s");
+	
+outTree->Branch("nx1",		&out_nx1,	"nx1/s");
+outTree->Branch("nx2",		&out_nx2,	"nx2/s");
+outTree->Branch("ny1",		&out_ny1,	"ny1/s");
+outTree->Branch("ny2",		&out_ny2,	"ny2/s");
+outTree->Branch("tMWPC",	out_tMWPC,	"tMWPC[4]/f");
 
-outTree->Branch("nx1",    &out_nx1,      "nx1/s");
-outTree->Branch("nx2",    &out_nx2,      "nx2/s");
-outTree->Branch("ny1",    &out_ny1,      "ny1/s");
-outTree->Branch("ny2",    &out_ny2,      "ny2/s");
-outTree->Branch("tMWPC",    out_tMWPC,      "tMWPC[4]/f");
+//RAW DATA
+outTree->Branch("r_SQX_L",	r_SQX_L,	"r_SQX_L[32]/D");
+outTree->Branch("r_SQX_R",	r_SQX_R,	"r_SQX_R[32]/D");
+outTree->Branch("r_SQY_L",	r_SQY_L,	"r_SQY_L[16]/D");
+outTree->Branch("r_SQY_R",	r_SQY_R,	"r_SQY_R[16]/D");
+outTree->Branch("r_CsI_L",	r_CsI_L,	"r_CsI_L[16]/D");
+outTree->Branch("r_CsI_R",	r_CsI_R,	"r_CsI_R[16]/D");
 
-//    RAW DATA
-outTree->Branch("r_SQX_L",       r_SQX_L,       "r_SQX_L[32]/D");
-outTree->Branch("r_SQX_R",       r_SQX_R,       "r_SQX_R[32]/D");
-outTree->Branch("r_SQY_L",       r_SQY_L,       "r_SQY_L[16]/D");
-outTree->Branch("r_SQY_R",       r_SQY_R,       "r_SQY_R[16]/D");
-outTree->Branch("r_CsI_L",       r_CsI_L,       "r_CsI_L[16]/D");
-outTree->Branch("r_CsI_R",       r_CsI_R,       "r_CsI_R[16]/D");
+outTree->Branch("trig",		&out_trig,	"trig/I");
+outTree->Branch("tof",		&out_tof,	"tof/D");
+outTree->Branch("aF5",		&aF5,	"aF5/D");
+outTree->Branch("az",	&AZ,		 "az/D");
 
-outTree->Branch("trigger",	    &out_trigger,        "trigger/I");
-outTree->Branch("tof",     &tof,        "tof/D");
-outTree->Branch("T",     &T,        "T/D");
+maynard = new TOOL();
 
-if (maynard->params_loader("SQX_L_ec.clb", a_SQX_L, b_SQX_L, 32)!=1){return 0;}
-if (maynard->params_loader("SQX_R_ec.clb", a_SQX_R, b_SQX_R, 32)!=1){return 0;}
-if (maynard->params_loader("SQX_L_tc.clb", a_tSQX_L, b_tSQX_L, 32)!=1){return 0;}
-if (maynard->params_loader("SQX_R_tc.clb", a_tSQX_R, b_tSQX_R, 32)!=1){return 0;}
+if (maynard->params_loader("SQX_L_ec.clb", a_SQX_L, b_SQX_L, 32)	&&
+	maynard->params_loader("SQX_R_ec.clb", a_SQX_R, b_SQX_R, 32)	&&
+	maynard->params_loader("SQX_L_tc.clb", a_tSQX_L, b_tSQX_L, 32)	&&
+	maynard->params_loader("SQX_R_tc.clb", a_tSQX_R, b_tSQX_R, 32)	&&
 
-if (maynard->params_loader("SQY_L_ec.clb", a_SQY_L, b_SQY_L, 16)!=1){return 0;}
-if (maynard->params_loader("SQY_R_ec.clb", a_SQY_R, b_SQY_R, 16)!=1){return 0;}
-if (maynard->params_loader("SQY_L_tc.clb", a_tSQY_L, b_tSQY_L, 16)!=1){return 0;}
-if (maynard->params_loader("SQY_R_tc.clb", a_tSQY_R, b_tSQY_R, 16)!=1){return 0;}
+	maynard->params_loader("SQY_L_ec.clb", a_SQY_L, b_SQY_L, 16)	&&
+	maynard->params_loader("SQY_R_ec.clb", a_SQY_R, b_SQY_R, 16)	&&
+	maynard->params_loader("SQY_L_tc.clb", a_tSQY_L, b_tSQY_L, 16)	&&
+	maynard->params_loader("SQY_R_tc.clb", a_tSQY_R, b_tSQY_R, 16)	&&
 
-if (maynard->params_loader("csi_r_tc.clb", a_tCsI_R, b_tCsI_R, 16)!=1){return 0;}
-if (maynard->params_loader("csi_l_tc.clb", a_tCsI_L, b_tCsI_L, 16)!=1){return 0;}
-
-if (s::runNo==0)
+	maynard->params_loader("csi_r_tc.clb", a_tCsI_R, b_tCsI_R, 16)	&&
+	maynard->params_loader("csi_l_tc.clb", a_tCsI_L, b_tCsI_L, 16)	&&
+	maynard->params_loader("csi_r_ec.clb", a_CsI_R, b_CsI_R, 16)	&&
+	maynard->params_loader("csi_l_ec.clb", a_CsI_L, b_CsI_L, 16)	)
 {
-	if (maynard->params_loader("csi_r_0ec.clb", a_CsI_R, b_CsI_R, 16)!=1){return 0;}
-	if (maynard->params_loader("csi_l_0ec.clb", a_CsI_L, b_CsI_L, 16)!=1){return 0;}
-
+	printf("#\tSuccesfully calibrated all the files\n");
 }
 
-if (maynard->params_loader("csi_r_ec.clb", a_CsI_R, b_CsI_R, 16)!=1){return 0;}
-if (maynard->params_loader("csi_l_ec.clb", a_CsI_L, b_CsI_L, 16)!=1){return 0;}
+
 
 Long64_t nEntries = inTree->GetEntries();
-counter = 0;
+int counter = 0;
 printf("##############################################################################\n");
-printf("#    Loaded files have %lli entries. \n#    Processing...\n", nEntries);
+printf("#\tLoaded files have %lli entries. \n#\tProcessing...\n", nEntries);
 for (Long64_t entry=0; entry<nEntries; entry++)
 {
 	inTree->GetTree()->GetEntry(entry);
-	if( entry % ( nEntries / 100 ) == 0)
+	if( entry % ( nEntries / 10 ) == 0)
 	{
-		printf("#    Progress: %i%%\n",counter);
-		counter++;
+		printf("#\tProgress: %i%%\n",counter);
+		counter+=10;
 	}
 	
 	out_nx1=in_nx1;
 	out_nx2=in_nx2;
 	out_ny1=in_ny1;
 	out_ny2=in_ny2;
-	out_trigger=in_trigger;
-
-	tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+s::tof_const;
+	out_trig=in_trig;
+	out_tof = in_tof;
+	aF5 = sumF5;
+	AZ = 0.017142857 * in_tof;
 
 	for (int iii=0; iii<4; iii++)
 	{ 
@@ -221,7 +195,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	}
 
 	for (int iii=0; iii<16; iii++)
-	{    
+	{
 
 		out_SQY_L[iii]=(in_SQY_L[iii]+gRandom->Uniform())*b_SQY_L[iii]+a_SQY_L[iii];
 		out_SQY_R[iii]=(in_SQY_R[iii]+gRandom->Uniform())*b_SQY_R[iii]+a_SQY_R[iii];
@@ -253,56 +227,10 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		r_SQX_R[iii]=in_SQX_R[iii];
 	}
 
-//no aF5 cut
-	if(
-		(in_tdcF5[0]-in_tdcF3[0])>100.0 && (in_tdcF5[0]-in_tdcF3[0])<800.0 &&
-		(in_tdcF3[0]-in_tdcF3[1]) > -50.0 &&  (in_tdcF3[0]-in_tdcF3[1]) < 50.0 &&
-		(in_tdcF5[0]-in_tdcF5[1]) > -50.0 &&  (in_tdcF5[0]-in_tdcF5[1]) < 50.0 &&
-		(maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, s::MWPC_1_X_id)*
-		maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, s::MWPC_1_Y_id)*
-		maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, s::MWPC_2_X_id)*
-		maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, s::MWPC_2_Y_id))
-		&& in_aF5[0]>0/* &&
-
-
-		(in_tdcF5[0]-in_tdcF3[0])>630 && (in_tdcF5[0]-in_tdcF3[0])<740 &&
-		tof>150 && tof<200 && in_aF5[0]>600 && in_aF5[0]<1800		*/	)
-	{
 	outTree->Fill();
-	}
-	fill(out_SQX_L,out_SQX_L+32,0);
-	fill(out_SQY_L,out_SQY_L+16,0);
-	fill(out_SQX_R,out_SQX_R+32,0);
-	fill(out_SQY_R,out_SQY_R+16,0);
-	fill(out_CsI_R,out_CsI_R+16,0);
-	fill(out_CsI_L,out_CsI_L+16,0);
-
-	fill(r_SQX_L,r_SQX_L+32,0);
-	fill(r_SQY_L,r_SQY_L+16,0);
-	fill(r_SQX_R,r_SQX_R+32,0);
-	fill(r_SQY_R,r_SQY_R+16,0);
-	fill(r_CsI_R,r_CsI_R+16,0);
-	fill(r_CsI_L,r_CsI_L+16,0);
-
-	fill(out_x1,out_x1+32,0);
-	fill(out_x2,out_x2+32,0);
-	fill(out_y1,out_y1+32,0);
-	fill(out_y2,out_y2+32,0);
-
-	fill(out_tF3,out_tF3,0);
-	fill(out_F3,out_F3,0);
-	fill(out_tF5,out_tF5,0);
-	fill(out_F5,out_F5,0);
-
 }
 
-printf("#    Creating file: %s with tree named \"calibrated\"\n",fname.Copy().Append("_cal.root").Data());
-printf("#    We got from %lli entries to %lli entries with trigger cut\n",inTree->GetEntries(), outTree->GetEntries());
-printf("#    That gives %i%% efficiency\n", static_cast<int>(100*outTree->GetEntries()/inTree->GetEntries()));
-printf("#    Goodbye ;)\n");
-outF->Write();
-//outF
-//inF->Close();
+printf("#\tCreating file: %s with tree named \"calibrated\"\n",out_fname.Copy().Prepend("cal_").Data());
 }
 
 void calibrate_tree()
@@ -312,8 +240,6 @@ void calibrate_tree()
 	{
 		case 0:
 			dir_current = s::dir_CsI;
-			wrk(s::s_inFname.Data(), dir_current);
-			return 1;
 			break;
 
 		case 1:
@@ -333,7 +259,7 @@ void calibrate_tree()
 			break;
 
 		default:
-			printf("\nError: WTF amigo\n");
+			printf("\n!!\tError: WTF amigo\n");
 			return 0;
 			break;
 	}
@@ -345,16 +271,16 @@ void calibrate_tree()
 	while (TObject *obj = bluster())
 	{
 		TString inFname = obj->GetName();
-		//if (inFname.Contains("run00")/* && !inFname.Contains("cal_")*/)
-		//{
+		if (inFname.Contains("cln"))
+		{
 			printf("%s\n",inFname.Data());
-		//}
+		}
 	}
 	TIter next(dir_data->GetListOfFiles());
 	while (TObject *obj = next())
 	{
 		TString str_name = obj->GetName();
-		if (str_name.Contains("run19") && !str_name.Contains("_"))
+		if (str_name.Contains("cln"))
 		{
 			wrk(obj->GetName(), dir_current);
 		}
@@ -366,7 +292,7 @@ void calibrate_tree()
 
 //}
 /*
-		  double Tbeam=v2H->Energy();
+		double Tbeam=v2H->Energy();
 	 double invariant = (m2H+m6He)*(m2H+m6He)+2.*m2H*Tbeam;
 	 double shorty=(invariant-m2H*m2H-m6He*m6He)*(invariant-m2H*m2H-m6He*m6He);
 	 double CMmom = sqrt((shorty-4.*m2H*m2H*m6He*m6He)/(4.*invariant));

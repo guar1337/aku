@@ -1,5 +1,5 @@
-#ifndef ReCoBuild_h
-#define ReCoBuild_h 1
+#ifndef calibrate_tree_h
+#define calibrate_tree_h 1
 
 #include <iostream>
 #include <vector>
@@ -16,13 +16,7 @@
 #include </home/guar/aku/ELC/AELC.h>
 #include </home/guar/aku/ELC/ELC.h>
 
-AELC *Si_Ecalc;
 TOOL *maynard;
-
-double si_A[1];
-double si_Z[1];
-double si_W[1];
-
 UShort_t in_CsI_L[16];
 UShort_t in_CsI_R[16];
 UShort_t in_SQX_L[32];
@@ -56,8 +50,7 @@ UShort_t in_y1[32];
 UShort_t in_y2[32];
 UShort_t in_tMWPC[4];
 
-int in_trigger, counter;
-
+int in_trig;
 //out tree branches
 Double_t out_CsI_L[16];
 Double_t out_CsI_R[16];
@@ -98,6 +91,7 @@ Double_t out_tF5[4];
 Double_t out_F5[4];
 Double_t out_tF6[4];
 Double_t out_F6[4];
+Double_t aF5, in_tof, out_tof, sumF5, AZ;
 
 Float_t out_tMWPC[4];
 
@@ -128,10 +122,6 @@ float b_tCsI_L[16];
 float b_SQY_L[16];
 float b_SQY_R[16];
 
-int out_trigger;
-Double_t tof;
-Double_t T;
-Double_t par_beta;
-
-
+int out_trig;
+bool b_csiCalib;
 #endif

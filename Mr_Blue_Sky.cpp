@@ -56,7 +56,7 @@ namespace ROOT {
       ::TOOL *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TOOL >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TOOL", ::TOOL::Class_Version(), "TOOL.h", 14,
+         instance("TOOL", ::TOOL::Class_Version(), "TOOL.h", 15,
                   typeid(::TOOL), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TOOL::Dictionary, isa_proxy, 16,
                   sizeof(::TOOL) );
@@ -90,7 +90,7 @@ namespace ROOT {
       ::dE_E_angle *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::dE_E_angle >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("dE_E_angle", ::dE_E_angle::Class_Version(), "dE_E_angle.h", 16,
+         instance("dE_E_angle", ::dE_E_angle::Class_Version(), "dE_E_angle.h", 17,
                   typeid(::dE_E_angle), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::dE_E_angle::Dictionary, isa_proxy, 16,
                   sizeof(::dE_E_angle) );

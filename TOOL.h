@@ -7,8 +7,9 @@
 #include <TF1.h>
 #include <TTree.h>
 #include <TFile.h>
+#include <TCutG.h>
 #include <algorithm>
-#include "Riostream.h"
+#include <Riostream.h>
 
 
 class TOOL
@@ -25,6 +26,7 @@ virtual ~TOOL();
 TString containerName, histName, histFillcmd;
 
 Double_t getT(Double_t , Float_t );
+Double_t getVelo(Double_t , Float_t );
 Double_t gettime(Double_t , Float_t , Float_t);
 bool Get_MWPC_pos(UShort_t, UShort_t *, Float_t *, Short_t);
 bool initializeGeometry(Double_t *, Double_t *, Double_t *, Double_t *, Float_t *);
@@ -39,6 +41,15 @@ void null_energy(	Double_t *, Double_t *, Double_t *,
 					Double_t *, Double_t *, Double_t *);
 
 bool params_loader(TString , float *, float *, short);
+
+bool gcuts_loader(TString , TCutG *, TString );
+int gcut_noPoints(TString fName, TString ion);
+
+
+
+
+
+
 ClassDef(TOOL,0);
 };
 #endif

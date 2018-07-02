@@ -20,7 +20,7 @@ void butler()
 		case 0:
 			dir_cur = s::dir_CsI;
 			//wrk(s::inFname.Data(), dir_cur);
-			return 1;
+			//return 1;
 			break;
 
 		case 1:
@@ -45,43 +45,44 @@ void butler()
 			break;
 	}
 
-gSystem->cd(dir_cur.Data());
-TSystemDirectory *dir_data = new TSystemDirectory("data", dir_cur.Data());
-printf("Entering directory: %s\nLooping over following files:\n",dir_cur.Data());
-TIter bluster(dir_data->GetListOfFiles());
-while (TObject *obj = bluster())
-{
-	TString inFname = obj->GetName();
-	if (inFname.Contains("cal_")) 
+	gSystem->cd(dir_cur.Data());
+	TSystemDirectory *dir_data = new TSystemDirectory("data", dir_cur.Data());
+	printf("Entering directory: %s\nLooping over following files:\n",dir_cur.Data());
+	TIter bluster(dir_data->GetListOfFiles());
+	while (TObject *obj = bluster())
 	{
-		printf("%s\n",inFname.Data());
-	}
-}
-TIter next(dir_data->GetListOfFiles());
-while (TObject *obj = next())
-{
-	TString inFname = obj->GetName();
-	TString outFname = inFname.Copy().ReplaceAll("cal_", "").Prepend("dE_");
-
-	if (inFname.Contains("cal_")) 
-	{
-		TFile *inF= new TFile((inFname.Data()), "READ");
-		TFile *outF = new TFile(outFname.Data(),"recreate");
-		if (!inF->IsZombie())
+		TString inFname = obj->GetName();
+		if (inFname.Contains("cal_") && inFname.Contains("csi")) 
 		{
-			printf("Succesfully opened file %s\n",inFname.Data());
+			printf("%s\n",inFname.Data());
 		}
-		else {return 0;}
-		TTree *inTree = (TTree*)inF->Get("calibrated");
-		TTree *outTree= new TTree("dE_E","he6");
-		dE_E_angle *Hermes= new dE_E_angle(inTree,outTree, inFname);
-		Hermes->actual_work();
-		inF->Close();
-		outF->cd();
-		outTree->Write();
-		outF->Close();
 	}
-}//file list iterator
+	TIter next(dir_data->GetListOfFiles());
+	while (TObject *obj = next())
+	{
+		TString inFname = obj->GetName();
+
+		TString outFname = inFname.Copy().ReplaceAll("cal_", "").Prepend("dE_");
+
+		if (inFname.Contains("cal_") && inFname.Contains("csi")) 
+		{
+			TFile *inF= new TFile((inFname.Data()), "READ");
+			TFile *outF = new TFile(outFname.Data(),"recreate");
+			if (!inF->IsZombie())
+			{
+				printf("Succesfully opened file %s\n",inFname.Data());
+			}
+			else {return 0;}
+			TTree *inTree = (TTree*)inF->Get("calibrated");
+			TTree *outTree= new TTree("dE_E","he6");
+			dE_E_angle *Hermes= new dE_E_angle(inTree,outTree, inFname);
+			Hermes->actual_work();
+			inF->Close();
+			outF->cd();
+			outTree->Write();
+			outF->Close();
+		}
+	}//file list iterator
 
 
 
