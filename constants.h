@@ -183,7 +183,7 @@ namespace s
 	static const TString 	dir_runs("/home/guar/data/mar2018/raw");
 	static const TString 	dir_CsI("/home/guar/data/mar2018/miscroot/CsI/parts");
 	static const TString 	dir_params("/home/guar/data/mar2018/calib/params/");	
-	static const TString 	s_inFname("csiL0");
+	static const TString 	s_inFname("csiL1");
 	static const TString	s_playground("/home/guar/data/tools/");
 	static const TString	dir_gcut("/home/guar/data/mar2018/miscroot/CsI/gcuts/");
 

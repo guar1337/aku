@@ -433,25 +433,25 @@ void TOOL::null_energy( Double_t *SQX_L, Double_t *SQY_L, Double_t *CsI_L,
 
 bool TOOL::params_loader(TString fname, float *AConst, float *BConst, short chNo)
 {
-	ifstream plik(fname.Copy().Prepend(s::dir_params.Data()).Data());
+	ifstream instream(fname.Copy().Prepend(s::dir_params.Data()).Data());
 	string dummy;
 	float CConst;
 
-	if (!plik) 
+	if (!instream) 
 	{
 		printf ("#Cannot open %s coefficient file\n",fname.Copy().Prepend(s::dir_params.Data()).Data());
 		return 0;
 	}
 
-	getline(plik, dummy);
-	getline(plik, dummy);
+	getline(instream, dummy);
+	getline(instream, dummy);
 	for (int iii=0; iii<chNo; iii++)
 	{
-		plik>>AConst[iii]>>BConst[iii]>>CConst;
+		instream>>AConst[iii]>>BConst[iii]>>CConst;
 		//cout<<AConst[iii]<<"  "<<BConst[iii]<<endl;
 	}
 
-	plik.close();
+	instream.close();
 	return 1;
 }
 
@@ -460,40 +460,40 @@ bool TOOL::gcuts_loader(TString fName, TCutG *gcut, TString ion)
 	fName.ReplaceAll("cal_","").ReplaceAll(".root","/");
 	string dummy, dummy2;
 	int points;
-	ifstream plik((s::dir_gcut+fName+ion).Data());
+	ifstream instream((s::dir_gcut+fName+ion).Data());
 	//printf("Patrz co kot przyniosl: %s\n",(s::dir_gcut+fName+ion).Data() );
 
-	if (!plik) 
+	if (!instream) 
 	{
-		printf ("#Cannot open %s coefficient file\n",(s::dir_gcut+fName+ion).Data());
+		//printf ("#Cannot open %s coefficient file\n",(s::dir_gcut+fName+ion).Data());
 		return false;
 	}
 	for (int iii = 0; iii < 4; ++iii)//clean lines before No of points
 	{
-		getline(plik, dummy);
+		getline(instream, dummy);
 	}
 
-	getline(plik, dummy, ',');
-	getline(plik, dummy, ')');
+	getline(instream, dummy, ',');
+	getline(instream, dummy, ')');
 	points = stoi(dummy);//"I am number of points now"
 
 	for (int iii = 0; iii < 5; ++iii)//clean lines after No of points
 	{
-		getline(plik, dummy);
+		getline(instream, dummy);
 	}
 
 	for (int iii = 0; iii < points; ++iii)
 	{
-		getline(plik, dummy, '(');
-		getline(plik, dummy, ',');
-		getline(plik, dummy, ',');
-		getline(plik, dummy2, ')');
+		getline(instream, dummy, '(');
+		getline(instream, dummy, ',');
+		getline(instream, dummy, ',');
+		getline(instream, dummy2, ')');
 		//printf("gcut->SetPoint(%i, %f, %f);\n",iii, stof(dummy), stof(dummy2));
 		gcut->SetPoint(iii, stof(dummy), stof(dummy2));
 
 	}
 
-	plik.close();
+	instream.close();
 	
 	return true;
 
@@ -504,24 +504,103 @@ int TOOL::gcut_noPoints(TString fName, TString ion)
 	fName.ReplaceAll("cal_","").ReplaceAll(".root","/");
 	string dummy, dummy2;
 	int points;
-	ifstream plik((s::dir_gcut+fName+ion).Data());
+	ifstream instream((s::dir_gcut+fName+ion).Data());
 	//printf("Patrz co kot przyniosl: %s\n",(s::dir_gcut+fName+ion).Data() );
 
-	if (!plik) 
+	if (!instream) 
 	{
 		printf ("#Cannot open %s coefficient file\n",(s::dir_gcut+fName+ion).Data());
 		return 0;
 	}
 	for (int iii = 0; iii < 4; ++iii)//clean lines before No of points
 	{
-		getline(plik, dummy);
+		getline(instream, dummy);
 	}
 
-	getline(plik, dummy, ',');
-	getline(plik, dummy, ')');
+	getline(instream, dummy, ',');
+	getline(instream, dummy, ')');
 	points = stoi(dummy);//"I am number of points now"
 	return points;
 
+}
+
+bool TOOL::data_loader(TString runNo, Short_t A, Short_t Z, Short_t detNo)
+{
+	TString dir_cur = TString::Format("%s%s/%i%i/%i%i_%i",
+					s::dir_CsI.Copy().ReplaceAll("parts","").Data(), 
+					runNo.Data(), A, Z, A, Z, detNo);	
+
+	ifstream getPede("/home/guar/data/mar2018/miscroot/CsI/dataPoints/L/pede.dat");
+
+	Float_t pedeBank[16];
+
+	for (int iii = 0; iii < 16; ++iii)
+	{
+		getPede>>pedeBank[iii];
+		//printf("%f\n",pedeBank[iii] );
+	}
+
+	ifstream instream(dir_cur.Data());
+	if (!instream) 
+	{
+		printf("Shoot! %s\n",dir_cur.Data());
+		return false;
+	}
+
+	string dummy;
+	for (int iii = 0; iii < 4; ++iii)//clean lines before No of points
+	{
+		getline(instream, dummy);
+	}
+
+	getline(instream, dummy, '[');
+	getline(instream, dummy, ']');
+	int points = stoi(dummy);//"I am number of points now"
+	getline(instream, dummy);
+	printf("Rozmiar ma znaczenie: %i for cryst [%i]\n",points, detNo);
+	vector<Float_t> kinE, LightOut;
+	
+	for (int iii = 0; iii < points-1; ++iii)
+	{
+		getline(instream, dummy, ',');
+		kinE.push_back(stof(dummy));
+		//printf("No ladnie: %f\n", kinE[iii]);
+	}
+
+	getline(instream, dummy, '}');
+	kinE.push_back(stof(dummy));
+	//printf("No ladnie: %f\n", kinE[points-1]);
+
+	getline(instream, dummy);
+	getline(instream, dummy);
+	//printf("\n%s\n^^^Przerwa na papierosa^^^\n\n",dummy.c_str());
+	for (int iii = 0; iii < points-1; ++iii)
+	{
+		getline(instream, dummy, ',');
+		LightOut.push_back(stof(dummy));
+		//printf("Czyz tak?: %f\n", LightOut[iii]);
+	}
+
+	getline(instream, dummy, '}');
+	LightOut.push_back(stof(dummy));
+	//printf("Czyz nie?: %f\n", LightOut[points-1]);
+	instream.close();
+
+	TString dir_out = TString::Format("%sdataPoints/L/%i.dat",
+					s::dir_CsI.Copy().ReplaceAll("parts","").Data(), detNo);
+	//printf("%s\n",dir_out.Data() );
+
+	ofstream outstream(dir_out.Data(), ios::app);
+	//outstream<<points<<endl;
+
+	for (int iii = 0; iii < points; ++iii)
+	{
+		outstream<<(LightOut[iii]-pedeBank[detNo])/(A*Z*Z)<<"\t"<<kinE[iii]/(A*Z*Z)<<endl;
+	}
+
+	outstream.close();
+
+	return true;
 }
 
 TOOL::~TOOL()

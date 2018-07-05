@@ -295,7 +295,7 @@ void muchobojca()
 	while (TObject *obj = bluster())
 	{
 		TString inFname = obj->GetName();
-		if (inFname.Contains("csiL0") && !inFname.Contains("cln"))
+		if (inFname.Contains("csi") && !inFname.Contains("cln"))
 		{
 			printf("%s\n",inFname.Data());
 		}

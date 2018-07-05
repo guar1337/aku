@@ -44,7 +44,7 @@ bool params_loader(TString , float *, float *, short);
 
 bool gcuts_loader(TString , TCutG *, TString );
 int gcut_noPoints(TString fName, TString ion);
-
+bool data_loader(TString , Short_t , Short_t, Short_t);
 
 
 

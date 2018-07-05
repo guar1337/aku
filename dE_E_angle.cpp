@@ -430,54 +430,50 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			out_tSQX_R[iii]=in_tSQX_R[iii];
 	}
 	//MWPC
-	if(	maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, s::MWPC_1_X_id)*
-		maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, s::MWPC_1_Y_id)*
-		maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, s::MWPC_2_X_id)*
-		maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, s::MWPC_2_Y_id))
-	{
-		//displacement + go to corner of MWPC + follow wire order - get event point
-		mwpc=true;
-		MWPC_1_X += rnd->Uniform(0.0,1.25)-0.6125;
-		MWPC_1_Y += rnd->Uniform(0.0,1.25)-0.6125;
-		MWPC_1_Z = -816.0;
+	maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, s::MWPC_1_X_id);
+	maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, s::MWPC_1_Y_id);
+	maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, s::MWPC_2_X_id);
+	maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, s::MWPC_2_Y_id);
+	
+	//displacement + go to corner of MWPC + follow wire order - get event point
+	MWPC_1_X += rnd->Uniform(0.0,1.25)-0.6125;
+	MWPC_1_Y += rnd->Uniform(0.0,1.25)-0.6125;
+	MWPC_1_Z = -816.0;
+	MWPC_2_X += rnd->Uniform(0.0,1.25)-0.6125;
+	MWPC_2_Y += rnd->Uniform(0.0,1.25)-0.6125;
+	MWPC_2_Z = -270.0;
 
-		MWPC_2_X += rnd->Uniform(0.0,1.25)-0.6125;
-		MWPC_2_Y += rnd->Uniform(0.0,1.25)-0.6125;
-		MWPC_2_Z = -270.0;
-
-		dX=MWPC_2_X-MWPC_1_X;
-		dY=MWPC_2_Y-MWPC_1_Y;
-		dZ=MWPC_2_Z-MWPC_1_Z;
+	dX=MWPC_2_X-MWPC_1_X;
+	dY=MWPC_2_Y-MWPC_1_Y;
+	dZ=MWPC_2_Z-MWPC_1_Z;
 		
-		v_beam.SetXYZ(dX,dY,dZ);
+	v_beam.SetXYZ(dX,dY,dZ);
 		Float_t det_effctv_thcknss = 347.1/(cos(v_beam.Theta()));
-		Float_t det_thcknss = 1000.0/(cos(v_beam.Theta()));
-			// choose correct Eloss method
-		if (in_AZ<2.2)
+	Float_t det_thcknss = 1000.0/(cos(v_beam.Theta()));
+		// choose correct Eloss method
+	if (in_AZ<2.2)
+	{
+		if (gcut_h2->IsInside(in_AZ,in_aF5))
 		{
-			if (gcut_h2->IsInside(in_AZ,in_aF5))
-			{
-				tempT = maynard->getT(in_tof,s::mass_2H);
-				out_T1 = h2_Si_Eloss->GetE(tempT, 347.1);
-				out_T2 = h2_Si_Eloss->GetE(tempT, det_effctv_thcknss);
-				fsqde1 = out_T1 - h2_Si_Eloss->GetE(out_T1, 1000.0);
-				fsqde2 = out_T2 - h2_Si_Eloss->GetE(out_T2, det_thcknss);
-				Ion_ID = 21;
-				//printf("Co ja robie tuuu %i\n",Ion_ID );
-			}
-
-			else if (gcut_he4->IsInside(in_AZ,in_aF5))
-			{
-				tempT = maynard->getT(in_tof,s::mass_4He);
-				out_T1 = he4_Si_Eloss->GetE(tempT, 347.1);
-				out_T2 = he4_Si_Eloss->GetE(tempT, det_effctv_thcknss);
-				fsqde1 = out_T1 - he4_Si_Eloss->GetE(out_T1, 1000.0);
-				fsqde2 = out_T2 - he4_Si_Eloss->GetE(out_T2, det_thcknss);
-				Ion_ID = 42;
-			}
+			tempT = maynard->getT(in_tof,s::mass_2H);
+			out_T1 = h2_Si_Eloss->GetE(tempT, 347.1);
+			out_T2 = h2_Si_Eloss->GetE(tempT, det_effctv_thcknss);
+			fsqde1 = out_T1 - h2_Si_Eloss->GetE(out_T1, 1000.0);
+			fsqde2 = out_T2 - h2_Si_Eloss->GetE(out_T2, det_thcknss);
+			Ion_ID = 21;
+			//printf("Co ja robie tuuu %i\n",Ion_ID );
 		}
-
-		else if (in_AZ>2.2 && in_AZ<2.6)
+		else if (gcut_he4->IsInside(in_AZ,in_aF5))
+		{
+			tempT = maynard->getT(in_tof,s::mass_4He);
+			out_T1 = he4_Si_Eloss->GetE(tempT, 347.1);
+			out_T2 = he4_Si_Eloss->GetE(tempT, det_effctv_thcknss);
+			fsqde1 = out_T1 - he4_Si_Eloss->GetE(out_T1, 1000.0);
+			fsqde2 = out_T2 - he4_Si_Eloss->GetE(out_T2, det_thcknss);
+			Ion_ID = 42;
+		}
+	}
+	else if (in_AZ>2.2 && in_AZ<2.6)
 		{
 			if (gcut_be9->IsInside(in_AZ,in_aF5))
 			{
@@ -501,76 +497,75 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 		}
 
-		else if (in_AZ>2.6 && in_AZ<2.85)
+	else if (in_AZ>2.6 && in_AZ<2.85)
+	{
+		if (gcut_li8->IsInside(in_AZ,in_aF5))
 		{
-			if (gcut_li8->IsInside(in_AZ,in_aF5))
-			{
-				tempT = maynard->getT(in_tof,s::mass_8Li);
-				out_T1 = li8_Si_Eloss->GetE(tempT, 347.1);
-				out_T2 = li8_Si_Eloss->GetE(tempT, det_effctv_thcknss);
-				fsqde1 = out_T1 - li8_Si_Eloss->GetE(out_T1, 1000.0);
-				fsqde2 = out_T2 - li8_Si_Eloss->GetE(out_T2, det_thcknss);
-				Ion_ID = 83;
-			}
-		}
-
-		else if (in_AZ>2.85 && in_AZ<3.2)
-		{
-			if (gcut_he6->IsInside(in_AZ,in_aF5))
-			{
-				tempT = maynard->getT(in_tof,s::mass_6He);
-				out_T1 = he6_Si_Eloss->GetE(tempT, 347.1);
-				out_T2 = he6_Si_Eloss->GetE(tempT, det_effctv_thcknss);
-				fsqde1 = out_T1 - he6_Si_Eloss->GetE(out_T1, 1000.0);
-				fsqde2 = out_T2 - he6_Si_Eloss->GetE(out_T2, det_thcknss);
-				Ion_ID = 62;
-			}
-
-			else if (gcut_h3->IsInside(in_AZ,in_aF5))
-			{
-				tempT = maynard->getT(in_tof,s::mass_3H);
-				out_T1 = h3_Si_Eloss->GetE(tempT, 347.1);
-				out_T2 = h3_Si_Eloss->GetE(tempT, det_effctv_thcknss);
-				fsqde1 = out_T1 - h3_Si_Eloss->GetE(out_T1, 1000.0);
-				fsqde2 = out_T2 - h3_Si_Eloss->GetE(out_T2, det_thcknss);
-				Ion_ID = 31;
-			}
-
-			else if (gcut_li9->IsInside(in_AZ,in_aF5))
-			{
-				tempT = maynard->getT(in_tof,s::mass_9Li);
-				out_T1 = li9_Si_Eloss->GetE(tempT, 347.1);
-				out_T2 = li9_Si_Eloss->GetE(tempT, det_effctv_thcknss);
-				fsqde1 = out_T1 - li9_Si_Eloss->GetE(out_T1, 1000.0);
-				fsqde2 = out_T2 - li9_Si_Eloss->GetE(out_T2, det_thcknss);
-				Ion_ID = 93;
-			}
-		}
-
-		//rotation matrix that will convert 2H or 6He particle so that they will see beam as Z axis
-		beam_setting_array.SetZAxis(v_beam.Unit(),zx);
-		beam_setting_array.Invert();
-
-		//v_beam.Transform(beam_setting_array);
-		ene_beam = s::mass_6He + out_T2;
-		mom_beam = sqrt(ene_beam*ene_beam - s::mass_6He*s::mass_6He);
-
-		v_beam.SetMag(mom_beam);
-		//printf("Wat wat wat%f\n",v_beam.Mag());	
-		
-		LV_beam->SetVectM(v_beam, s::mass_6He);
-		Tcoef=(cos(tar_angle)*s::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
-		XZsum= - sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z;
-
-		evX = MWPC_1_X + dX*Tcoef;
-		evY = MWPC_1_Y + dY*Tcoef;
-		evZ = MWPC_1_Z + dZ*Tcoef;
-		if (evX > tar_cut_lo_X && evX < tar_cut_hi_X	&&
-			evY > tar_cut_lo_Y && evY < tar_cut_lo_Y	)
-		{
-			tar=true;
+			tempT = maynard->getT(in_tof,s::mass_8Li);
+			out_T1 = li8_Si_Eloss->GetE(tempT, 347.1);
+			out_T2 = li8_Si_Eloss->GetE(tempT, det_effctv_thcknss);
+			fsqde1 = out_T1 - li8_Si_Eloss->GetE(out_T1, 1000.0);
+			fsqde2 = out_T2 - li8_Si_Eloss->GetE(out_T2, det_thcknss);
+			Ion_ID = 83;
 		}
 	}
+	
+	else if (in_AZ>2.85 && in_AZ<3.2)
+		{
+		if (gcut_he6->IsInside(in_AZ,in_aF5))
+		{
+			tempT = maynard->getT(in_tof,s::mass_6He);
+			out_T1 = he6_Si_Eloss->GetE(tempT, 347.1);
+			out_T2 = he6_Si_Eloss->GetE(tempT, det_effctv_thcknss);
+			fsqde1 = out_T1 - he6_Si_Eloss->GetE(out_T1, 1000.0);
+			fsqde2 = out_T2 - he6_Si_Eloss->GetE(out_T2, det_thcknss);
+			Ion_ID = 62;
+		}
+		else if (gcut_h3->IsInside(in_AZ,in_aF5))
+		{
+			tempT = maynard->getT(in_tof,s::mass_3H);
+			out_T1 = h3_Si_Eloss->GetE(tempT, 347.1);
+			out_T2 = h3_Si_Eloss->GetE(tempT, det_effctv_thcknss);
+			fsqde1 = out_T1 - h3_Si_Eloss->GetE(out_T1, 1000.0);
+			fsqde2 = out_T2 - h3_Si_Eloss->GetE(out_T2, det_thcknss);
+			Ion_ID = 31;
+		}
+
+		else if (gcut_li9->IsInside(in_AZ,in_aF5))
+		{
+			tempT = maynard->getT(in_tof,s::mass_9Li);
+			out_T1 = li9_Si_Eloss->GetE(tempT, 347.1);
+			out_T2 = li9_Si_Eloss->GetE(tempT, det_effctv_thcknss);
+			fsqde1 = out_T1 - li9_Si_Eloss->GetE(out_T1, 1000.0);
+			fsqde2 = out_T2 - li9_Si_Eloss->GetE(out_T2, det_thcknss);
+			Ion_ID = 93;
+		}
+	}
+
+	//rotation matrix that will convert 2H or 6He particle so that they will see beam as Z axis
+	beam_setting_array.SetZAxis(v_beam.Unit(),zx);
+	beam_setting_array.Invert();
+
+	//v_beam.Transform(beam_setting_array);
+	ene_beam = s::mass_6He + out_T2;
+	mom_beam = sqrt(ene_beam*ene_beam - s::mass_6He*s::mass_6He);
+
+	v_beam.SetMag(mom_beam);
+	//printf("Wat wat wat%f\n",v_beam.Mag());	
+	
+	LV_beam->SetVectM(v_beam, s::mass_6He);
+	Tcoef=(cos(tar_angle)*s::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
+	XZsum= - sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z;
+
+	evX = MWPC_1_X + dX*Tcoef;
+	evY = MWPC_1_Y + dY*Tcoef;
+	evZ = MWPC_1_Z + dZ*Tcoef;
+	if (evX > tar_cut_lo_X && evX < tar_cut_hi_X	&&
+		evY > tar_cut_lo_Y && evY < tar_cut_lo_Y	)
+	{
+		tar=true;
+	}
+	
 
 
 
