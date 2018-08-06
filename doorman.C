@@ -52,7 +52,7 @@ bool doorman()
 	TFile *outF = new TFile(outFname.Data(),"recreate");
 	if (!inF->IsZombie())
 	{
-		printf("Succesfully opened file %s\n",inFname.Data());
+		printf("%sSuccesfully opened file %s\n", "\x1B[32m", inFname.Data());
 	}
 	else {return 0;}
 TTree *inTree = (TTree*)inF->Get("calibrated");

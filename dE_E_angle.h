@@ -44,7 +44,7 @@ UShort_t memS_CsI_R, memS_CsI_L, Ion_ID;
 Float_t memE_CsI_R, memE_CsI_L;
 Float_t dist_tar_det;
 Float_t dX,  dY,  dZ,  XZsum;
-Float_t evX,  evY,  evZ;
+Float_t evX,  evY,  evZ, f5X,  f5Y,  f5Z, f6X,  f6Y,  f6Z;
 Float_t Xpos,  Ypos,  Zpos;
 Float_t X6He_det,  Y6He_det,  Z6He_det, X6He_lab,  Y6He_lab,  Z6He_lab;
 Float_t X6He, Y6He, Z6He;
@@ -53,18 +53,22 @@ Float_t X2H, Y2H, Z2H;
 //Float_t virt_E, beta_squared, gamma, time, par_beta;
 Float_t MWPC_1_X,  MWPC_1_Y,  MWPC_1_Z,  MWPC_2_X,  MWPC_2_Y,  MWPC_2_Z;
 
-Double_t Tcoef, time_Tar, fsqde1, fsqde2, fsqrde;
-Double_t CsI_L[16], CsI_R[16], SQX_L[32], SQX_R[32], SQY_L[16],	SQY_R[16];
+Float_t ene2_2H, mom2_2H;
+
+
+
+Double_t Tcoef, Tcoef2, Tcoef3, time_Tar, fsqde1, fsqde2, fsqrde;
+Double_t CsI_L[16], CsI_R[16], SQX_L[32], SQX_Ln[32], SQX_R[32], SQY_L[16],	SQY_R[16];
 Double_t c_CsI_L[16], c_CsI_R[16], c_SQX_L[32], c_SQX_R[32], c_SQY_L[16], c_SQY_R[16];
 Double_t r_CsI_L[16], r_CsI_R[16], r_SQX_L[32], r_SQX_R[32], r_SQY_L[16], r_SQY_R[16];
 Double_t raw_CsI_L[16], raw_CsI_R[16], raw_SQX_L[32], raw_SQX_R[32], raw_SQY_L[16], raw_SQY_R[16];
 Double_t in_tF3[4],	in_F3[4], in_tF5[4], in_F5[4], in_tF6[4], in_F6[4];
 Double_t in_tof, out_tof, tempT, out_T1, out_T2, T, in_AZ, out_AZ;
-Double_t CsI_L_Edep[17], CsI_R_Edep[17], SQX_L_Edep[33], SQX_R_Edep[33], SQY_L_Edep[17], SQY_R_Edep[17];
+Double_t CsI_L_Edep[17], CsI_R_Edep[17], SQX_L_Edep[33], SQX_L_Edep2[33], SQX_R_Edep[33], SQY_L_Edep[17], SQY_R_Edep[17];
 Double_t out_tF3[4], out_F3[4], out_tF5[4], out_F5[4], out_tF6[4], out_F6[4];
-Double_t sqlde, sqletot, sqlphi, sqltheta, sqltheta1H, sqltheta2H, sqlde1H, sqlde2H, sqlang, sqlxtime, sqlytime;
-Double_t sqrde, sqretot, sqrphi, sqrtheta, sqrang, sqrxtime, sqrytime;
-Double_t missMass, mom_2H, ene_2H, mom_6He, ene_6He, mom_beam, ene_beam;
+Double_t sqlde, sqlde2, sqletot, sqletot2, fsqlE, csilDep, kinsqle, sqlphi, sqltheta, fsqltheta, fsqltheta2, sqlang, sqlxtime, sqlytime, fel, fdel, ftot, newE;
+Double_t sqrde, sqretot, sqrphi, sqrtheta, fsqrtheta, sqrang, sqrxtime, sqrytime;
+Double_t missMass, missMass2, mom_2H, ene_2H, mom_6He, ene_6He, mom_beam, ene_beam;
 Double_t in_tSQX_L[32], in_tSQX_R[32], out_tSQX_L[32], out_tSQX_R[32];
 Double_t in_tSQY_L[16], in_tSQY_R[16], out_tSQY_L[16], out_tSQY_R[16];
 Double_t in_tCsI_L[16], in_tCsI_R[16], out_tCsI_L[16], out_tCsI_R[16];
@@ -75,20 +79,39 @@ Float_t tar_cut_lo_X, tar_cut_hi_X, tar_cut_lo_Y, tar_cut_hi_Y;
 Float_t tcor_sqLX_I, tcor_sqLX_II, tcor_sqLY, tcor_sqRX_I, tcor_sqRX_II, tcor_sqRY;
 
 Double_t cut_SQX_L, cut_SQX_R, cut_SQY_L, cut_SQY_R, cut_CsI_L, cut_CsI_R;
+Int_t cris;
+Float_t pede[16];
+Float_t B[16];
+Float_t C[16];
+Float_t D[16];
+Float_t B2[16];
+Float_t C2[16];
+Float_t D2[16];
+Float_t pede2[16];
+Float_t lamb, input;
 
 //double gsl_sf_lambert_Wm1(double in);
-TLorentzVector *LV_6He, *LV_2H, *LV_beam, *LV_tar_1H, *LV_tar_2H;
+TLorentzVector *LV_6He, *LV_2H, *LV_beam, *LV_tar_1H, *LV_tar_2H, *LV2_2H, *LV2_6He;
 TRotation beam_setting_array;
 TString s_curFile;
 
-AELC *h2_Si_Eloss;
-AELC *h3_Si_Eloss;
-AELC *he4_Si_Eloss;
-AELC *he6_Si_Eloss;
-AELC *li7_Si_Eloss;
-AELC *li8_Si_Eloss;
-AELC *li9_Si_Eloss;
-AELC *be9_Si_Eloss;
+AELC *h2_Si;
+AELC *h2_CsI;
+AELC *h2_BoPET;
+AELC *h2_CD2;
+
+AELC *h3_Si;
+AELC *he4_Si;
+
+AELC *he6_Si;
+AELC *he6_CsI;
+AELC *he6_BoPET;
+AELC *he6_CD2;
+
+AELC *li7_Si;
+AELC *li8_Si;
+AELC *li9_Si;
+AELC *be9_Si;
 TOOL *maynard;
 
 TCutG *gcut_h2, *gcut_h3, *gcut_he4, *gcut_he6, *gcut_li7, *gcut_li8, *gcut_li9, *gcut_be9;
@@ -96,6 +119,18 @@ TCutG *gcut_h2, *gcut_h3, *gcut_he4, *gcut_he6, *gcut_li7, *gcut_li8, *gcut_li9,
 double si_A[1];
 double si_Z[1];
 double si_W[1];
+double csi_A[2];
+double csi_Z[2];
+double csi_W[2];
+
+double CD2_A[2];
+double CD2_Z[2];
+double CD2_W[2];
+
+double BoPET_A[3];
+double BoPET_Z[3];
+double BoPET_W[3];
+
 ClassDef(dE_E_angle,0);
 };
 #endif

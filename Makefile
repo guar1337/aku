@@ -1,7 +1,7 @@
 # 6he data analysis code
 NAME := Mr_Blue_Sky
 ELC_dir = /home/guar/aku/eloss
-INCLUDES = -I`root-config --incdir` 
+INCLUDES = -I`root-config --incdir`
 
 SHAREDLIBS = $(addprefix -l, gsl Physics MathCore Core)
 CLASSLIST := TOOL dE_E_angle

@@ -34,13 +34,17 @@ UShort_t in_tCsI_R[16];
 UShort_t in_tSQY_L[16];
 UShort_t in_tSQY_R[16];
 
-
 UShort_t in_tdcF3[4];
 UShort_t in_aF3[4];
 UShort_t in_tdcF5[4];
 UShort_t in_aF5[4];
 UShort_t in_tdcF6[4];
 UShort_t in_aF6[4];
+
+UShort_t in_x1[32];
+UShort_t in_x2[32];
+UShort_t in_y1[32];
+UShort_t in_y2[32];
 
 UShort_t out_tF3[4];
 UShort_t out_F3[4];
@@ -59,10 +63,7 @@ UShort_t out_nx2;
 UShort_t out_ny1;
 UShort_t out_ny2;
 
-UShort_t in_x1[32];
-UShort_t in_x2[32];
-UShort_t in_y1[32];
-UShort_t in_y2[32];
+
 UShort_t out_x1[32];
 UShort_t out_x2[32];
 UShort_t out_y1[32];
@@ -92,7 +93,7 @@ Float_t MWPC_1_X, MWPC_1_Y, MWPC_1_Z;
 Float_t MWPC_2_X, MWPC_2_Y, MWPC_2_Z;
 Float_t dX,  dY,  dZ,  XZsum;
 Double_t sumF5, tof;
-Bool_t mwpc, amp, tac, tof_range;
-
+Bool_t mwpc, amp, tac, tof_range, sql;
+Float_t a_tSQX_L[32], b_tSQX_L[32], tSQX_L[32];
 
 #endif

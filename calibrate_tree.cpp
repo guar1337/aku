@@ -95,6 +95,7 @@ inTree->SetBranchAddress("sumF5",		&sumF5);
 outTree->SetMakeClass(1);
 //CALIBRATED DATA
 outTree->Branch("SQX_L",	out_SQX_L,	"SQX_L[32]/D");
+outTree->Branch("SQX_Ln",	out_SQX_Lnew,	"SQX_Ln[32]/D");
 outTree->Branch("SQX_R",	out_SQX_R,	"SQX_R[32]/D");	
 outTree->Branch("SQY_L",	out_SQY_L,	"SQY_L[16]/D");
 outTree->Branch("SQY_R",	out_SQY_R,	"SQY_R[16]/D");
@@ -142,9 +143,11 @@ outTree->Branch("az",	&AZ,		 "az/D");
 maynard = new TOOL();
 
 if (maynard->params_loader("SQX_L_ec.clb", a_SQX_L, b_SQX_L, 32)	&&
+	maynard->params_loader("SQX_Lnew.clb", a_SQX_Lnew, b_SQX_Lnew, 32)	&&
 	maynard->params_loader("SQX_R_ec.clb", a_SQX_R, b_SQX_R, 32)	&&
 	maynard->params_loader("SQX_L_tc.clb", a_tSQX_L, b_tSQX_L, 32)	&&
 	maynard->params_loader("SQX_R_tc.clb", a_tSQX_R, b_tSQX_R, 32)	&&
+
 
 	maynard->params_loader("SQY_L_ec.clb", a_SQY_L, b_SQY_L, 16)	&&
 	maynard->params_loader("SQY_R_ec.clb", a_SQY_R, b_SQY_R, 16)	&&
@@ -173,7 +176,6 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		printf("#\tProgress: %i%%\n",counter);
 		counter+=10;
 	}
-	
 	out_nx1=in_nx1;
 	out_nx2=in_nx2;
 	out_ny1=in_ny1;
@@ -220,17 +222,18 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		out_y1[iii]=in_y1[iii];
 		out_y2[iii]=in_y2[iii];
 		out_SQX_L[iii]=(in_SQX_L[iii]+gRandom->Uniform())*b_SQX_L[iii]+a_SQX_L[iii];
+		out_SQX_Lnew[iii]=(in_SQX_L[iii]+gRandom->Uniform())*b_SQX_Lnew[iii]+a_SQX_Lnew[iii];
 		out_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
 		out_tSQX_R[iii]=(in_tSQX_R[iii]+gRandom->Uniform())*b_tSQX_R[iii]+a_tSQX_R[iii];
 		out_tSQX_L[iii]=(in_tSQX_L[iii]+gRandom->Uniform())*b_tSQX_L[iii]+a_tSQX_L[iii];
 		r_SQX_L[iii]=in_SQX_L[iii];
 		r_SQX_R[iii]=in_SQX_R[iii];
 	}
-
 	outTree->Fill();
+	
 }
 
-printf("#\tCreating file: %s with tree named \"calibrated\"\n",out_fname.Copy().Prepend("cal_").Data());
+printf("#\tCreating file: %s with tree named \"calibrated\"\n",out_fname.Copy().Data());
 }
 
 void calibrate_tree()
@@ -271,7 +274,7 @@ void calibrate_tree()
 	while (TObject *obj = bluster())
 	{
 		TString inFname = obj->GetName();
-		if (inFname.Contains("cln"))
+		if (inFname.Contains("cln_") && inFname.Contains("run"))
 		{
 			printf("%s\n",inFname.Data());
 		}
@@ -280,7 +283,7 @@ void calibrate_tree()
 	while (TObject *obj = next())
 	{
 		TString str_name = obj->GetName();
-		if (str_name.Contains("cln"))
+		if (str_name.Contains("cln_") && str_name.Contains("run"))
 		{
 			wrk(obj->GetName(), dir_current);
 		}
@@ -291,10 +294,4 @@ void calibrate_tree()
 }
 
 //}
-/*
-		double Tbeam=v2H->Energy();
-	 double invariant = (m2H+m6He)*(m2H+m6He)+2.*m2H*Tbeam;
-	 double shorty=(invariant-m2H*m2H-m6He*m6He)*(invariant-m2H*m2H-m6He*m6He);
-	 double CMmom = sqrt((shorty-4.*m2H*m2H*m6He*m6He)/(4.*invariant));
-	 double chi = log((CMmom+sqrt(m2H*m2H+CMmom*CMmom))/m2H);
-*/
+

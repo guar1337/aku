@@ -59,6 +59,7 @@ else {printf("*Succesfully opened tree %s\n\n",outTree->GetName());}
 maynard = new TOOL();
 //Creating addresses of BEAM holding branches
 inTree->SetMakeClass(1);
+
 inTree->SetBranchAddress("NeEvent.CsI_L[16]",	in_CsI_L);
 inTree->SetBranchAddress("NeEvent.CsI_R[16]",	in_CsI_R);
 inTree->SetBranchAddress("NeEvent.SQX_L[32]",	in_SQX_L);
@@ -97,19 +98,19 @@ inTree->SetBranchAddress("NeEvent.trigger", &in_trig);
 //ReCo - detectors
 outTree->SetMakeClass(1);
 //CALIBRATED DATA
-outTree->Branch("SQX_L",	out_SQX_L,	"SQX_L[32]/D");
-outTree->Branch("SQX_R",	out_SQX_R,	"SQX_R[32]/D");
-outTree->Branch("SQY_L",	out_SQY_L,	"SQY_L[16]/D");
-outTree->Branch("SQY_R",	out_SQY_R,	"SQY_R[16]/D");
-outTree->Branch("CsI_L",	out_CsI_L,	"CsI_L[16]/D");
-outTree->Branch("CsI_R",	out_CsI_R,	"CsI_R[16]/D");
+outTree->Branch("SQX_L",	out_SQX_L,	"SQX_L[32]/s");
+outTree->Branch("SQX_R",	out_SQX_R,	"SQX_R[32]/s");
+outTree->Branch("SQY_L",	out_SQY_L,	"SQY_L[16]/s");
+outTree->Branch("SQY_R",	out_SQY_R,	"SQY_R[16]/s");
+outTree->Branch("CsI_L",	out_CsI_L,	"CsI_L[16]/s");
+outTree->Branch("CsI_R",	out_CsI_R,	"CsI_R[16]/s");
 
-outTree->Branch("tSQX_L",	out_tSQX_L,	"tSQX_L[32]/D");
-outTree->Branch("tSQX_R",	out_tSQX_R,	"tSQX_R[32]/D");
-outTree->Branch("tSQY_L",	out_tSQY_L,	"tSQY_L[16]/D");
-outTree->Branch("tSQY_R",	out_tSQY_R,	"tSQY_R[16]/D");
-outTree->Branch("tCsI_L",	out_tCsI_L,	"tCsI_L[16]/D");
-outTree->Branch("tCsI_R",	out_tCsI_R,	"tCsI_R[16]/D");
+outTree->Branch("tSQX_L",	out_tSQX_L,	"tSQX_L[32]/s");
+outTree->Branch("tSQX_R",	out_tSQX_R,	"tSQX_R[32]/s");
+outTree->Branch("tSQY_L",	out_tSQY_L,	"tSQY_L[16]/s");
+outTree->Branch("tSQY_R",	out_tSQY_R,	"tSQY_R[16]/s");
+outTree->Branch("tCsI_L",	out_tCsI_L,	"tCsI_L[16]/s");
+outTree->Branch("tCsI_R",	out_tCsI_R,	"tCsI_R[16]/s");
 
 outTree->Branch("x1",	out_x1,	"x1[32]/s");
 outTree->Branch("x2",	out_x2,	"x2[32]/s");
@@ -121,20 +122,20 @@ outTree->Branch("nx2",	&out_nx2,	"nx2/s");
 outTree->Branch("ny1",	&out_ny1,	"ny1/s");
 outTree->Branch("ny2",	&out_ny2,	"ny2/s");
 
-outTree->Branch("tF3",	out_tF3,	"tF3[4]/D");
-outTree->Branch("F3",	out_F3,		"F3[4]/D");
-outTree->Branch("tF5",	out_tF5,	"tF5[4]/D");
-outTree->Branch("F5",	out_F5,		"F5[4]/D");
-outTree->Branch("tF6",	out_tF6,	"tF6[4]/D");
-outTree->Branch("F6",	out_F6,		"F6[4]/D");
+outTree->Branch("tF3",	out_tF3,	"tF3[4]/s");
+outTree->Branch("F3",	out_F3,		"F3[4]/s");
+outTree->Branch("tF5",	out_tF5,	"tF5[4]/s");
+outTree->Branch("F5",	out_F5,		"F5[4]/s");
+outTree->Branch("tF6",	out_tF6,	"tF6[4]/s");
+outTree->Branch("F6",	out_F6,		"F6[4]/s");
 
-outTree->Branch("tMWPC",	out_tMWPC,	"tMWPC[4]/f");
+outTree->Branch("tMWPC",	out_tMWPC,	"tMWPC[4]/s");
 outTree->Branch("tof",		&tof,		"tof/D");
 outTree->Branch("sumF5",	&sumF5,		"aF5/D");
 outTree->Branch("trig",		&out_trig,	"trig/I");
 
-
 TRandom3 *rnd = new TRandom3();
+maynard->params_loader("SQX_L_tc.clb", a_tSQX_L, b_tSQX_L, 32);
 Long64_t nEntries = inTree->GetEntries();
 counter = 0;
 Long64_t tac_count=0, mwpc_count=0, amp_count=0, tof_range_count=0, zero_mult=0;
@@ -148,7 +149,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		printf("#Progress: %i%%\n",counter);
 		counter+=10;
 	}
-	tac=false; mwpc=false; tof_range=false; amp=false;
+	tac=false; mwpc=false; tof_range=false; amp=false, sql=false;
 	if (in_nx1<100 && in_nx2<100 && in_ny1<100 && in_ny2<100)
 	{
 
@@ -197,6 +198,13 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			out_SQX_R[iii]=in_SQX_R[iii];
 			out_tSQX_R[iii]=in_tSQX_R[iii];
 			out_tSQX_L[iii]=in_tSQX_L[iii];
+
+			tSQX_L[iii]=(in_tSQX_L[iii]+gRandom->Uniform())*b_tSQX_L[iii]+a_tSQX_L[iii];
+			if (in_tSQX_L[iii]>s::tc_SQX_L)
+			{
+				sql=true;
+			}
+
 		}
 
 
@@ -217,12 +225,12 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			mwpc_count++;
 		}
 		
-		if (sumF5>0)
-		{
+//		if (sumF5>0)
+//		{
 			amp=true;
-			amp_count++;
-
-		}
+//			amp_count++;
+//
+//		}
 
 		if (tof>100 && tof<200)
 		{
@@ -235,7 +243,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			zero_mult++;
 		}
 
-		if (tac*mwpc*amp*tof_range)		
+		if (tac*mwpc*amp*tof_range*sql)		
 		{
 			outTree->Fill();
 		}
@@ -295,7 +303,7 @@ void muchobojca()
 	while (TObject *obj = bluster())
 	{
 		TString inFname = obj->GetName();
-		if (inFname.Contains("csi") && !inFname.Contains("cln"))
+		if (inFname.Contains("3") && !inFname.Contains("cln"))
 		{
 			printf("%s\n",inFname.Data());
 		}
@@ -304,7 +312,7 @@ void muchobojca()
 	while (TObject *obj = next())
 	{
 		TString str_name = obj->GetName();
-		if (str_name.Contains("csi") && !str_name.Contains("cln") && !str_name.Contains("_"))
+		if (str_name.Contains("3") && !str_name.Contains("cln") && !str_name.Contains("dE") && !str_name.Contains("cal"))
 		{
 			wrk(obj->GetName(), dir_current);
 		}
@@ -313,12 +321,3 @@ void muchobojca()
 	}
 	
 }
-
-//}
-/*
-	double Tbeam=v2H->Energy();
-	double invariant = (m2H+m6He)*(m2H+m6He)+2.*m2H*Tbeam;
-	double shorty=(invariant-m2H*m2H-m6He*m6He)*(invariant-m2H*m2H-m6He*m6He);
-	double CMmom = sqrt((shorty-4.*m2H*m2H*m6He*m6He)/(4.*invariant));
-	double chi = log((CMmom+sqrt(m2H*m2H+CMmom*CMmom))/m2H);
-*/

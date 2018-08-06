@@ -40,7 +40,7 @@ Double_t TOOL::gettime(Double_t T, Float_t mass, Float_t dist)
 
 Double_t TOOL::getVelo(Double_t T, Float_t mass)
 {
-	gamma_squared = pow(T/(mass*mass)+1,2.0);
+	gamma_squared = pow(T/(mass)+1,2.0);
 
 	beta = sqrt(1-1/gamma_squared);
 	return beta*s::c;
@@ -460,6 +460,7 @@ bool TOOL::gcuts_loader(TString fName, TCutG *gcut, TString ion)
 	fName.ReplaceAll("cal_","").ReplaceAll(".root","/");
 	string dummy, dummy2;
 	int points;
+	
 	ifstream instream((s::dir_gcut+fName+ion).Data());
 	//printf("Patrz co kot przyniosl: %s\n",(s::dir_gcut+fName+ion).Data() );
 
@@ -519,9 +520,53 @@ int TOOL::gcut_noPoints(TString fName, TString ion)
 
 	getline(instream, dummy, ',');
 	getline(instream, dummy, ')');
+	//printf("%s\n%s\n",dummy.c_str(), (s::dir_gcut+fName+ion).Data());
 	points = stoi(dummy);//"I am number of points now"
 	return points;
 
+}
+
+bool TOOL::params5_loader(TString fname, 	Float_t *par1,  Float_t *par2, Float_t *par3, 
+											Float_t *par4, Float_t *par5)
+{
+	ifstream instream(fname.Copy().Prepend(s::dir_params.Data()).Data());
+
+	if (!instream) 
+	{
+		printf ("#Cannot open %s coefficient file\n",fname.Copy().Prepend(s::dir_params.Data()).Data());
+		return 0;
+	}
+	
+	for (int iii=0; iii<16; iii++)
+	{
+		instream>>par1[iii]>>par2[iii]>>par3[iii]>>par4[iii]>>par5[iii];
+		printf("%f\t%f\t%f\t%f\t%f\n",par1[iii],par2[iii],par3[iii],par4[iii],par5[iii]);
+	}
+
+	instream.close();
+	return 1;
+}
+
+bool TOOL::params4_loader(TString fname, 	Float_t *par1,  Float_t *par2, Float_t *par3, 
+											Float_t *par4)
+{
+	ifstream instream(fname.Copy().Prepend(s::dir_params.Data()).Data());
+
+	if (!instream) 
+	{
+		printf ("#Cannot open %s coefficient file\n",
+		fname.Copy().Prepend(s::dir_params.Data()).Data());
+		return 0;
+	}
+	
+	for (int iii=0; iii<16; iii++)
+	{
+		instream>>par1[iii]>>par2[iii]>>par3[iii]>>par4[iii];
+		//printf("%f\t%f\t%f\t%f\n",par1[iii],par2[iii],par3[iii],par4[iii]);
+	}
+
+	instream.close();
+	return 1;
 }
 
 bool TOOL::data_loader(TString runNo, Short_t A, Short_t Z, Short_t detNo)
@@ -586,7 +631,7 @@ bool TOOL::data_loader(TString runNo, Short_t A, Short_t Z, Short_t detNo)
 	//printf("Czyz nie?: %f\n", LightOut[points-1]);
 	instream.close();
 
-	TString dir_out = TString::Format("%sdataPoints/L/%i.dat",
+	TString dir_out = TString::Format("%sdataPoints/L/%i_woPede.dat",
 					s::dir_CsI.Copy().ReplaceAll("parts","").Data(), detNo);
 	//printf("%s\n",dir_out.Data() );
 
@@ -601,6 +646,36 @@ bool TOOL::data_loader(TString runNo, Short_t A, Short_t Z, Short_t detNo)
 	outstream.close();
 
 	return true;
+}
+
+Float_t TOOL::kin_GetAngDeut(Float_t T_deu, Float_t T_beam)
+{
+	Float_t mass_ratio, velo_deu, velo_beam;
+	mass_ratio = s::mass_2H/s::mass_6He;
+	velo_deu = getVelo(T_deu, s::mass_2H);
+	velo_beam = getVelo(T_beam, s::mass_6He);
+	return acos( ( (1+mass_ratio)/2.0) * (velo_deu/velo_beam))*s::rad_to_deg;
+}
+
+Float_t TOOL::kin_GetDeutE(Float_t theta, Float_t T_beam)
+{
+	Float_t mass_ratio, velo_deu, velo_beam;
+	mass_ratio = s::mass_2H/s::mass_6He;
+	velo_beam = getVelo(T_beam, s::mass_6He);
+	velo_deu = ((2 * cos(theta)) / (1+mass_ratio)) * velo_beam;
+	beta_squared= pow(velo_deu/s::c, 2.0);
+	gamma=1.0/sqrt(1.0-beta_squared);
+	return s::mass_2H*(gamma-1.0);
+}
+
+Float_t TOOL::kin_GetAngHel(Float_t T_deut, Float_t T_beam)
+{
+	Float_t mass_ratio, velo_hel, velo_beam, vel_R;
+	mass_ratio = s::mass_2H/s::mass_6He;
+	velo_hel = getVelo(T_beam - T_deut, s::mass_6He);
+	velo_beam = getVelo(T_beam, s::mass_6He);
+	vel_R = velo_hel/velo_beam;
+	return acos(((1+mass_ratio)*vel_R*vel_R+1-mass_ratio)/(2*vel_R))*s::rad_to_deg;
 }
 
 TOOL::~TOOL()

@@ -14,10 +14,14 @@ R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
 void xavras()
 {
 TOOL *maynard = new TOOL();
-
+Float_t CsI_par1[16];
+Float_t CsI_par2[16];
+Float_t CsI_par3[16];
+Float_t CsI_par4[16];
+Float_t CsI_par5[16];
 Short_t A=2, Z=1, detNo=0;
 TString runNo1{"L1"}, runNo0{"L0"};
-
+/*
 for (Short_t iii = 0; iii < 16; ++iii)
 {
 	maynard->data_loader(runNo0, 2, 1, iii);
@@ -28,7 +32,7 @@ for (Short_t iii = 0; iii < 16; ++iii)
 	maynard->data_loader(runNo1, 6, 2, iii);
 	printf("\n\n^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n");
 }
-
+*/
 
 
 }

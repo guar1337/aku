@@ -14,14 +14,14 @@ namespace s
 	static const float		sql_ang_s0		=	0.0	* (3.1415/180.0);
 	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
 
-	static const float		sql_ang_s1		=	65.0	* (3.1415/180.0);
-	static const float		sqr_ang_s1		=	15.0	* (3.1415/180.0);
+	static const float		sql_ang_s1		=	(65.0 + 3.7)	* (3.1415/180.0);
+	static const float		sqr_ang_s1		=	(15.0 - 0.3)	* (3.1415/180.0);
 
 	static const float		sql_ang_s2		=	50.0	* (3.1415/180.0);
-	static const float		sqr_ang_s2		=	15.0	* (3.1415/180.0);
+	static const float		sqr_ang_s2		=	(15.0 - 0.578278)	* (3.1415/180.0);
 
 	static const float		sql_ang_s3		=	35.0	* (3.1415/180.0);
-	static const float		sqr_ang_s3		=	15.0	* (3.1415/180.0);
+	static const float		sqr_ang_s3		=	(15.0 - 0.578278)	* (3.1415/180.0);
 
 	static const float		sql_ang_s4		=	75.0	* (3.1415/180.0);
 	static const float		sqr_ang_s4		=	10.08	* (3.1415/180.0);
@@ -30,7 +30,10 @@ namespace s
 	static const float		tar_ang_s2		=	6.0		* (3.1415/180.0);
 	static const float		tar_ang_s3		=	0.0		* (3.1415/180.0);
 	static const float		tar_ang_s4		=	32.0	* (3.1415/180.0);
-	static const float		tar_pos_Z		=	170.0;
+	static const float		tar_thcknss		=	100;
+
+	static const float		tar_pos_Z		=	0.0;
+
 
 	static const float		tar_gcut_low_X_1	=	-13.0;
 	static const float		tar_gcut_high_X_1	=	18.0;
@@ -157,7 +160,7 @@ namespace s
 	static const short		MWPC_2_Y_id	=	3;
 
 	//*************************PHYSICS**************************************************
-	static const float		alpha_from_Ra226[4]{4.415, 5.153, 5.683, 7.419};
+	static const float		alpha_from_Ra226[4]{4.751, 5.459, 5.972, 7.661};
 	static const float		rad_to_deg	=	180.0	/ 3.1415927;
 	static const float		deg_to_rad	=	3.1415927/180.0;
 	static const float		PI 			=	3.1415927;
@@ -176,21 +179,22 @@ namespace s
 
 	static const float		c			=	299.792;	// mm/ns
 	
-	static const float		tofBase			=	12348.0;
-	static const float		dist_Tar_to_F5	=	953.0;
-	static const float		tof_const	=	89.165;
+	static const float		tofBase			=	12320.0;
+	static const float		dist_Tar_to_F5	=	-953.0;
+	static const float		dist_Tar_to_F6	=	478.0;
+	static const float		tof_const		=	89.165;
 
 	static const TString 	dir_runs("/home/guar/data/mar2018/raw");
 	static const TString 	dir_CsI("/home/guar/data/mar2018/miscroot/CsI/parts");
 	static const TString 	dir_params("/home/guar/data/mar2018/calib/params/");	
-	static const TString 	s_inFname("csiL1");
+	static const TString 	s_inFname("run3");
 	static const TString	s_playground("/home/guar/data/tools/");
-	static const TString	dir_gcut("/home/guar/data/mar2018/miscroot/CsI/gcuts/");
+	static const TString	dir_gcut("/home/guar/data/mar2018/GCuts/");
 
 	static const TString	dir_len_data("/home/guar/data/");
 	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
 
 
-	static const int		runNo=	0;
+	static const int		runNo=	1;
 }
 #endif

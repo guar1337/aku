@@ -52,9 +52,15 @@ void butler()
 	while (TObject *obj = bluster())
 	{
 		TString inFname = obj->GetName();
-		if (inFname.Contains("cal_") && inFname.Contains("csi")) 
+
+		if  (inFname.Contains("cal_") && !inFname.Contains("0_2") && !inFname.Contains("2_3") && !inFname.Contains("All"))
 		{
 			printf("%s\n",inFname.Data());
+		}
+
+		else if (inFname.Contains("cal_"))
+		{
+			printf("%s%s%s%s%s\n", "\x1B[32m", "\e[1m", inFname.Data(), "\x1b[0m", "\e[0m");
 		}
 	}
 	TIter next(dir_data->GetListOfFiles());
@@ -64,13 +70,13 @@ void butler()
 
 		TString outFname = inFname.Copy().ReplaceAll("cal_", "").Prepend("dE_");
 
-		if (inFname.Contains("cal_") && inFname.Contains("csi")) 
+		if (inFname.Contains("cal_") && !inFname.Contains("0_2") && !inFname.Contains("2_3") && !inFname.Contains("All")) 
 		{
 			TFile *inF= new TFile((inFname.Data()), "READ");
 			TFile *outF = new TFile(outFname.Data(),"recreate");
 			if (!inF->IsZombie())
 			{
-				printf("Succesfully opened file %s\n",inFname.Data());
+				//printf("Succesfully opened file %s\n",inFname.Data());
 			}
 			else {return 0;}
 			TTree *inTree = (TTree*)inF->Get("calibrated");
