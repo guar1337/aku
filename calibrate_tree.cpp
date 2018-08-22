@@ -5,50 +5,14 @@ R__LOAD_LIBRARY(libgsl.so);
 R__LOAD_LIBRARY(/home/guar/aku/ELC/libEloss.so);
 R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
 
-void wrk(TString in_fname, TString dir_current) 
-{
 
-gSystem->cd(dir_current.Data());
-if (!in_fname.Contains(".root"))
+ClassImp(calibrate_tree);
+calibrate_tree::calibrate_tree()
 {
-	in_fname.Append(".root");
-
-}
-TString out_fname = in_fname.Copy().ReplaceAll("cln","cal");
-TFile *inF = new TFile(in_fname.Copy());
-if (inF->IsZombie())
-{
-	printf("\n!!Cannot open file: %s\n", in_fname.Copy().Prepend("inF: ").Data());
-	return 0;
 }
 
-printf("\n*Succesfully opened file %s\n",inF->GetName());
-TFile *outF = new TFile(in_fname.Copy().ReplaceAll("cln","cal"),"RECREATE");
-if (outF->IsZombie())
+bool calibrate_tree::wrk(TTree *inTree, TTree *outTree, TString fName) 
 {
-	printf("!!Cannot open file: %s\n", in_fname.Copy().Prepend("outF: ").Data());
-	return 0;
-}
-printf("*Succesfully opened file %s\n\n",outF->GetName());
-
-
-TTree *inTree = (TTree*)inF->Get("cleaned");
-TTree *outTree= new TTree("calibrated","calibrated");
-
-
-if (inTree->IsZombie())
-{
-	printf("!!Cannot open tree: %s\n", in_fname.Copy().Prepend("inTree: ").Data());
-	return 0;
-}
-else {printf("*Succesfully opened tree %s\n",inTree->GetName());}
-
-if (outTree->IsZombie())
-{
-	printf("!!Cannot open tree: %s\n", in_fname.Copy().Prepend("outTree: ").Data());
-	return 0;
-}
-else {printf("*Succesfully opened tree %s\n\n",outTree->GetName());}
 
 //Creating addresses of BEAM holding branches
 inTree->SetMakeClass(1);
@@ -100,6 +64,7 @@ outTree->Branch("SQX_R",	out_SQX_R,	"SQX_R[32]/D");
 outTree->Branch("SQY_L",	out_SQY_L,	"SQY_L[16]/D");
 outTree->Branch("SQY_R",	out_SQY_R,	"SQY_R[16]/D");
 outTree->Branch("CsI_L",	out_CsI_L,	"CsI_L[16]/D");
+outTree->Branch("CsI_0L",	out_CsI_0L,	"CsI_0L[16]/D");
 outTree->Branch("CsI_R",	out_CsI_R,	"CsI_R[16]/D");
 
 outTree->Branch("tSQX_L",	out_tSQX_L,	"tSQX_L[32]/D");
@@ -157,7 +122,8 @@ if (maynard->params_loader("SQX_L_ec.clb", a_SQX_L, b_SQX_L, 32)	&&
 	maynard->params_loader("csi_r_tc.clb", a_tCsI_R, b_tCsI_R, 16)	&&
 	maynard->params_loader("csi_l_tc.clb", a_tCsI_L, b_tCsI_L, 16)	&&
 	maynard->params_loader("csi_r_ec.clb", a_CsI_R, b_CsI_R, 16)	&&
-	maynard->params_loader("csi_l_ec.clb", a_CsI_L, b_CsI_L, 16)	)
+	maynard->params_loader("csi_l_ec.clb", a_CsI_L, b_CsI_L, 16)	&&
+	maynard->params_loader("csi_l_0ec.clb", a_CsI_0L, b_CsI_0L, 16)	)
 {
 	printf("#\tSuccesfully calibrated all the files\n");
 }
@@ -203,6 +169,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		out_SQY_R[iii]=(in_SQY_R[iii]+gRandom->Uniform())*b_SQY_R[iii]+a_SQY_R[iii];
 		out_CsI_R[iii]=(in_CsI_R[iii]+gRandom->Uniform())*b_CsI_R[iii]+a_CsI_R[iii];
 		out_CsI_L[iii]=(in_CsI_L[iii]+gRandom->Uniform())*b_CsI_L[iii]+a_CsI_L[iii];
+		out_CsI_0L[iii]=(in_CsI_L[iii]+gRandom->Uniform())*b_CsI_0L[iii]+a_CsI_0L[iii];
 
 		out_tSQY_L[iii]=(in_tSQY_L[iii]+gRandom->Uniform())*b_tSQY_L[iii]+a_tSQY_L[iii];
 		out_tSQY_R[iii]=(in_tSQY_R[iii]+gRandom->Uniform())*b_tSQY_R[iii]+a_tSQY_R[iii];
@@ -232,66 +199,10 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	outTree->Fill();
 	
 }
-
-printf("#\tCreating file: %s with tree named \"calibrated\"\n",out_fname.Copy().Data());
+outTree->Write();
+return 1;
 }
 
-void calibrate_tree()
+calibrate_tree::~calibrate_tree()
 {
-	TString dir_current;
-	switch (s::runNo)
-	{
-		case 0:
-			dir_current = s::dir_CsI;
-			break;
-
-		case 1:
-			dir_current = s::dir_runs.Copy().Append("/geo1").Data();
-			break;
-
-		case 2:
-			dir_current = s::dir_runs.Copy().Append("/geo2").Data();
-			break;
-
-		case 3:
-			dir_current = s::dir_runs.Copy().Append("/geo3").Data();
-			break;
-
-		case 4:
-			dir_current = s::dir_runs.Copy().Append("/geo4").Data();
-			break;
-
-		default:
-			printf("\n!!\tError: WTF amigo\n");
-			return 0;
-			break;
-	}
-
-	gSystem->cd(dir_current.Data());
-	TSystemDirectory *dir_data = new TSystemDirectory("data", dir_current.Data());
-
-	TIter bluster(dir_data->GetListOfFiles());
-	while (TObject *obj = bluster())
-	{
-		TString inFname = obj->GetName();
-		if (inFname.Contains("cln_") && inFname.Contains("run"))
-		{
-			printf("%s\n",inFname.Data());
-		}
-	}
-	TIter next(dir_data->GetListOfFiles());
-	while (TObject *obj = next())
-	{
-		TString str_name = obj->GetName();
-		if (str_name.Contains("cln_") && str_name.Contains("run"))
-		{
-			wrk(obj->GetName(), dir_current);
-		}
-
-		
-	}
-	
 }
-
-//}
-

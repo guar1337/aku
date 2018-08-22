@@ -14,19 +14,21 @@ namespace s
 	static const float		sql_ang_s0		=	0.0	* (3.1415/180.0);
 	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
 
-	static const float		sql_ang_s1		=	(65.0 + 3.7)	* (3.1415/180.0);
-	static const float		sqr_ang_s1		=	(15.0 - 0.3)	* (3.1415/180.0);
+	static const float		sql_ang_s10		=	(65.0 + 4.0)	* (3.1415/180.0);
+	static const float		sql_ang_s12		=	(65.0 + 4.0)	* (3.1415/180.0);
 
-	static const float		sql_ang_s2		=	50.0	* (3.1415/180.0);
-	static const float		sqr_ang_s2		=	(15.0 - 0.578278)	* (3.1415/180.0);
+	static const float		sqr_ang_s1		=	(15.0 -  0.19)	* (3.1415/180.0);
+
+	static const float		sql_ang_s2		=	(50.0 + 3.58)	* (3.1415/180.0);
+	static const float		sqr_ang_s2		=	(15.0 - 0.19)	* (3.1415/180.0);
 
 	static const float		sql_ang_s3		=	35.0	* (3.1415/180.0);
-	static const float		sqr_ang_s3		=	(15.0 - 0.578278)	* (3.1415/180.0);
+	static const float		sqr_ang_s3		=	(15.0 - 0.19)	* (3.1415/180.0);
 
-	static const float		sql_ang_s4		=	75.0	* (3.1415/180.0);
+	static const float		sql_ang_s4		=	(75.0 + 4.0)	* (3.1415/180.0);
 	static const float		sqr_ang_s4		=	10.08	* (3.1415/180.0);
 
-	static const float		tar_ang_s1		=	45.0	* (3.1415/180.0);
+	static const float		tar_ang_s1		=	38.0	* (3.1415/180.0);
 	static const float		tar_ang_s2		=	6.0		* (3.1415/180.0);
 	static const float		tar_ang_s3		=	0.0		* (3.1415/180.0);
 	static const float		tar_ang_s4		=	32.0	* (3.1415/180.0);
@@ -184,10 +186,10 @@ namespace s
 	static const float		dist_Tar_to_F6	=	478.0;
 	static const float		tof_const		=	89.165;
 
-	static const TString 	dir_runs("/home/guar/data/mar2018/raw");
+	static const TString 	dir_runs("/home/guar/data/mar2018/");
 	static const TString 	dir_CsI("/home/guar/data/mar2018/miscroot/CsI/parts");
 	static const TString 	dir_params("/home/guar/data/mar2018/calib/params/");	
-	static const TString 	s_inFname("run3");
+	static const TString 	s_inFname("run00_12");
 	static const TString	s_playground("/home/guar/data/tools/");
 	static const TString	dir_gcut("/home/guar/data/mar2018/GCuts/");
 
@@ -195,6 +197,7 @@ namespace s
 	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
 
 
-	static const int		runNo=	1;
+	static const int		runNo=	12;
+	static const TString	inDir = "clb";
 }
 #endif

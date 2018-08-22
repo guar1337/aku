@@ -39,6 +39,8 @@ namespace std {} using namespace std;
 // Header files passed as explicit arguments
 #include "TOOL.h"
 #include "dE_E_angle.h"
+#include "muchobojca.h"
+#include "calibrate_tree.h"
 
 // Header files passed via #pragma extra_include
 
@@ -56,7 +58,7 @@ namespace ROOT {
       ::TOOL *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TOOL >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TOOL", ::TOOL::Class_Version(), "TOOL.h", 15,
+         instance("TOOL", ::TOOL::Class_Version(), "TOOL.h", 16,
                   typeid(::TOOL), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TOOL::Dictionary, isa_proxy, 16,
                   sizeof(::TOOL) );
@@ -108,6 +110,74 @@ namespace ROOT {
    }
    // Static variable to force the class initialization
    static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::dE_E_angle*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
+
+namespace ROOT {
+   static void *new_muchobojca(void *p = 0);
+   static void *newArray_muchobojca(Long_t size, void *p);
+   static void delete_muchobojca(void *p);
+   static void deleteArray_muchobojca(void *p);
+   static void destruct_muchobojca(void *p);
+   static void streamer_muchobojca(TBuffer &buf, void *obj);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::muchobojca*)
+   {
+      ::muchobojca *ptr = 0;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::muchobojca >(0);
+      static ::ROOT::TGenericClassInfo 
+         instance("muchobojca", ::muchobojca::Class_Version(), "muchobojca.h", 20,
+                  typeid(::muchobojca), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::muchobojca::Dictionary, isa_proxy, 16,
+                  sizeof(::muchobojca) );
+      instance.SetNew(&new_muchobojca);
+      instance.SetNewArray(&newArray_muchobojca);
+      instance.SetDelete(&delete_muchobojca);
+      instance.SetDeleteArray(&deleteArray_muchobojca);
+      instance.SetDestructor(&destruct_muchobojca);
+      instance.SetStreamerFunc(&streamer_muchobojca);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::muchobojca*)
+   {
+      return GenerateInitInstanceLocal((::muchobojca*)0);
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::muchobojca*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+} // end of namespace ROOT
+
+namespace ROOT {
+   static void *new_calibrate_tree(void *p = 0);
+   static void *newArray_calibrate_tree(Long_t size, void *p);
+   static void delete_calibrate_tree(void *p);
+   static void deleteArray_calibrate_tree(void *p);
+   static void destruct_calibrate_tree(void *p);
+   static void streamer_calibrate_tree(TBuffer &buf, void *obj);
+
+   // Function generating the singleton type initializer
+   static TGenericClassInfo *GenerateInitInstanceLocal(const ::calibrate_tree*)
+   {
+      ::calibrate_tree *ptr = 0;
+      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::calibrate_tree >(0);
+      static ::ROOT::TGenericClassInfo 
+         instance("calibrate_tree", ::calibrate_tree::Class_Version(), "calibrate_tree.h", 19,
+                  typeid(::calibrate_tree), ::ROOT::Internal::DefineBehavior(ptr, ptr),
+                  &::calibrate_tree::Dictionary, isa_proxy, 16,
+                  sizeof(::calibrate_tree) );
+      instance.SetNew(&new_calibrate_tree);
+      instance.SetNewArray(&newArray_calibrate_tree);
+      instance.SetDelete(&delete_calibrate_tree);
+      instance.SetDeleteArray(&deleteArray_calibrate_tree);
+      instance.SetDestructor(&destruct_calibrate_tree);
+      instance.SetStreamerFunc(&streamer_calibrate_tree);
+      return &instance;
+   }
+   TGenericClassInfo *GenerateInitInstance(const ::calibrate_tree*)
+   {
+      return GenerateInitInstanceLocal((::calibrate_tree*)0);
+   }
+   // Static variable to force the class initialization
+   static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::calibrate_tree*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
 } // end of namespace ROOT
 
 //______________________________________________________________________________
@@ -181,6 +251,76 @@ TClass *dE_E_angle::Class()
 }
 
 //______________________________________________________________________________
+atomic_TClass_ptr muchobojca::fgIsA(0);  // static to hold class pointer
+
+//______________________________________________________________________________
+const char *muchobojca::Class_Name()
+{
+   return "muchobojca";
+}
+
+//______________________________________________________________________________
+const char *muchobojca::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::muchobojca*)0x0)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int muchobojca::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::muchobojca*)0x0)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *muchobojca::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::muchobojca*)0x0)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *muchobojca::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::muchobojca*)0x0)->GetClass(); }
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+atomic_TClass_ptr calibrate_tree::fgIsA(0);  // static to hold class pointer
+
+//______________________________________________________________________________
+const char *calibrate_tree::Class_Name()
+{
+   return "calibrate_tree";
+}
+
+//______________________________________________________________________________
+const char *calibrate_tree::ImplFileName()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::calibrate_tree*)0x0)->GetImplFileName();
+}
+
+//______________________________________________________________________________
+int calibrate_tree::ImplFileLine()
+{
+   return ::ROOT::GenerateInitInstanceLocal((const ::calibrate_tree*)0x0)->GetImplFileLine();
+}
+
+//______________________________________________________________________________
+TClass *calibrate_tree::Dictionary()
+{
+   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::calibrate_tree*)0x0)->GetClass();
+   return fgIsA;
+}
+
+//______________________________________________________________________________
+TClass *calibrate_tree::Class()
+{
+   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::calibrate_tree*)0x0)->GetClass(); }
+   return fgIsA;
+}
+
+//______________________________________________________________________________
 void TOOL::Streamer(TBuffer &R__b)
 {
    // Stream an object of class TOOL.
@@ -246,11 +386,79 @@ namespace ROOT {
    }
 } // end of namespace ROOT for class ::dE_E_angle
 
+//______________________________________________________________________________
+void muchobojca::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class muchobojca.
+
+   ::Error("muchobojca::Streamer", "version id <=0 in ClassDef, dummy Streamer() called"); if (R__b.IsReading()) { }
+}
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_muchobojca(void *p) {
+      return  p ? new(p) ::muchobojca : new ::muchobojca;
+   }
+   static void *newArray_muchobojca(Long_t nElements, void *p) {
+      return p ? new(p) ::muchobojca[nElements] : new ::muchobojca[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_muchobojca(void *p) {
+      delete ((::muchobojca*)p);
+   }
+   static void deleteArray_muchobojca(void *p) {
+      delete [] ((::muchobojca*)p);
+   }
+   static void destruct_muchobojca(void *p) {
+      typedef ::muchobojca current_t;
+      ((current_t*)p)->~current_t();
+   }
+   // Wrapper around a custom streamer member function.
+   static void streamer_muchobojca(TBuffer &buf, void *obj) {
+      ((::muchobojca*)obj)->::muchobojca::Streamer(buf);
+   }
+} // end of namespace ROOT for class ::muchobojca
+
+//______________________________________________________________________________
+void calibrate_tree::Streamer(TBuffer &R__b)
+{
+   // Stream an object of class calibrate_tree.
+
+   ::Error("calibrate_tree::Streamer", "version id <=0 in ClassDef, dummy Streamer() called"); if (R__b.IsReading()) { }
+}
+
+namespace ROOT {
+   // Wrappers around operator new
+   static void *new_calibrate_tree(void *p) {
+      return  p ? new(p) ::calibrate_tree : new ::calibrate_tree;
+   }
+   static void *newArray_calibrate_tree(Long_t nElements, void *p) {
+      return p ? new(p) ::calibrate_tree[nElements] : new ::calibrate_tree[nElements];
+   }
+   // Wrapper around operator delete
+   static void delete_calibrate_tree(void *p) {
+      delete ((::calibrate_tree*)p);
+   }
+   static void deleteArray_calibrate_tree(void *p) {
+      delete [] ((::calibrate_tree*)p);
+   }
+   static void destruct_calibrate_tree(void *p) {
+      typedef ::calibrate_tree current_t;
+      ((current_t*)p)->~current_t();
+   }
+   // Wrapper around a custom streamer member function.
+   static void streamer_calibrate_tree(TBuffer &buf, void *obj) {
+      ((::calibrate_tree*)obj)->::calibrate_tree::Streamer(buf);
+   }
+} // end of namespace ROOT for class ::calibrate_tree
+
 namespace {
   void TriggerDictionaryInitialization_Mr_Blue_Sky_Impl() {
     static const char* headers[] = {
 "TOOL.h",
 "dE_E_angle.h",
+"muchobojca.h",
+"calibrate_tree.h",
 0
     };
     static const char* includePaths[] = {
@@ -267,6 +475,8 @@ namespace {
 extern int __Cling_Autoloading_Map;
 class __attribute__((annotate("$clingAutoload$TOOL.h")))  TOOL;
 class __attribute__((annotate("$clingAutoload$dE_E_angle.h")))  dE_E_angle;
+class __attribute__((annotate("$clingAutoload$muchobojca.h")))  muchobojca;
+class __attribute__((annotate("$clingAutoload$calibrate_tree.h")))  calibrate_tree;
 )DICTFWDDCLS";
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "Mr_Blue_Sky dictionary payload"
@@ -278,12 +488,16 @@ class __attribute__((annotate("$clingAutoload$dE_E_angle.h")))  dE_E_angle;
 #define _BACKWARD_BACKWARD_WARNING_H
 #include "TOOL.h"
 #include "dE_E_angle.h"
+#include "muchobojca.h"
+#include "calibrate_tree.h"
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
     static const char* classesHeaders[]={
 "TOOL", payloadCode, "@",
+"calibrate_tree", payloadCode, "@",
 "dE_E_angle", payloadCode, "@",
+"muchobojca", payloadCode, "@",
 nullptr};
 
     static bool isInitialized = false;

@@ -16,7 +16,15 @@
 #include </home/guar/aku/ELC/AELC.h>
 #include </home/guar/aku/ELC/ELC.h>
 
+class calibrate_tree
+{
+public:
+calibrate_tree();
+virtual ~calibrate_tree();
+bool wrk(TTree *, TTree *, TString);
 TOOL *maynard;
+
+protected:
 UShort_t in_CsI_L[16];
 UShort_t in_CsI_R[16];
 UShort_t in_SQX_L[32];
@@ -53,6 +61,7 @@ UShort_t in_tMWPC[4];
 int in_trig;
 //out tree branches
 Double_t out_CsI_L[16];
+Double_t out_CsI_0L[16];
 Double_t out_CsI_R[16];
 Double_t out_SQX_L[32];
 Double_t out_SQX_Lnew[32];
@@ -97,6 +106,7 @@ Double_t aF5, in_tof, out_tof, sumF5, AZ;
 Float_t out_tMWPC[4];
 
 float a_CsI_L[16];
+float a_CsI_0L[16];
 float a_CsI_R[16];
 float a_SQX_L[32];
 float a_SQX_Lnew[32];
@@ -112,6 +122,7 @@ float a_SQY_R[16];
 float pede_CsI_L[16];
 
 float b_CsI_L[16];
+float b_CsI_0L[16];
 float b_CsI_R[16];
 float b_SQX_L[32];
 float b_SQX_Lnew[32];
@@ -126,4 +137,7 @@ float b_SQY_L[16];
 float b_SQY_R[16];
 
 int out_trig;
+
+ClassDef(calibrate_tree,0);
+};
 #endif

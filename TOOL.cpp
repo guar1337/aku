@@ -135,6 +135,7 @@ bool TOOL::Get_MWPC_pos(UShort_t multi, UShort_t *wireNo,
 	return 0;
 }
 
+
 bool TOOL::initializeGeometry(	Double_t *sqr_ang, Double_t *sql_ang,
 								Double_t *sqr_dist, Double_t *sql_dist,
 								Float_t *tar_angle) 
@@ -167,10 +168,22 @@ bool TOOL::initializeGeometry(	Double_t *sqr_ang, Double_t *sql_ang,
 		return 1;
 		break;
 
-		case 1:
+		case 10:
 		printf("\nLoaded exprimental setup parameters for geometry 1:\n");
 		*sqr_ang=s::sqr_ang_s1;
-		*sql_ang=s::sql_ang_s1;
+		*sql_ang=s::sql_ang_s10;
+		
+		*sqr_dist=s::sqr_dist_s1;
+		*sql_dist=s::sql_dist_s1;
+		*tar_angle=s::tar_ang_s1;
+		printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
+		return 1;
+		break;
+
+		case 12:
+		printf("\nLoaded exprimental setup parameters for geometry 1:\n");
+		*sqr_ang=s::sqr_ang_s1;
+		*sql_ang=s::sql_ang_s12;
 		
 		*sqr_dist=s::sqr_dist_s1;
 		*sql_dist=s::sql_dist_s1;
@@ -234,76 +247,6 @@ bool TOOL::initializeGeometry(	Double_t *sqr_ang, Double_t *sql_ang,
 	}
 }
 
-bool TOOL::getTarCuts(	Float_t *tar_cut_lo_X, Float_t *tar_cut_hi_X,
-						Float_t *tar_cut_lo_Y, Float_t *tar_cut_hi_Y) 
-{
-	printf("\n*****************************************");
-	//Read detectors geometry parameters depending on run
-	switch (s::runNo)
-	{
-		case 7:
-		printf("\nLoaded geometrical cuts on target for geometry 7:\n");
-		return 1;
-		break;
-
-		case 9:
-		printf("\nLoaded geometrical cuts on target for geometry 9:\n");
-		return 1;
-		break;
-
-		case 1:
-		printf("\nLoaded geometrical cuts on target for geometry 1:\n");
-		*tar_cut_lo_X=s::tar_gcut_low_X_1;
-		*tar_cut_hi_X=s::tar_gcut_high_X_1;
-		
-		*tar_cut_lo_Y=s::tar_gcut_low_Y_1;
-		*tar_cut_hi_Y=s::tar_gcut_high_Y_1;
-		return 1;
-		break;
-
-		case 2:
-		printf("\nLoaded geometrical cuts on target for geometry 2:\n");
-		*tar_cut_lo_X=s::tar_gcut_low_X_2;
-		*tar_cut_hi_X=s::tar_gcut_high_X_2;
-		
-		*tar_cut_lo_Y=s::tar_gcut_low_Y_2;
-		*tar_cut_hi_Y=s::tar_gcut_high_Y_2;
-		return 1;
-		break;
-
-		case 3:
-		printf("\nLoaded geometrical cuts on target for geometry 3:\n");
-		*tar_cut_lo_X=s::tar_gcut_low_X_3;
-		*tar_cut_hi_X=s::tar_gcut_high_X_3;
-		
-		*tar_cut_lo_Y=s::tar_gcut_low_Y_3;
-		*tar_cut_hi_Y=s::tar_gcut_high_Y_3;
-		return 1;
-		break;
-
-		case 4:
-		printf("\nLoaded geometrical cuts on target for geometry 4:\n");
-		*tar_cut_lo_X=s::tar_gcut_low_X_4;
-		*tar_cut_hi_X=s::tar_gcut_high_X_4;
-		
-		*tar_cut_lo_Y=s::tar_gcut_low_Y_4;
-		*tar_cut_hi_Y=s::tar_gcut_high_Y_4;
-		return 1;
-		break;
-
-		case 0:
-		printf("\nLoaded geometrical cuts on target for geometry 0:\n");
-		return 1;
-		break;
-
-		default:
-		printf("\n#getTarCuts_Error: Wrong geometry\n");
-		return 0;
-		break;
-	}
-}
-
-
 bool TOOL::getTimeCorrectionForDets(Float_t *tcor_sqLX_I, Float_t *tcor_sqLX_II,
 									Float_t *tcor_sqRX_I, Float_t *tcor_sqRX_II,
 									Float_t *tcor_sqLY, Float_t *tcor_sqRY ) 
@@ -322,7 +265,18 @@ bool TOOL::getTimeCorrectionForDets(Float_t *tcor_sqLX_I, Float_t *tcor_sqLX_II,
 		return 1;
 		break;
 
-		case 1:
+		case 10:
+		printf("\nLoaded Si detectors time corrections for geometry 1...\n");
+		*tcor_sqLX_I	= s::tcor_sqLX_I_1;
+		*tcor_sqLX_II	= s::tcor_sqLX_II_1;
+		*tcor_sqRX_I	= s::tcor_sqRX_I_1;
+		*tcor_sqRX_II	= s::tcor_sqRX_II_1;
+		*tcor_sqLY		= s::tcor_sqLY_1;
+		*tcor_sqRY		= s::tcor_sqRY_1;
+		return 1;
+		break;
+
+		case 12:
 		printf("\nLoaded Si detectors time corrections for geometry 1...\n");
 		*tcor_sqLX_I	= s::tcor_sqLX_I_1;
 		*tcor_sqLX_II	= s::tcor_sqLX_II_1;
@@ -439,7 +393,8 @@ bool TOOL::params_loader(TString fname, float *AConst, float *BConst, short chNo
 
 	if (!instream) 
 	{
-		printf ("#Cannot open %s coefficient file\n",fname.Copy().Prepend(s::dir_params.Data()).Data());
+		printf ("#Cannot open %s coefficient file\n",
+				fname.Copy().Prepend(s::dir_params.Data()).Data());
 		return 0;
 	}
 
@@ -457,7 +412,7 @@ bool TOOL::params_loader(TString fname, float *AConst, float *BConst, short chNo
 
 bool TOOL::gcuts_loader(TString fName, TCutG *gcut, TString ion)
 {
-	fName.ReplaceAll("cal_","").ReplaceAll(".root","/");
+	fName.ReplaceAll("clb_","").ReplaceAll(".root","/");
 	string dummy, dummy2;
 	int points;
 	
@@ -466,7 +421,7 @@ bool TOOL::gcuts_loader(TString fName, TCutG *gcut, TString ion)
 
 	if (!instream) 
 	{
-		//printf ("#Cannot open %s coefficient file\n",(s::dir_gcut+fName+ion).Data());
+		printf ("!!Cannot open %s coefficient file\n",(s::dir_gcut+fName+ion).Data());
 		return false;
 	}
 	for (int iii = 0; iii < 4; ++iii)//clean lines before No of points
@@ -502,7 +457,7 @@ bool TOOL::gcuts_loader(TString fName, TCutG *gcut, TString ion)
 
 int TOOL::gcut_noPoints(TString fName, TString ion)
 {
-	fName.ReplaceAll("cal_","").ReplaceAll(".root","/");
+	fName.ReplaceAll("clb_","").ReplaceAll(".root","/");
 	string dummy, dummy2;
 	int points;
 	ifstream instream((s::dir_gcut+fName+ion).Data());
@@ -510,7 +465,7 @@ int TOOL::gcut_noPoints(TString fName, TString ion)
 
 	if (!instream) 
 	{
-		printf ("#Cannot open %s coefficient file\n",(s::dir_gcut+fName+ion).Data());
+		//printf ("#Cannot open %s coefficient file\n",(s::dir_gcut+fName+ion).Data());
 		return 0;
 	}
 	for (int iii = 0; iii < 4; ++iii)//clean lines before No of points
@@ -530,17 +485,20 @@ bool TOOL::params5_loader(TString fname, 	Float_t *par1,  Float_t *par2, Float_t
 											Float_t *par4, Float_t *par5)
 {
 	ifstream instream(fname.Copy().Prepend(s::dir_params.Data()).Data());
-
+	string dummy;
 	if (!instream) 
 	{
-		printf ("#Cannot open %s coefficient file\n",fname.Copy().Prepend(s::dir_params.Data()).Data());
+		printf ("#Cannot open %s coefficient file\n",
+				fname.Copy().Prepend(s::dir_params.Data()).Data());
 		return 0;
 	}
-	
+	//printf("\n%s\n",fname.Data() );
+	getline(instream, dummy);
+	getline(instream, dummy);
 	for (int iii=0; iii<16; iii++)
 	{
 		instream>>par1[iii]>>par2[iii]>>par3[iii]>>par4[iii]>>par5[iii];
-		printf("%f\t%f\t%f\t%f\t%f\n",par1[iii],par2[iii],par3[iii],par4[iii],par5[iii]);
+		//printf("%f\t%f\t%f\t%f\t%f\n",par1[iii],par2[iii],par3[iii],par4[iii],par5[iii]);
 	}
 
 	instream.close();

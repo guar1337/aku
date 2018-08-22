@@ -4,7 +4,7 @@ ELC_dir = /home/guar/aku/eloss
 INCLUDES = -I`root-config --incdir`
 
 SHAREDLIBS = $(addprefix -l, gsl Physics MathCore Core)
-CLASSLIST := TOOL dE_E_angle
+CLASSLIST := TOOL dE_E_angle muchobojca calibrate_tree
 
 
 HEADERS := $(addsuffix .h, $(CLASSLIST) linkdef)

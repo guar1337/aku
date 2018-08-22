@@ -17,7 +17,15 @@
 #include </home/guar/aku/ELC/AELC.h>
 #include </home/guar/aku/ELC/ELC.h>
 
+class muchobojca
+{
+public:
+muchobojca();
+virtual ~muchobojca();
+bool wrk(TTree *, TTree *, TString);
 TOOL *maynard;
+
+protected:
 
 
 UShort_t in_CsI_L[16];
@@ -96,4 +104,6 @@ Double_t sumF5, tof;
 Bool_t mwpc, amp, tac, tof_range, sql;
 Float_t a_tSQX_L[32], b_tSQX_L[32], tSQX_L[32];
 
+ClassDef(muchobojca,0);
+};
 #endif

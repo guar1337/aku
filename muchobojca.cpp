@@ -8,54 +8,13 @@ R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
 
 // voron1392
 
-
-void wrk(TString fname, TString dir_current) 
+ClassImp(muchobojca);
+muchobojca::muchobojca()
 {
-//TTree *inTree;
-
-gSystem->cd(dir_current.Data());
-if (!fname.Contains(".root"))
-{
-	fname.Append(".root");
-
-}
-TFile *inF = new TFile(fname.Copy());
-if (inF->IsZombie())
-{
-	printf("\n#Cannot open file: %s\n", fname.Copy().Prepend("inF: ").Data());
-	return 0;
 }
 
-printf("\n*Succesfully opened file %s\n",inF->GetName());
-TFile *outF = new TFile(fname.Copy().Prepend("cln_"),"RECREATE");
-if (outF->IsZombie())
+bool muchobojca::wrk(TTree *inTree, TTree *outTree, TString fname) 
 {
-	printf("#Cannot open file: %s\n", fname.Copy().Prepend("outF: ").Data());
-	return 0;
-}
-printf("*Succesfully opened file %s\n\n",outF->GetName());
-
-
-TTree *inTree = (TTree*)inF->Get("AnalysisxTree");
-TTree *outTree= new TTree("cleaned","cleaned");
-
-
-if (inTree->IsZombie())
-{
-	printf("#Cannot open tree: %s\n", fname.Copy().Prepend("inTree: ").Data());
-	return 0;
-}
-else {printf("*Succesfully opened tree %s\n",inTree->GetName());}
-
-if (outTree->IsZombie())
-{
-	printf("#Cannot open tree: %s\n", fname.Copy().Prepend("outTree: ").Data());
-	return 0;
-}
-else {printf("*Succesfully opened tree %s\n\n",outTree->GetName());}
-
-//inFiles
-
 maynard = new TOOL();
 //Creating addresses of BEAM holding branches
 inTree->SetMakeClass(1);
@@ -134,11 +93,10 @@ outTree->Branch("tof",		&tof,		"tof/D");
 outTree->Branch("sumF5",	&sumF5,		"aF5/D");
 outTree->Branch("trig",		&out_trig,	"trig/I");
 
-TRandom3 *rnd = new TRandom3();
 maynard->params_loader("SQX_L_tc.clb", a_tSQX_L, b_tSQX_L, 32);
 Long64_t nEntries = inTree->GetEntries();
 counter = 0;
-Long64_t tac_count=0, mwpc_count=0, amp_count=0, tof_range_count=0, zero_mult=0;
+Long64_t tac_count=0, mwpc_count=0, sql_count=0, tof_range_count=0, zero_mult=0;
 printf("##############################################################################\n");
 printf("#Loaded files have %lli entries. \n#Processing...\n", nEntries);
 for (Long64_t entry=0; entry<nEntries; entry++)
@@ -199,10 +157,10 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			out_tSQX_R[iii]=in_tSQX_R[iii];
 			out_tSQX_L[iii]=in_tSQX_L[iii];
 
-			tSQX_L[iii]=(in_tSQX_L[iii]+gRandom->Uniform())*b_tSQX_L[iii]+a_tSQX_L[iii];
-			if (in_tSQX_L[iii]>s::tc_SQX_L)
+			if (in_tSQX_L[iii]>500)
 			{
 				sql=true;
+				sql_count++;
 			}
 
 		}
@@ -218,7 +176,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		if (maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, s::MWPC_1_X_id)*
 			maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, s::MWPC_1_Y_id)*
 			maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, s::MWPC_2_X_id)*
-			maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, s::MWPC_2_Y_id)	)
+			maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, s::MWPC_2_Y_id)	&&
+			in_tMWPC[0]>3000 && in_tMWPC[1]>3000 && in_tMWPC[2]>3000 && in_tMWPC[3]>3000)
 		{
 
 			mwpc=true;
@@ -252,72 +211,18 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 	
 }
-
-printf("\n\n#\tCreating file: %s with tree named \"cleaned\"\n",fname.Copy().Prepend("cal_").Data());
+outTree->Write();
+//printf("\n\n#\tCreating file: %s with tree named \"cleaned\"\n",fname.Copy().Prepend("cal_").Data());
 printf("#\tWe got from %lli entries to %lli entries with trigger cut\n",inTree->GetEntries(), outTree->GetEntries()	);
 printf("#\tThat gives %i%% total efficiency\n", static_cast<int>(100*outTree->GetEntries()/inTree->GetEntries())	);
 printf("#\tTDC signals out of phase: %i%%\n", static_cast<int>(100*(nEntries-tac_count)/nEntries)	);
-printf("#\tQDC amplitude at 0: %i%%\n", static_cast<int>(100*(nEntries-amp_count)/nEntries)		);
-printf("#\tWrong tracking: %i%%\twhile there is %i%% of 0_mult events\n\n", static_cast<int>	(100*(nEntries-mwpc_count)/nEntries),static_cast<int>(100*(nEntries-zero_mult)/nEntries));
+printf("#\tSQL amplitude at 0: %i%%\n", static_cast<int>(100*(nEntries-sql_count)/nEntries)		);
+printf("#\tWrong tracking: %i%%\twhile there is %i%% of 0_mult events\n", static_cast<int>	(100*(nEntries-mwpc_count)/nEntries),static_cast<int>(100*(nEntries-zero_mult)/nEntries));
 printf("#\tToF out of range: %i%%\n", static_cast<int>(100*(nEntries-tof_range_count)/nEntries)	);
 printf("#\tGoodbye\n");
-outF->Write();
-//outF
-//inF->Close();
+return 1;
 }
 
-void muchobojca()
+muchobojca::~muchobojca()
 {
-	TString dir_current;
-	switch (s::runNo)
-	{
-		case 0:
-			dir_current = s::dir_CsI;
-			break;
-
-		case 1:
-			dir_current = s::dir_runs.Copy().Append("/geo1").Data();
-			break;
-
-		case 2:
-			dir_current = s::dir_runs.Copy().Append("/geo2").Data();
-			break;
-
-		case 3:
-			dir_current = s::dir_runs.Copy().Append("/geo3").Data();
-			break;
-
-		case 4:
-			dir_current = s::dir_runs.Copy().Append("/geo4").Data();
-			break;
-
-		default:
-			printf("\nError: WTF amigo\n");
-			return 0;
-			break;
-	}
-	gSystem->cd(dir_current.Data());
-	TSystemDirectory *dir_data = new TSystemDirectory("data", dir_current.Data());
-
-	TIter bluster(dir_data->GetListOfFiles());
-	while (TObject *obj = bluster())
-	{
-		TString inFname = obj->GetName();
-		if (inFname.Contains("3") && !inFname.Contains("cln"))
-		{
-			printf("%s\n",inFname.Data());
-		}
-	}
-	TIter next(dir_data->GetListOfFiles());
-	while (TObject *obj = next())
-	{
-		TString str_name = obj->GetName();
-		if (str_name.Contains("3") && !str_name.Contains("cln") && !str_name.Contains("dE") && !str_name.Contains("cal"))
-		{
-			wrk(obj->GetName(), dir_current);
-		}
-
-		
-	}
-	
 }
