@@ -92,7 +92,7 @@ namespace ROOT {
       ::dE_E_angle *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::dE_E_angle >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("dE_E_angle", ::dE_E_angle::Class_Version(), "dE_E_angle.h", 17,
+         instance("dE_E_angle", ::dE_E_angle::Class_Version(), "dE_E_angle.h", 18,
                   typeid(::dE_E_angle), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::dE_E_angle::Dictionary, isa_proxy, 16,
                   sizeof(::dE_E_angle) );

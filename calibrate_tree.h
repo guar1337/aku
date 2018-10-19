@@ -13,8 +13,8 @@
 #include "dE_E_angle.h"
 #include <TString.h>
 
-#include </home/guar/aku/ELC/AELC.h>
-#include </home/guar/aku/ELC/ELC.h>
+#include "ELC/AELC.h"
+#include "ELC/ELC.h"
 
 class calibrate_tree
 {
@@ -31,6 +31,7 @@ UShort_t in_SQX_L[32];
 UShort_t in_SQX_R[32];
 UShort_t in_SQY_L[16];
 UShort_t in_SQY_R[16];
+UShort_t in_SQ300[16];
 
 UShort_t in_tSQX_L[32];
 UShort_t in_tSQX_R[32];
@@ -38,7 +39,7 @@ UShort_t in_tCsI_L[16];
 UShort_t in_tCsI_R[16];
 UShort_t in_tSQY_L[16];
 UShort_t in_tSQY_R[16];
-
+UShort_t in_tSQ300[16];
 
 UShort_t in_tdcF3[4];
 UShort_t in_aF3[4];
@@ -68,6 +69,7 @@ Double_t out_SQX_Lnew[32];
 Double_t out_SQX_R[32];
 Double_t out_SQY_L[16];
 Double_t out_SQY_R[16];
+Double_t out_SQ300[16];
 
 Double_t out_tSQX_L[32];
 Double_t out_tSQX_R[32];
@@ -75,6 +77,7 @@ Double_t out_tCsI_L[16];
 Double_t out_tCsI_R[16];
 Double_t out_tSQY_L[16];
 Double_t out_tSQY_R[16];
+Double_t out_tSQ300[16];
 
 Float_t MWPC_1_X,  MWPC_1_Y,  MWPC_1_Z,  MWPC_2_X,  MWPC_2_Y,  MWPC_2_Z;
 
@@ -102,6 +105,7 @@ Double_t out_F5[4];
 Double_t out_tF6[4];
 Double_t out_F6[4];
 Double_t aF5, in_tof, out_tof, sumF5, AZ;
+Short_t Run_ID;
 
 Float_t out_tMWPC[4];
 
@@ -119,6 +123,8 @@ float a_tCsI_R[16];
 float a_tCsI_L[16];
 float a_SQY_L[16];
 float a_SQY_R[16];
+float a_SQ300[16];
+float a_SQ300t[16];
 float pede_CsI_L[16];
 
 float b_CsI_L[16];
@@ -135,6 +141,8 @@ float b_tCsI_R[16];
 float b_tCsI_L[16];
 float b_SQY_L[16];
 float b_SQY_R[16];
+float b_SQ300[16];
+float b_SQ300t[16];
 
 int out_trig;
 
