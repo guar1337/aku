@@ -14,8 +14,8 @@
 #include <TString.h>
 #include <TRandom3.h>
 
-#include </home/guar/aku/ELC/AELC.h>
-#include </home/guar/aku/ELC/ELC.h>
+#include "ELC/AELC.h"
+#include "ELC/ELC.h"
 
 class muchobojca
 {
@@ -34,6 +34,7 @@ UShort_t in_SQX_L[32];
 UShort_t in_SQX_R[32];
 UShort_t in_SQY_L[16];
 UShort_t in_SQY_R[16];
+UShort_t in_SQ300[16];
 
 UShort_t in_tSQX_L[32];
 UShort_t in_tSQX_R[32];
@@ -41,6 +42,7 @@ UShort_t in_tCsI_L[16];
 UShort_t in_tCsI_R[16];
 UShort_t in_tSQY_L[16];
 UShort_t in_tSQY_R[16];
+UShort_t in_tSQ300[16];
 
 UShort_t in_tdcF3[4];
 UShort_t in_aF3[4];
@@ -87,6 +89,7 @@ UShort_t out_SQX_L[32];
 UShort_t out_SQX_R[32];
 UShort_t out_SQY_L[16];
 UShort_t out_SQY_R[16];
+UShort_t out_SQ300[16];
 
 UShort_t out_tSQX_L[32];
 UShort_t out_tSQX_R[32];
@@ -94,6 +97,7 @@ UShort_t out_tCsI_L[16];
 UShort_t out_tCsI_R[16];
 UShort_t out_tSQY_L[16];
 UShort_t out_tSQY_R[16];
+UShort_t out_tSQ300[16];
 
 UShort_t out_tMWPC[4];
 
@@ -101,8 +105,9 @@ Float_t MWPC_1_X, MWPC_1_Y, MWPC_1_Z;
 Float_t MWPC_2_X, MWPC_2_Y, MWPC_2_Z;
 Float_t dX,  dY,  dZ,  XZsum;
 Double_t sumF5, tof;
-Bool_t mwpc, amp, tac, tof_range, sql;
-Float_t a_tSQX_L[32], b_tSQX_L[32], tSQX_L[32];
+Bool_t mwpc, amp, tac, tof_range;
+Float_t a_tSQX_R[32], b_tSQX_R[32], tSQX_R[32], AZ;
+Short_t sql_count, sqr_count;
 
 ClassDef(muchobojca,0);
 };

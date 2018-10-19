@@ -3,7 +3,7 @@
 #include <Rtypes.h>
 #include <TString.h>
 
-namespace s
+namespace cs
 {
 	//*************************geometry**************************************************
 	static const float		sql_ang7		=	70.0	* (3.1415/180.0);
@@ -14,16 +14,14 @@ namespace s
 	static const float		sql_ang_s0		=	0.0	* (3.1415/180.0);
 	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
 
-	static const float		sql_ang_s10		=	(65.0 + 4.0)	* (3.1415/180.0);
-	static const float		sql_ang_s12		=	(65.0 + 4.0)	* (3.1415/180.0);
+	static const float		sql_ang_s1		=	(65.0/* + 3.53*/)	* (3.1415/180.0);
+	static const float		sqr_ang_s1		=	(15.0/* - 0.08*/)	* (3.1415/180.0);
 
-	static const float		sqr_ang_s1		=	(15.0 -  0.19)	* (3.1415/180.0);
+	static const float		sql_ang_s2		=	(50.0/* + 3.31*/)	* (3.1415/180.0);
+	static const float		sqr_ang_s2		=	(15.0/* - 0.08*/)	* (3.1415/180.0);
 
-	static const float		sql_ang_s2		=	(50.0 + 3.58)	* (3.1415/180.0);
-	static const float		sqr_ang_s2		=	(15.0 - 0.19)	* (3.1415/180.0);
-
-	static const float		sql_ang_s3		=	35.0	* (3.1415/180.0);
-	static const float		sqr_ang_s3		=	(15.0 - 0.19)	* (3.1415/180.0);
+	static const float		sql_ang_s3		=	(35.0/* + 3.81*/)	* (3.1415/180.0);
+	static const float		sqr_ang_s3		=	(15.0/* - 0.08*/)	* (3.1415/180.0);
 
 	static const float		sql_ang_s4		=	(75.0 + 4.0)	* (3.1415/180.0);
 	static const float		sqr_ang_s4		=	10.08	* (3.1415/180.0);
@@ -32,7 +30,15 @@ namespace s
 	static const float		tar_ang_s2		=	6.0		* (3.1415/180.0);
 	static const float		tar_ang_s3		=	0.0		* (3.1415/180.0);
 	static const float		tar_ang_s4		=	32.0	* (3.1415/180.0);
-	static const float		tar_thcknss		=	100;
+
+	static const float		tar_thcknss_1		=	100;
+	static const float		tar_thcknss_2		=	200;
+	static const float		tar_thcknss_3		=	200;
+	static const float		tar_thcknss_4		=	20;
+
+	static const float		tar_thcknss_7		=	100;
+	static const float		tar_thcknss_9		=	10;
+	static const float		tar_thcknss_0		=	20;
 
 	static const float		tar_pos_Z		=	0.0;
 
@@ -163,9 +169,9 @@ namespace s
 
 	//*************************PHYSICS**************************************************
 	static const float		alpha_from_Ra226[4]{4.751, 5.459, 5.972, 7.661};
-	static const float		rad_to_deg	=	180.0	/ 3.1415927;
-	static const float		deg_to_rad	=	3.1415927/180.0;
-	static const float		PI 			=	3.1415927;
+	static const float		rad_to_deg	=	180.0	/ 3.14159265359;
+	static const float		deg_to_rad	=	3.14159265359/180.0;
+	static const float		PI 			=	3.14159265359;
 	static const float		u_to_MeV	=	931.4936;
 
 	static const float 		mass_1H 	= 1.00782503*u_to_MeV;
@@ -197,7 +203,7 @@ namespace s
 	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
 
 
-	static const int		runNo=	12;
+	static const int		runNo=	1;
 	static const TString	inDir = "clb";
 }
 #endif

@@ -11,6 +11,9 @@ R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
 ClassImp(muchobojca);
 muchobojca::muchobojca()
 {
+	maynard = new TOOL();
+	gcut_he6 = new TCutG("He6",maynard->gcut_noPoints(s_curFile, "he6.dat"),&in_AZ,&in_aF5);
+	maynard->gcuts_loader(s_curFile, gcut_he6, "he6.dat", 1);
 }
 
 bool muchobojca::wrk(TTree *inTree, TTree *outTree, TString fname) 
@@ -25,6 +28,7 @@ inTree->SetBranchAddress("NeEvent.SQX_L[32]",	in_SQX_L);
 inTree->SetBranchAddress("NeEvent.SQX_R[32]",	in_SQX_R);
 inTree->SetBranchAddress("NeEvent.SQY_L[16]",	in_SQY_L);
 inTree->SetBranchAddress("NeEvent.SQY_R[16]",	in_SQY_R);
+inTree->SetBranchAddress("NeEvent.SQ300[16]",	in_SQ300);
 
 inTree->SetBranchAddress("NeEvent.tSQX_L[32]",	in_tSQX_L);
 inTree->SetBranchAddress("NeEvent.tSQX_R[32]",	in_tSQX_R);
@@ -32,6 +36,7 @@ inTree->SetBranchAddress("NeEvent.tCsI_L[16]",	in_tCsI_L);
 inTree->SetBranchAddress("NeEvent.tCsI_R[16]",	in_tCsI_R);
 inTree->SetBranchAddress("NeEvent.tSQY_L[16]",	in_tSQY_L);
 inTree->SetBranchAddress("NeEvent.tSQY_R[16]",	in_tSQY_R);
+inTree->SetBranchAddress("NeEvent.tSQ300[16]",	in_tSQ300);
 
 inTree->SetBranchAddress("NeEvent.tF3[4]",	in_tdcF3);
 inTree->SetBranchAddress("NeEvent.F3[4]",	in_aF3);
@@ -63,6 +68,7 @@ outTree->Branch("SQY_L",	out_SQY_L,	"SQY_L[16]/s");
 outTree->Branch("SQY_R",	out_SQY_R,	"SQY_R[16]/s");
 outTree->Branch("CsI_L",	out_CsI_L,	"CsI_L[16]/s");
 outTree->Branch("CsI_R",	out_CsI_R,	"CsI_R[16]/s");
+outTree->Branch("SQ300",	out_SQ300,	"SQ300[16]/s");
 
 outTree->Branch("tSQX_L",	out_tSQX_L,	"tSQX_L[32]/s");
 outTree->Branch("tSQX_R",	out_tSQX_R,	"tSQX_R[32]/s");
@@ -70,6 +76,7 @@ outTree->Branch("tSQY_L",	out_tSQY_L,	"tSQY_L[16]/s");
 outTree->Branch("tSQY_R",	out_tSQY_R,	"tSQY_R[16]/s");
 outTree->Branch("tCsI_L",	out_tCsI_L,	"tCsI_L[16]/s");
 outTree->Branch("tCsI_R",	out_tCsI_R,	"tCsI_R[16]/s");
+outTree->Branch("tSQ300",	out_tSQ300,	"tSQ300[16]/s");
 
 outTree->Branch("x1",	out_x1,	"x1[32]/s");
 outTree->Branch("x2",	out_x2,	"x2[32]/s");
@@ -93,7 +100,7 @@ outTree->Branch("tof",		&tof,		"tof/D");
 outTree->Branch("sumF5",	&sumF5,		"aF5/D");
 outTree->Branch("trig",		&out_trig,	"trig/I");
 
-maynard->params_loader("SQX_L_tc.clb", a_tSQX_L, b_tSQX_L, 32);
+maynard->params_loader("SQX_R_tc.clb", a_tSQX_R, b_tSQX_R, 32);
 Long64_t nEntries = inTree->GetEntries();
 counter = 0;
 Long64_t tac_count=0, mwpc_count=0, sql_count=0, tof_range_count=0, zero_mult=0;
@@ -107,18 +114,24 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		printf("#Progress: %i%%\n",counter);
 		counter+=10;
 	}
-	tac=false; mwpc=false; tof_range=false; amp=false, sql=false;
+	tac=false; mwpc=false; tof_range=false; amp=false, sql_count=0; sqr_count=0, he6_in_ToF_spctr = false;
 	if (in_nx1<100 && in_nx2<100 && in_ny1<100 && in_ny2<100)
 	{
 
-		tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4.0+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+s::tof_const;
+		tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4.0+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+cs::tof_const;
 		sumF5 = (in_aF5[0] + in_aF5[1] + in_aF5[2] + in_aF5[3])/4.0;
+		AZ = 0.017142857 * in_tof;
+
+		if (gcut_he6->IsInside(AZ,sumF5))
+		{
+			he6_in_ToF_spctr = true;
+		}
 
 		out_nx1=in_nx1;
 		out_nx2=in_nx2;
 		out_ny1=in_ny1;
 		out_ny2=in_ny2;
-		in_trig=out_trig;
+		out_trig=in_trig;
 
 		for (int iii=0; iii<4; iii++)
 		{ 
@@ -137,11 +150,13 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			out_SQY_R[iii]=in_SQY_R[iii];
 			out_CsI_R[iii]=in_CsI_R[iii];
 			out_CsI_L[iii]=in_CsI_L[iii];
+			out_SQ300[iii]=in_SQ300[iii];
 
 			out_tSQY_L[iii]=in_tSQY_L[iii];
 			out_tSQY_R[iii]=in_tSQY_R[iii];
 			out_tCsI_R[iii]=in_tCsI_R[iii];
 			out_tCsI_L[iii]=in_tCsI_L[iii];
+			out_tSQ300[iii]=in_tSQ300[iii];
 
 		}
 
@@ -157,10 +172,14 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			out_tSQX_R[iii]=in_tSQX_R[iii];
 			out_tSQX_L[iii]=in_tSQX_L[iii];
 
-			if (in_tSQX_L[iii]>500)
+			if (in_tSQX_L[iii]>200)
 			{
-				sql=true;
 				sql_count++;
+			}
+
+			if (in_tSQX_R[iii]>200)
+			{
+				sqr_count++;
 			}
 
 		}
@@ -173,10 +192,10 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			tac_count++;
 		}
 
-		if (maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, s::MWPC_1_X_id)*
-			maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, s::MWPC_1_Y_id)*
-			maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, s::MWPC_2_X_id)*
-			maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, s::MWPC_2_Y_id)	&&
+		if (maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, cs::MWPC_1_X_id)*
+			maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, cs::MWPC_1_Y_id)*
+			maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, cs::MWPC_2_X_id)*
+			maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id)	&&
 			in_tMWPC[0]>3000 && in_tMWPC[1]>3000 && in_tMWPC[2]>3000 && in_tMWPC[3]>3000)
 		{
 
@@ -202,7 +221,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			zero_mult++;
 		}
 
-		if (tac*mwpc*amp*tof_range*sql)		
+		if (tac*mwpc*amp*tof_range*(sql_count==1)*(sqr_count==1)*he6_in_ToF_spctr)		
 		{
 			outTree->Fill();
 		}
