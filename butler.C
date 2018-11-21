@@ -79,7 +79,7 @@ void butler()
 			else if(cs::inDir=="cln"){Kali->wrk(inTree, outTree, str_name);}
 			else if(cs::inDir=="de")
 			{dE_E_angle *Hermes = new dE_E_angle(inTree,outTree, str_name);
-			Hermes->actual_work(5,5.5,5.5);}
+			Hermes->actual_work(4);}
 		}			
 	}
 	break;
@@ -110,7 +110,7 @@ void butler()
 			else if(cs::inDir=="cln"){Kali->wrk(inTree, outTree, str_name);}
 			else if(cs::inDir=="clb")
 			{dE_E_angle *Hermes = new dE_E_angle(inTree,outTree, str_name);
-			Hermes->actual_work(1,-2.0,-4.0);}
+			Hermes->actual_work(1);}
 			outF->Close();
 		}
 	}
@@ -140,8 +140,10 @@ void butler()
 			if (cs::inDir=="raw")	{MrMuscle->wrk(inTree, outTree, str_name);}
 			else if(cs::inDir=="cln"){Kali->wrk(inTree, outTree, str_name);}
 			else if(cs::inDir=="clb")
-			{dE_E_angle *Hermes = new dE_E_angle(inTree,outTree, str_name);
-			Hermes->actual_work(2,-2.0,-4.0);}
+			{
+				dE_E_angle *Hermes = new dE_E_angle(inTree,outTree, str_name);
+				Hermes->actual_work(2);
+			}
 			outF->Close();
 		}			
 	}
@@ -173,7 +175,7 @@ void butler()
 			else if(cs::inDir=="cln"){Kali->wrk(inTree, outTree, str_name);}
 			else if(cs::inDir=="clb")
 			{dE_E_angle *Hermes = new dE_E_angle(inTree,outTree, str_name);
-			Hermes->actual_work(3,-2.0,-4.0);}
+			Hermes->actual_work(3);}
 			outF->Close();
 		}			
 	}
@@ -204,7 +206,7 @@ void butler()
 			else if(cs::inDir=="cln"){Kali->wrk(inTree, outTree, str_name);}
 			else if(cs::inDir=="clb")
 			{dE_E_angle *Hermes = new dE_E_angle(inTree,outTree, str_name);
-			Hermes->actual_work(5,5.5,5.5);}
+			Hermes->actual_work(4);}
 			outF->Close();
 		}
 	}

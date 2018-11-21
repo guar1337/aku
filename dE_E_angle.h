@@ -22,6 +22,7 @@ public:
 dE_E_angle();
 dE_E_angle(TTree *inTree, TTree *outTree, TString inFile);
 virtual ~dE_E_angle();
+Float_t actual_work(Int_t);
 Float_t actual_work(Int_t, Float_t, Float_t, std::vector<Float_t> &,  std::vector<Float_t> &,  std::vector<Float_t> &,  std::vector<Float_t> &);
 
 private:
@@ -31,8 +32,7 @@ bool create_input_tree(TTree *inTree);
 bool create_output_tree(TTree *outTree);
 
 
-Bool_t mwpc, tmw, tar, he6, cln1, cln2, cln3, mmBool;
-Bool_t angAng1H, angAng2H;
+Bool_t he6, angAng1H, angAng2H;
 
 int out_trig, in_trig, counter;
 
@@ -71,15 +71,11 @@ Double_t in_tF3[4],	in_F3[4], in_tF5[4], in_F5[4], in_tF6[4], in_F6[4];
 Double_t in_tof, out_tof, tempT1, tempT2, out_T1, out_T2, T, in_AZ, out_AZ;
 Double_t CsI_L_Edep[17], CsI_R_Edep[17], SQX_L_Edep[33], SQX_L_Edep2[33], SQX_R_Edep[33], SQY_L_Edep[17], SQY_R_Edep[17];
 Double_t out_tF3[4], out_F3[4], out_tF5[4], out_F5[4], out_tF6[4], out_F6[4];
-Double_t sqlde, sqlde2, sqletot, sqletot1, sqletot2, sqletot3, sqletot4, fsqlE, csilDep, kinsqle1, kinsqle2, sqlphi, sqltheta, fsqltheta1, fsqltheta2, sqlang, sqlxtime, sqlytime, fel_2H, fdel_2H, ftot, newE;
+Double_t sqlde, sqletot, kinsqle_1H, kinsqle_2H, sqlphi, sqltheta, fsqltheta_1H, fsqltheta_2H, sqlang, sqlxtime, sqlytime, fel_2H, fdel_2H, ftot;
 Double_t sqrde, sqretot, sqrphi, sqrtheta, fsqrtheta1, fsqrtheta2, sqrang, sqrxtime, sqrytime;
 
 Double_t mml, mom_2H, ene_2H;
-Double_t mml1, mom1_2H, ene1_2H;
-Double_t mml2, mom2_2H, ene2_2H;
-Double_t mml3, mom3_2H, ene3_2H;
-Double_t mml4, mom4_2H, ene4_2H;
-Double_t mom_6He, ene_6He, mom_beam, ene_beam, mmr;
+Double_t mom_6He, ene_6He, mom_beam, ene_beam;
 
 Double_t in_tSQX_L[32], in_tSQX_R[32], out_tSQX_L[32], out_tSQX_R[32];
 Double_t in_tSQY_L[16], in_tSQY_R[16], out_tSQY_L[16], out_tSQY_R[16];
@@ -102,14 +98,10 @@ Float_t pede[16];
 Float_t B[16];
 Float_t C[16];
 Float_t D[16];
-Float_t lamb, input1, input3;
+
 
 //double gsl_sf_lambert_Wm1(double in);
 TLorentzVector *LV_6He, *LV_2H, *LV_beam, *LV_tar_2H;
-TLorentzVector *LV_2H1, *LV_2H2, *LV_2H3, *LV_2H4;
-TLorentzVector *LV_6He1, *LV_6He2, *LV_6He3, *LV_6He4;
-TLorentzVector *LV_6He_solo, *LV_2H_solo;
-
 TRotation beam_setting_array;
 TString s_curFile;
 
@@ -150,7 +142,7 @@ double BoPET_A[3];
 double BoPET_Z[3];
 double BoPET_W[3];
 
-TVector3 *v_beam, *v_tar;
+TVector3 *vBeam, *vTarget;
 TRandom3 *rnd;
 
 ClassDef(dE_E_angle,0);

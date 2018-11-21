@@ -113,7 +113,7 @@ float loop(Float_t left_det_shift, Float_t right_det_shift, std::vector<Float_t>
 	while (TObject *obj = bluster())
 	{			
 		str_name = obj->GetName();
-		if (str_name.Contains("run02sum"))
+		if (str_name.Contains("ultrGeo"))
 		{
 			printf("%s%s%s\t%s%s\n", "\x1B[32m", "\e[1m", 
 					str_name.Data(), "\x1b[0m", "\e[0m");
@@ -134,7 +134,7 @@ float loop(Float_t left_det_shift, Float_t right_det_shift, std::vector<Float_t>
 
 			dE_E_angle *Hermes = new dE_E_angle(inTree,outTree, str_name);
 
-			container = Hermes->actual_work(geoNo, left_det_shift, right_det_shift,
+			container = Hermes->actual_work(cs::runNo, left_det_shift, right_det_shift,
 													stdV_Sqlang_1H, stdV_Sqrang_1H,
 													stdV_Sqlang_2H, stdV_Sqrang_2H);
 
@@ -160,7 +160,7 @@ float loop(Float_t left_det_shift, Float_t right_det_shift, std::vector<Float_t>
 	while (TObject *obj = bluster())
 	{			
 		str_name = obj->GetName();
-		if (str_name.Contains("geo"))			
+		if (str_name.Contains("ultrGeo"))			
 		{
 			printf("%s%s%s%s%s\n", "\x1B[32m", "\e[1m", 
 					str_name.Data(), "\x1b[0m", "\e[0m");
@@ -206,7 +206,7 @@ float loop(Float_t left_det_shift, Float_t right_det_shift, std::vector<Float_t>
 	while (TObject *obj = bluster())
 	{			
 		str_name = obj->GetName();
-		if (str_name.Contains("geo"))
+		if (str_name.Contains("ultrGeo"))
 		{
 			printf("%s%s%s%s%s\n", "\x1B[32m", "\e[1m", 
 					str_name.Data(), "\x1b[0m", "\e[0m");
@@ -279,7 +279,8 @@ float loop(Float_t left_det_shift, Float_t right_det_shift, std::vector<Float_t>
 	}
 	}//switch
 }//for loop on geometry
-
+atan(sin(2*lvBeam->Angle(*v2H))/(-cos(2*lvBeam->Angle(*v2H))+6.01888589/2.01410177))
+[2]*atan(sin([0]*x)/([1]-cos([0]*x)))
 TF1 *angAngFit_1H = new TF1("angAngFit_1H","[2]*atan(sin([0]*x)/([1]-cos([0]*x)))");
 angAngFit_1H->FixParameter(0, 2*cs::deg_to_rad);
 angAngFit_1H->FixParameter(1, cs::mass_6He/cs::mass_1H);
@@ -302,29 +303,39 @@ angAngMultiGraph_2H->Add(angAngGraph_2H_geo2);
 angAngMultiGraph_2H->Add(angAngGraph_2H_geo3);
 
 
-
-
 angAngGraph_1H_geo1->SetMarkerStyle(kFullDotMedium);
 angAngGraph_1H_geo1->SetMarkerColor(kRed);
 angAngGraph_1H_geo2->SetMarkerStyle(kFullDotMedium);
 angAngGraph_1H_geo2->SetMarkerColor(kBlue);
-//angAngGraph_1H_geo3->SetMarkerStyle(kFullDotMedium);
-//angAngGraph_1H_geo3->SetMarkerColor();
+angAngGraph_1H_geo3->SetMarkerStyle(kFullDotMedium);
+angAngGraph_1H_geo3->SetMarkerColor(kGreen);
 
 
 angAngGraph_2H_geo1->SetMarkerStyle(kFullDotMedium);
 angAngGraph_2H_geo1->SetMarkerColor(kRed);
 angAngGraph_2H_geo2->SetMarkerStyle(kFullDotMedium);
 angAngGraph_2H_geo2->SetMarkerColor(kBlue);
-//angAngGraph_2H_geo3->SetMarkerStyle(kFullDotMedium);
-//angAngGraph_2H_geo3->SetMarkerColor();
+angAngGraph_2H_geo3->SetMarkerStyle(kFullDotMedium);
+angAngGraph_2H_geo3->SetMarkerColor(kGreen);
 
+/*
 angAngMultiGraph_1H->Fit(angAngFit_1H, "Q");
 angAngMultiGraph_2H->Fit(angAngFit_2H, "Q");
+*/
 vChiSquare_1H.push_back(angAngFit_1H->GetChisquare());
 vChiSquare_2H.push_back(angAngFit_2H->GetChisquare());
 
-//angAngMultiGraph_1H->Draw("AP");
+TMultiGraph *angAngMultiGraph_both = new TMultiGraph();
+angAngMultiGraph_both->Add(angAngMultiGraph_1H);
+angAngMultiGraph_both->Add(angAngMultiGraph_2H);
+
+angAngMultiGraph_both->Fit(angAngFit_1H, "");
+angAngMultiGraph_both->Fit(angAngFit_2H, "+");
+angAngMultiGraph_both->Draw("AP");
+/*
+angAngMultiGraph_2H->Draw("AP");
+angAngMultiGraph_1H->Draw("AP");
+*/
 
 
 
@@ -337,32 +348,32 @@ void cutler()
 	std::vector<Float_t> vChiSquare_1H;
 	std::vector<Float_t> vChiSquare_2H;
 	TString dir_out("/home/guar/Desktop/");
-	ofstream outStream_1H(dir_out.Append("fitQuality_1H.dat").Data(), ios::trunc);
+	ofstream outStream_1H(dir_out.Append("prec_fitQuality_1H.dat").Data(), ios::trunc);
 	ofstream outStream_2H(dir_out.ReplaceAll("1H","2H").Data(), ios::trunc);
-	Float_t right_det_shift = -2.0;
-	Float_t left_det_shift = -4.0;
-/*
+	Float_t right_det_shift = 0.5;
+	Float_t left_det_shift = 2.7;
+
 	loop(left_det_shift, right_det_shift, vChiSquare_1H, vChiSquare_2H);
 	outStream_1H<<vChiSquare_1H.back()<<" ";
 	outStream_2H<<vChiSquare_2H.back()<<" ";
-*/
 
-	for (int iii = 0; iii < 40; ++iii)
+/*
+	for (int iii = 0; iii < 20; ++iii)
 	{
-		for (int jjj = 0; jjj < 40; ++jjj)
+		for (int jjj = 0; jjj < 20; ++jjj)
 		{
 			loop(left_det_shift, right_det_shift, vChiSquare_1H, vChiSquare_2H);
 			outStream_1H<<vChiSquare_1H.back()<<" ";
 			outStream_2H<<vChiSquare_2H.back()<<" ";
 			outStream_1H.flush();
 			outStream_2H.flush();
-			right_det_shift+=0.1;
+			right_det_shift+=0.05;
 		}
 		outStream_1H<<endl;
 		outStream_2H<<endl;
-		left_det_shift+=0.2;
-		right_det_shift=-2.0;
+		left_det_shift+=0.1;
+		right_det_shift=-0.2;
 		printf("\n****************************************\n");
 	}
-	
+*/	
 }

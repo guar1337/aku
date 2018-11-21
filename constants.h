@@ -14,17 +14,17 @@ namespace cs
 	static const float		sql_ang_s0		=	0.0	* (3.1415/180.0);
 	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
 
-	static const float		sql_ang_s1		=	(65.0/* + 3.53*/)	* (3.1415/180.0);
+	static const float		sql_ang_s1		=	(65.0+ 2.2)	* (3.1415/180.0);
 	static const float		sqr_ang_s1		=	(15.0/* - 0.08*/)	* (3.1415/180.0);
 
-	static const float		sql_ang_s2		=	(50.0/* + 3.31*/)	* (3.1415/180.0);
+	static const float		sql_ang_s2		=	(50.0 + 2.2)	* (3.1415/180.0);
 	static const float		sqr_ang_s2		=	(15.0/* - 0.08*/)	* (3.1415/180.0);
 
-	static const float		sql_ang_s3		=	(35.0/* + 3.81*/)	* (3.1415/180.0);
+	static const float		sql_ang_s3		=	(35.0 + 2.2)	* (3.1415/180.0);
 	static const float		sqr_ang_s3		=	(15.0/* - 0.08*/)	* (3.1415/180.0);
 
-	static const float		sql_ang_s4		=	(75.0 + 4.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s4		=	10.08	* (3.1415/180.0);
+	static const float		sql_ang_s4		=	(75.0 + 1.0)	* (3.1415/180.0);
+	static const float		sqr_ang_s4		=	10.58	* (3.1415/180.0);
 
 	static const float		tar_ang_s1		=	38.0	* (3.1415/180.0);
 	static const float		tar_ang_s2		=	6.0		* (3.1415/180.0);
@@ -203,7 +203,7 @@ namespace cs
 	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
 
 
-	static const int		runNo=	1;
+	static const int		runNo=	3;
 	static const TString	inDir = "clb";
 }
 #endif

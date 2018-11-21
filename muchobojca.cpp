@@ -11,14 +11,16 @@ R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
 ClassImp(muchobojca);
 muchobojca::muchobojca()
 {
-	maynard = new TOOL();
-	gcut_he6 = new TCutG("He6",maynard->gcut_noPoints(s_curFile, "he6.dat"),&in_AZ,&in_aF5);
-	maynard->gcuts_loader(s_curFile, gcut_he6, "he6.dat", 1);
 }
 
 bool muchobojca::wrk(TTree *inTree, TTree *outTree, TString fname) 
 {
 maynard = new TOOL();
+
+gcut_he6 = new TCutG("He6",maynard->gcut_noPoints(fname, "he6.dat", cs::runNo),&AZ,&sumF5);
+maynard->gcuts_loader(fname, gcut_he6, "he6.dat", cs::runNo);
+
+
 //Creating addresses of BEAM holding branches
 inTree->SetMakeClass(1);
 
@@ -28,7 +30,7 @@ inTree->SetBranchAddress("NeEvent.SQX_L[32]",	in_SQX_L);
 inTree->SetBranchAddress("NeEvent.SQX_R[32]",	in_SQX_R);
 inTree->SetBranchAddress("NeEvent.SQY_L[16]",	in_SQY_L);
 inTree->SetBranchAddress("NeEvent.SQY_R[16]",	in_SQY_R);
-inTree->SetBranchAddress("NeEvent.SQ300[16]",	in_SQ300);
+//inTree->SetBranchAddress("NeEvent.SQ300[16]",	in_SQ300);
 
 inTree->SetBranchAddress("NeEvent.tSQX_L[32]",	in_tSQX_L);
 inTree->SetBranchAddress("NeEvent.tSQX_R[32]",	in_tSQX_R);
@@ -36,7 +38,7 @@ inTree->SetBranchAddress("NeEvent.tCsI_L[16]",	in_tCsI_L);
 inTree->SetBranchAddress("NeEvent.tCsI_R[16]",	in_tCsI_R);
 inTree->SetBranchAddress("NeEvent.tSQY_L[16]",	in_tSQY_L);
 inTree->SetBranchAddress("NeEvent.tSQY_R[16]",	in_tSQY_R);
-inTree->SetBranchAddress("NeEvent.tSQ300[16]",	in_tSQ300);
+//inTree->SetBranchAddress("NeEvent.tSQ300[16]",	in_tSQ300);
 
 inTree->SetBranchAddress("NeEvent.tF3[4]",	in_tdcF3);
 inTree->SetBranchAddress("NeEvent.F3[4]",	in_aF3);
@@ -97,10 +99,9 @@ outTree->Branch("F6",	out_F6,		"F6[4]/s");
 
 outTree->Branch("tMWPC",	out_tMWPC,	"tMWPC[4]/s");
 outTree->Branch("tof",		&tof,		"tof/D");
-outTree->Branch("sumF5",	&sumF5,		"aF5/D");
+outTree->Branch("sumF5",	&sumF5,		"sumF5/F");
 outTree->Branch("trig",		&out_trig,	"trig/I");
 
-maynard->params_loader("SQX_R_tc.clb", a_tSQX_R, b_tSQX_R, 32);
 Long64_t nEntries = inTree->GetEntries();
 counter = 0;
 Long64_t tac_count=0, mwpc_count=0, sql_count=0, tof_range_count=0, zero_mult=0;
@@ -120,9 +121,9 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 
 		tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4.0+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+cs::tof_const;
 		sumF5 = (in_aF5[0] + in_aF5[1] + in_aF5[2] + in_aF5[3])/4.0;
-		AZ = 0.017142857 * in_tof;
+		AZ = 0.017142857 * tof;
 
-		if (gcut_he6->IsInside(AZ,sumF5))
+		if (gcut_he6->IsInside(AZ,sumF5) || (sumF5==0 && AZ>2.75 && AZ<3.1))
 		{
 			he6_in_ToF_spctr = true;
 		}
@@ -224,6 +225,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		if (tac*mwpc*amp*tof_range*(sql_count==1)*(sqr_count==1)*he6_in_ToF_spctr)		
 		{
 			outTree->Fill();
+			//printf("%f\n", sumF5);
 		}
 
 	}

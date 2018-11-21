@@ -439,17 +439,18 @@ bool TOOL::gcuts_loader(TString fName, TCutG *gcut, TString ion, int geoNo)
 
 }
 
-int TOOL::gcut_noPoints(TString fName, TString ion)
+int TOOL::gcut_noPoints(TString fName, TString ion, int geoNo)
 {
 	fName.ReplaceAll("clb_","").ReplaceAll(".root","/");
 	string dummy, dummy2;
 	int points;
-	ifstream instream((cs::dir_gcut+fName+ion).Data());
-	//printf("Patrz co kot przyniosl: %s\n",(cs::dir_gcut+fName+ion).Data() );
+	TString dir_cur;
+	dir_cur.Form("%sgeo%i/%s",cs::dir_gcut.Data(),geoNo,ion.Data());
+	ifstream instream(dir_cur.Data());
 
 	if (!instream) 
 	{
-		//printf ("#Cannot open %s coefficient file\n",(cs::dir_gcut+fName+ion).Data());
+		printf ("#Cannot open %s coefficient file\n",(dir_cur.Data()));
 		return 0;
 	}
 	for (int iii = 0; iii < 4; ++iii)//clean lines before No of points

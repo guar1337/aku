@@ -44,7 +44,7 @@ bool params_loader(TString , float *, float *, short);
 bool params4_loader(TString , Float_t *,  Float_t *, Float_t *, Float_t *);
 bool params5_loader(TString , Float_t *,  Float_t *, Float_t *, Float_t *, Float_t *);
 bool gcuts_loader(TString , TCutG *, TString, int);
-int gcut_noPoints(TString fName, TString ion);
+int gcut_noPoints(TString fName, TString ion, int);
 bool data_loader(TString , Short_t , Short_t, Short_t);
 
 Float_t kin_GetAngRecoil(Float_t , Float_t, Float_t);

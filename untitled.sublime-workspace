@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"he",
+				"he6_in_ToF_spctr"
+			],
+			[
+				"geo",
+				"geoNo"
+			],
+			[
+				"Int",
+				"Int_t"
+			],
+			[
 				"o",
 				"outF"
 			],
@@ -156,29 +168,55 @@
 	"buffers":
 	[
 		{
-			"file": "calibrate_tree.cpp",
+			"file": "dE_E_angle.h",
 			"settings":
 			{
-				"buffer_size": 7808,
+				"buffer_size": 4753,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "calibrate_tree.h",
-			"settings":
-			{
-				"buffer_size": 2802,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "#include \"dE_E_angle.h\"\n\nClassImp(dE_E_angle);\nusing namespace std;\n\ndE_E_angle::dE_E_angle()\n{\n\tcreate_input_tree(NULL);\n\tcreate_output_tree(NULL);\n}\n\ndE_E_angle::dE_E_angle(TTree *inT, TTree *outT, TString inFile)\n{\n\tcreate_input_tree(inT);\n\tcreate_output_tree(outT);\n\tmaynard = new TOOL();\n\ts_curFile = inFile;\n\n\tint si_Nel=1;\n\tsi_A[0]=28;\n\tsi_Z[0]=14;\n\tsi_W[0]=1;\n\n\tint csi_Nel=2;\n\tcsi_A[0]=126.90447;\n\tcsi_Z[0]=53;\n\tcsi_W[0]=1;\n\n\tcsi_A[1]=132.905452;\n\tcsi_Z[1]=55;\n\tcsi_W[1]=1;\n\n\tint CD2_Nel=2;\n\tCD2_A[0]=2;\n\tCD2_Z[0]=1;\n\tCD2_W[0]=1;\n\n\tCD2_A[1]=12;\n\tCD2_Z[1]=6;\n\tCD2_W[1]=1;\n\n\tint BoPET_Nel=3;\n\tBoPET_A[0]=1;\n\tBoPET_Z[0]=1;\n\tBoPET_W[0]=8;\n\n\tBoPET_A[1]=12;\n\tBoPET_Z[1]=6;\n\tBoPET_W[1]=10;\n\n\tBoPET_A[2]=16;\n\tBoPET_Z[2]=8;\n\tBoPET_W[2]=4;\n\nh2_Si \t\t= new ELC(2, 1, si_Nel, 2.35, si_A, si_Z, si_W, 300.,1500);\nh2_CsI \t\t= new ELC(2, 1, csi_Nel, 4.51, si_A, si_Z, csi_W, 300.,1500);\nh2_BoPET\t= new ELC(2, 1, BoPET_Nel, 1.4, BoPET_A, BoPET_Z, BoPET_W, 250.,1500);\nh2_CD2\t\t= new ELC(2, 1, CD2_Nel, 1.4, CD2_A, CD2_Z, CD2_W, 300.,1500);\n\nh3_Si \t\t= new ELC(3, 1, si_Nel, 2.35, si_A, si_Z, si_W, 200.,1500);\nhe4_Si \t\t= new ELC(4, 2, si_Nel, 2.35, si_A, si_Z, si_W, 500.,1500);\n\nhe6_Si \t\t= new ELC(6, 2, si_Nel, 2.35, si_A, si_Z, si_W, 300.,1500);\nhe6_CD2\t\t= new ELC(6, 2, CD2_Nel, 1.16, CD2_A, CD2_Z, CD2_W, 200.,1500);\nhe6_BoPET\t= new ELC(6, 2, BoPET_Nel, 1.4, BoPET_A, BoPET_Z, BoPET_W, 200.,1500);\nhe6_CsI \t= new ELC(6, 2, csi_Nel, 4.51, csi_A, csi_Z, csi_W, 300.,1500);\n\nli7_Si \t\t= new ELC(7, 3, si_Nel, 2.35, si_A, si_Z, si_W, 700.,1500);\nli8_Si \t\t= new ELC(8, 3, si_Nel, 2.35, si_A, si_Z, si_W, 600.,1500);\nli9_Si \t\t= new ELC(9, 3, si_Nel, 2.35, si_A, si_Z, si_W, 600.,1500);\nbe9_Si \t\t= new ELC(9, 4, si_Nel, 2.35, si_A, si_Z, si_W, 1200.,1500);\n\n\ngcut_h2 = new TCutG(\"H2\",maynard->gcut_noPoints(s_curFile,\"h2.dat\"),&in_AZ,&in_aF5);\nmaynard->gcuts_loader(s_curFile, gcut_h2, \"h2.dat\");\n\ngcut_h3 = new TCutG(\"H3\",maynard->gcut_noPoints(s_curFile, \"h3.dat\"),&in_AZ,&in_aF5);\nmaynard->gcuts_loader(s_curFile, gcut_h3, \"h3.dat\");\n\ngcut_he4 = new TCutG(\"He4\",maynard->gcut_noPoints(s_curFile, \"he4.dat\"),&in_AZ,&in_aF5);\nmaynard->gcuts_loader(s_curFile, gcut_he4, \"he4.dat\");\n\ngcut_he6 = new TCutG(\"He6\",maynard->gcut_noPoints(s_curFile, \"he6.dat\"),&in_AZ,&in_aF5);\nmaynard->gcuts_loader(s_curFile, gcut_he6, \"he6.dat\");\n\ngcut_li7 = new TCutG(\"Li7\",maynard->gcut_noPoints(s_curFile, \"li7.dat\"),&in_AZ,&in_aF5);\nmaynard->gcuts_loader(s_curFile, gcut_li7, \"li7.dat\");\n\ngcut_li8 = new TCutG(\"Li8\",maynard->gcut_noPoints(s_curFile, \"li8.dat\"),&in_AZ,&in_aF5);\nmaynard->gcuts_loader(s_curFile, gcut_li8, \"li8.dat\");\n\ngcut_li9 = new TCutG(\"Li9\",maynard->gcut_noPoints(s_curFile, \"li9.dat\"),&in_AZ,&in_aF5);\nmaynard->gcuts_loader(s_curFile, gcut_li9, \"li9.dat\");\n\ngcut_be9 = new TCutG(\"Be9\",maynard->gcut_noPoints(s_curFile, \"be9.dat\"),&in_AZ,&in_aF5);\nmaynard->gcuts_loader(s_curFile, gcut_be9, \"be9.dat\");\n\ngcut_dehe6 = new TCutG(\"dehe6\", maynard->gcut_noPoints(s_curFile, \"dehe6.dat\"),\n\t\t\t\t\t\t&sqretot, &sqrde);\nmaynard->gcuts_loader(s_curFile, gcut_dehe6, \"dehe6.dat\");\n\ngcut_AngAng2H = new TCutG(\"AngAng2H\", maynard->gcut_noPoints(s_curFile, \"AngAng2H.dat\"),\n\t\t\t\t\t\t&sqrang, &sqlang);\nmaynard->gcuts_loader(s_curFile, gcut_AngAng2H, \"AngAng2H.dat\");\n\nTRotation beam_setting_array;\n}\n\ndE_E_angle::~dE_E_angle()\n{\n\tdelete h2_Si;\n\tdelete h2_CsI;\n\tdelete h2_BoPET;\n\tdelete h2_CD2;\n\n\tdelete h3_Si;\n\tdelete he4_Si;\n\n\tdelete he6_Si;\n\tdelete he6_CsI;\n\tdelete he6_BoPET;\n\tdelete he6_CD2;\n\n\tdelete li7_Si;\n\tdelete li8_Si;\n\tdelete li9_Si;\n\tdelete be9_Si;\n\tdelete maynard;\n}\n\nbool dE_E_angle::create_input_tree(TTree *in)\n{\n\tinTree=in;\n\tinTree->SetMakeClass(1);\n\t//CALIBRATED DATA\n\tinTree->SetBranchAddress(\"CsI_L\",\tCsI_L);\n\tinTree->SetBranchAddress(\"CsI_0L\",\tCsI_0L);\n\tinTree->SetBranchAddress(\"CsI_R\",\tCsI_R);\n\tinTree->SetBranchAddress(\"SQX_L\",\tSQX_L);\n\tinTree->SetBranchAddress(\"SQX_Ln\",\tSQX_Ln);\n\tinTree->SetBranchAddress(\"SQX_R\",\tSQX_R);\n\tinTree->SetBranchAddress(\"SQY_L\",\tSQY_L);\n\tinTree->SetBranchAddress(\"SQY_R\",\tSQY_R);\n\t\n\t//RAW DATA\n\tinTree->SetBranchAddress(\"r_CsI_L\",\tr_CsI_L);\n\tinTree->SetBranchAddress(\"r_CsI_R\",\tr_CsI_R);\n\tinTree->SetBranchAddress(\"r_SQX_L\",\tr_SQX_L);\n\tinTree->SetBranchAddress(\"r_SQX_R\",\tr_SQX_R);\n\tinTree->SetBranchAddress(\"r_SQY_L\",\tr_SQY_L);\n\n\n\t//inTree->SetBranchAddress(\"SQ300\",\tSQ300);\n\t//inTree->SetBranchAddress(\"r_SQY_R\",\tr_SQY_R);\n\t//inTree->SetBranchAddress(\"r_SQ300\",\tr_SQ300);\n\t//inTree->SetBranchAddress(\"tSQ300\",\tin_tSQ300);\n\n\t//TIME\n\tinTree->SetBranchAddress(\"tSQX_L\",\tin_tSQX_L);\n\tinTree->SetBranchAddress(\"tSQX_R\",\tin_tSQX_R);\n\tinTree->SetBranchAddress(\"tCsI_L\",\tin_tCsI_L);\n\tinTree->SetBranchAddress(\"tCsI_R\",\tin_tCsI_R);\n\tinTree->SetBranchAddress(\"tSQY_L\",\tin_tSQY_L);\n\tinTree->SetBranchAddress(\"tSQY_R\",\tin_tSQY_R);\n\t\n\n\tinTree->SetBranchAddress(\"tF3\",\t\tin_tF3);\n\tinTree->SetBranchAddress(\"F3\",\t\tin_F3);\n\tinTree->SetBranchAddress(\"tF5\",\t\tin_tF5);\n\tinTree->SetBranchAddress(\"F5\",\t\tin_F5);\n\tinTree->SetBranchAddress(\"tF6\",\t\tin_tF6);\n\tinTree->SetBranchAddress(\"F6\",\t\tin_F6);\n\n\tinTree->SetBranchAddress(\"nx1\",\t\t&in_nx1);\n\tinTree->SetBranchAddress(\"ny1\",\t\t&in_ny1);\n\tinTree->SetBranchAddress(\"nx2\",\t\t&in_nx2);\n\tinTree->SetBranchAddress(\"ny2\",\t\t&in_ny2);\n\n\tinTree->SetBranchAddress(\"tMWPC\",\tin_tMWPC);\n\n\tinTree->SetBranchAddress(\"x1\",\t\tin_x1);\n\tinTree->SetBranchAddress(\"y1\",\t\tin_y1);\n\tinTree->SetBranchAddress(\"x2\",\t\tin_x2);\n\tinTree->SetBranchAddress(\"y2\",\t\tin_y2);\n\n\tinTree->SetBranchAddress(\"trig\",\t&in_trig);\n\tinTree->SetBranchAddress(\"tof\",\t\t&in_tof);\n\tinTree->SetBranchAddress(\"az\",\t\t&in_AZ);\n\tinTree->SetBranchAddress(\"aF5\",\t\t&in_aF5);\n\tinTree->SetBranchAddress(\"run\",\t\t&run);\n\n\n \treturn true;\n}\n\nbool dE_E_angle::create_output_tree(TTree *out)\n{\n\toutTree=out;\n\t\n\tLV_6He = new TLorentzVector();\n\tLV_2H = new TLorentzVector();\n\tLV_6He1 = new TLorentzVector();\n\tLV_2H1 = new TLorentzVector();\n\tLV_6He2 = new TLorentzVector();\n\tLV_2H2 = new TLorentzVector();\n\tLV_6He3 = new TLorentzVector();\n\tLV_2H3 = new TLorentzVector();\n\tLV_6He4 = new TLorentzVector();\n\tLV_2H4 = new TLorentzVector();\n\n\tLV_2H_solo = new TLorentzVector();\n\tLV_6He_solo = new TLorentzVector();\n\n\tLV_tar_2H = new TLorentzVector();\n\tLV_beam = new TLorentzVector();\n\n\t\n\toutTree->SetMakeClass(1);\n\toutTree->Branch(\"SQX_L_m\",\t&SQX_L_mult,\t\"SQX_L_m/S\");\n\toutTree->Branch(\"SQX_R_m\",\t&SQX_R_mult,\t\"SQX_R_m/S\");\n\toutTree->Branch(\"SQY_L_m\",\t&SQY_L_mult,\t\"SQY_L_m/S\");\n\toutTree->Branch(\"SQY_R_m\",\t&SQY_R_mult,\t\"SQY_R_m/S\");\n\toutTree->Branch(\"CsI_L_m\",\t&CsI_L_mult,\t\"CsI_L_m/S\");\n\toutTree->Branch(\"CsI_R_m\",\t&CsI_R_mult,\t\"CsI_R_m/S\");\n\n\toutTree->Branch(\"tSQX_L\",\tout_tSQX_L,\t\t\"tSQX_L[32]/D\");\n\toutTree->Branch(\"tSQX_R\",\tout_tSQX_R,\t\t\"tSQX_R[32]/D\");\n\toutTree->Branch(\"tSQY_L\",\tout_tSQY_L,\t\t\"tSQY_L[16]/D\");\n\toutTree->Branch(\"tSQY_R\",\tout_tSQY_R,\t\t\"tSQY_R[16]/D\");\n\toutTree->Branch(\"tCsI_L\",\tout_tCsI_L,\t\t\"tCsI_L[16]/D\");\n\toutTree->Branch(\"tCsI_R\",\tout_tCsI_R,\t\t\"tCsI_R[16]/D\");\n\n\toutTree->Branch(\"SQY_L_e\",\tSQY_L_Edep,\t\t\"SQY_L_e[16]/D\");\n\toutTree->Branch(\"SQY_R_e\",\tSQY_R_Edep,\t\t\"SQY_R_e[16]/D\");\n\toutTree->Branch(\"SQX_L_e\",\tSQX_L_Edep,\t\t\"SQX_L_e[32]/D\");\n\toutTree->Branch(\"SQX_R_e\",\tSQX_R_Edep,\t\t\"SQX_R_e[32]/D\");\n\toutTree->Branch(\"CsI_L_e\",\tCsI_L_Edep,\t\t\"CsI_L_e[16]/D\");\n\toutTree->Branch(\"CsI_R_e\",\tCsI_R_Edep,\t\t\"CsI_R_e[16]/D\");\n\n\toutTree->Branch(\"SQX_L_s\",\tSQX_L_strip,\t\"SQX_L_s[32]/S\");\n\toutTree->Branch(\"SQX_R_s\",\tSQX_R_strip,\t\"SQX_R_s[32]/S\");\n\toutTree->Branch(\"SQY_L_s\",\tSQY_L_strip,\t\"SQY_L_s[16]/S\");\n\toutTree->Branch(\"SQY_R_s\",\tSQY_R_strip,\t\"SQY_R_s[16]/S\");\n\toutTree->Branch(\"CsI_L_s\",\tCsI_L_strip,\t\"CsI_L_s[16]/S\");\n\toutTree->Branch(\"CsI_R_s\",\tCsI_R_strip,\t\"CsI_R_s[16]/S\");\n\n\t//LEFT\n\toutTree->Branch(\"sqlde\",\t\t&sqlde,\t\t\"sqlde/D\");\n\toutTree->Branch(\"sqlde2\",\t\t&sqlde2,\t\"sqlde2/D\");\n\n\toutTree->Branch(\"sqletot\",\t\t&sqletot,\t\"sqletot/D\");\n/*\n\toutTree->Branch(\"sqletot1\",\t\t&sqletot1,\t\"sqletot1/D\");\n\toutTree->Branch(\"sqletot2\",\t\t&sqletot2,\t\"sqletot2/D\");\n\toutTree->Branch(\"sqletot3\",\t\t&sqletot3,\t\"sqletot3/D\");\n\toutTree->Branch(\"sqletot4\",\t\t&sqletot4,\t\"sqletot4/D\");\n*/\n\toutTree->Branch(\"sqlphi\",\t\t&sqlphi,\t\"sqlphi/D\");\n\toutTree->Branch(\"sqltheta\",\t\t&sqltheta,\t\"sqltheta/D\");\n\toutTree->Branch(\"sqlang\",\t\t&sqlang,\t\"sqlang/D\");\n\toutTree->Branch(\"sqlxtime\",\t\t&sqlxtime,\t\"sqlxtime/D\");\n\toutTree->Branch(\"sqlytime\",\t\t&sqlytime,\t\"sqlytime/D\");\n\toutTree->Branch(\"fsqlE\",\t\t&fsqlE,\t\t\"fsqlE/D\");\n\toutTree->Branch(\"kinsqle1\",\t\t&kinsqle1,\t\"kinsqle1/D\");\n\toutTree->Branch(\"kinsqle2\",\t\t&kinsqle2,\t\"kinsqle2/D\");\n\toutTree->Branch(\"csilDep\",\t\t&csilDep,\t\"csilDep/D\");\n\n\toutTree->Branch(\"fsqltheta1\",\t&fsqltheta1,\"fsqltheta1/D\");\n\toutTree->Branch(\"fsqltheta2\",\t&fsqltheta2,\"fsqltheta2/D\");\n\toutTree->Branch(\"sqde1\",\t\t&fsqde1,\t\"sqde1/D\");\n\toutTree->Branch(\"sqde2\",\t\t&fsqde2,\t\"sqde2/D\");\n\n\toutTree->Branch(\"del_2H\",\t\t&fdel_2H,\t\t\"del_2H/D\");\n\toutTree->Branch(\"el_2H\",\t\t&fel_2H,\t\t\"el_2H/D\");\n\toutTree->Branch(\"newE\",\t\t\t&newE,\t\t\"newE/D\");\n\n\toutTree->Branch(\"sqrde\",\t\t&sqrde,\t\t\"sqrde/D\");\n\toutTree->Branch(\"sqretot\",\t\t&sqretot,\t\"sqretot/D\");\n\toutTree->Branch(\"sqrth\",\t\t&sqrtheta,\t\"sqrth/D\");\n\toutTree->Branch(\"sqrphi\",\t\t&sqrphi,\t\"sqrphi/D\");\n\toutTree->Branch(\"sqrang\",\t\t&sqrang,\t\"sqrang/D\");\n\toutTree->Branch(\"sqrxtime\",\t\t&sqrxtime,\t\"sqrxtime/D\");\n\n\toutTree->Branch(\"sqrytime\",\t\t&sqrytime,\t\"sqrytime/D\");\n\toutTree->Branch(\"fsqrde\",\t\t&fsqrde,\t\"fsqrde/D\");\n\toutTree->Branch(\"fsqrtheta1\",\t&fsqrtheta1,\t\"fsqrtheta1/D\");\n\toutTree->Branch(\"fsqrtheta2\",\t&fsqrtheta2,\t\"fsqrtheta2/D\");\n\n\toutTree->Branch(\"s_csir\",\t\t&memS_CsI_R,\t\"s_csir/S\");\n\toutTree->Branch(\"s_csil\",\t\t&memS_CsI_L,\t\"s_csil/S\");\n\n\toutTree->Branch(\"X2H\",\t&X2H,\t\"X2H/F\");\n\toutTree->Branch(\"Y2H\",\t&Y2H,\t\"Y2H/F\");\n\toutTree->Branch(\"Z2H\",\t&Z2H,\t\"Z2H/F\");\n\n\toutTree->Branch(\"X6He\",\t&X6He,\t\"X6He/F\");\n\toutTree->Branch(\"Y6He\",\t&Y6He,\t\"Y6He/F\");\n\toutTree->Branch(\"Z6He\",\t&Z6He,\t\"Z6He/F\");\n\n\toutTree->Branch(\"evX\",\t&evX,\t\"evX/F\");\n\toutTree->Branch(\"evY\",\t&evY,\t\"evY/F\");\n\toutTree->Branch(\"evZ\",\t&evZ,\t\"evZ/F\");\n\n\toutTree->Branch(\"f6X\",\t&f6X,\t\"f6X/F\");\n\toutTree->Branch(\"f6Y\",\t&f6Y,\t\"f6Y/F\");\n\toutTree->Branch(\"f6Z\",\t&f6Z,\t\"f6Z/F\");\n\n\toutTree->Branch(\"f5X\",\t&f5X,\t\"f5X/F\");\n\toutTree->Branch(\"f5Y\",\t&f5Y,\t\"f5Y/F\");\n\toutTree->Branch(\"f5Z\",\t&f5Z,\t\"f5Z/F\");\n\n\n\toutTree->Branch(\"tF3\",\tout_tF3,\t\"tF3[4]/D\");\n\toutTree->Branch(\"F3\",\tout_F3,\t\t\"F3[4]/D\");\n\toutTree->Branch(\"tF5\",\tout_tF5,\t\"tF5[4]/D\");\n\toutTree->Branch(\"F5\",\tout_F5,\t\t\"F5[4]/D\");\n\toutTree->Branch(\"tF6\",\tout_tF6,\t\"tF6[4]/D\");\n\toutTree->Branch(\"F6\",\tout_F6,\t\t\"F6[4]/D\");\n\n\n\toutTree->Branch(\"tof\",\t&out_tof,\t\"tof/D\");\n\toutTree->Branch(\"aF5\",\t&out_aF5,\t\"aF5/D\");\n\toutTree->Branch(\"az\",\t&out_AZ,\t\"az/D\");\n\toutTree->Branch(\"T1\",\t&out_T1,\t\"T1/D\");\n\toutTree->Branch(\"T2\",\t&out_T2,\t\"T2/D\");\n\n\toutTree->Branch(\"ion\",\t&Ion_ID,\t\"ion/S\");\n\toutTree->Branch(\"geo\",\t&Geo_ID,\t\"geo/S\");\n\toutTree->Branch(\"run\",\t&Run_ID,\t\"run/S\");\n\n\toutTree->Branch(\"x1\",\tout_x1,\t\t\"x1[32]/s\");\n\toutTree->Branch(\"x2\",\tout_x2,\t\t\"x2[32]/s\");\n\toutTree->Branch(\"y1\",\tout_y1,\t\t\"y1[32]/s\");\n\toutTree->Branch(\"y2\",\tout_y2,\t\t\"y2[32]/s\");\n\n\toutTree->Branch(\"nx1\",\t&out_nx1,\t\"nx1/s\");\n\toutTree->Branch(\"nx2\",\t&out_nx2,\t\"nx2/s\");\n\toutTree->Branch(\"ny1\",\t&out_ny1,\t\"ny1/s\");\n\toutTree->Branch(\"ny2\",\t&out_ny2,\t\"ny2/s\");\n\n\toutTree->Branch(\"tMWPC\",\tout_tMWPC,\t\"tMWPC[4]/F\");\t\n\toutTree->Branch(\"trigger\",\t&out_trig,\t\"trigger/S\");\n\toutTree->Branch(\"mml\",\t&mml,\t\"mml/D\");\n\n\toutTree->Branch(\"c_SQX_L\",\tc_SQX_L,\t\"c_SQX_L[32]/D\");\n\toutTree->Branch(\"c_SQX_R\",\tc_SQX_R,\t\"c_SQX_R[32]/D\");\n\toutTree->Branch(\"c_SQY_L\",\tc_SQY_L,\t\"c_SQY_L[16]/D\");\n\toutTree->Branch(\"c_SQY_R\",\tc_SQY_R,\t\"c_SQY_R[16]/D\");\n\toutTree->Branch(\"c_CsI_L\",\tc_CsI_L,\t\"c_CsI_L[16]/D\");\n\toutTree->Branch(\"c_CsI_R\",\tc_CsI_R,\t\"c_CsI_R[16]/D\");\n\n\toutTree->Branch(\"r_SQX_L\",\traw_SQX_L,\t\"r_SQX_L[32]/D\");\n\toutTree->Branch(\"r_SQX_R\",\traw_SQX_R,\t\"r_SQX_R[32]/D\");\n\toutTree->Branch(\"r_SQY_L\",\traw_SQY_L,\t\"r_SQY_L[16]/D\");\n\toutTree->Branch(\"r_SQY_R\",\traw_SQY_R,\t\"r_SQY_R[16]/D\");\n\toutTree->Branch(\"r_CsI_L\",\traw_CsI_L,\t\"r_CsI_L[16]/D\");\n\toutTree->Branch(\"r_CsI_R\",\traw_CsI_R,\t\"r_CsI_R[16]/D\");\n\n\toutTree->Branch(\"he6\",\t&he6,\t\"he6/B\");\n\toutTree->Branch(\"mmBool\",\t&mmBool,\t\"mmBool/B\");\n\n\toutTree->Bronch(\"LV_6He.\",\t\"TLorentzVector\",\t&LV_6He);\n\toutTree->Bronch(\"LV_2H.\",\t\"TLorentzVector\",\t&LV_2H);\n\toutTree->Bronch(\"LV_beam.\",\t\"TLorentzVector\",\t&LV_beam);\n\treturn true;\n}\n\nFloat_t dE_E_angle::actual_work(Float_t angShift, Float_t tar_thck)\n{\n\tLong64_t nEntries = inTree->GetEntries();\n\tTVector3 zx(0.0,1.0,0.0), v_beam(0.0,0.0,1.0), v_tar(0.0, 0.0, 0.0);\n\tTRandom3 *rnd = new TRandom3();\n\tcounter = 0;\n\tmaynard->params5_loader(\"csil_1_ec.clb\", pede1, A1, B1, C1, D1);\n\tmaynard->params5_loader(\"csil_2_ec.clb\", pede2, A2, B2, C2, D2);\n\tmaynard->params5_loader(\"csil_3_ec.clb\", pede3, A3, B3, C3, D3);\n\tmaynard->params5_loader(\"csil_4_ec.clb\", pede4, A4, B4, C4, D4);\n\tmaynard->initializeGeometry(&SQR_ang, &SQL_ang, &SQR_dist, &SQL_dist, &tar_angle, &tar_thcknss);\n\tmaynard->getTimeCorrectionForDets(\t&tcor_sqLX_I, &tcor_sqLX_II, &tcor_sqRX_I,\n\t\t\t\t\t\t\t\t\t\t&tcor_sqRX_II, &tcor_sqLY, &tcor_sqRY);\n\tSQL_ang = cs::sql_ang_s1 + angShift*cs::deg_to_rad;\n\ttar_thcknss = tar_thck;\n\tprintf(\"##############################################################################\\n\");\n\tprintf(\"#\tLoaded file %s has %lli entries. \\n#\tProcessing...\\n\", \n\t\t\ts_curFile.Data(), nEntries);\n\tprintf(\"sqlang: %f\\ttar_thckns: %f\\n\",SQL_ang*cs::rad_to_deg, tar_thck);\n\tTH1F *mmHist = new TH1F(\"mmFit\", \"mmFitttl\", 300, -15, 15);\n\tTF1 *gausFit = new TF1(\"gausFit\",\"atan(sin(2x/()))\");\n\tTF1 *angAngFit = new TF1(\"angAngFit\",\"gaus\");\n\tLong64_t mmCounter = 0;\nLong64_t st=0, nd=0, rd=0, th=0;\nfor (Long64_t entry=0; entry<nEntries; entry++)\n\t{\n\tinTree->GetEntry(entry);\n\n\tif( entry % ( nEntries / 10 ) == 0)\n\t{\n\t\tprintf(\"# Progress: %i %%\\n\", counter);\n\t\tcounter+=10;\n\t}\n\t//NULLing everything\n\t\tLV_tar_2H->SetVectM(v_tar,cs::mass_2H);\n\t\tmemE_CsI_R=0.0; memE_CsI_L=0.0; memE_CsI_0L=0.0; memS_CsI_R=20; memS_CsI_L=20;\n\t\tdist_tar_det = 0.0, kine_2H=0.0, kine_1H=0.0;\n\t\tIon_ID = 0, Geo_ID = cs::runNo, out_T1 = 0.0, out_T2 = 0.0, fsqde1=0.0, fsqde2=0.0;\n\t\tevX=0.0;evY=0.0;evZ=0.0; Run_ID = run;\n\t\tcln1=false, cln2=false, cln3=false;\n\t\ttmw=false; tar=false, he6=false, mmBool=false;\n\n\t\tX6He=0.0; Y6He=0.0; Z6He=0.0; X2H=0.0; Y2H=0.0; Z2H=0.0;\n\n\t\tsqrphi=0.0; sqrtheta=0.0; sqrang=0.0; sqrde=0.0; sqretot=0.0;\n\t\tsqlphi=0.0; sqltheta=0.0; sqlang=0.0; sqlde=0.0; sqletot=0.0;\t\n\t\tsqletot1=0.0;\tsqletot2=0.0;\tsqletot3=0.0;\tsqletot4=0.0;\n\t\tSQX_L_mult=0; SQY_L_mult=0; CsI_L_mult=0;\n\t\tSQX_R_mult=0; SQY_R_mult=0; CsI_R_mult=0;\n\n\t\tmaynard->null_energy(\tSQX_L_Edep,SQY_L_Edep,CsI_L_Edep,\n\t\t\t\t\t\t\t\tSQX_R_Edep,SQY_R_Edep,CsI_R_Edep);\n\n\t\tmaynard->null_strips(\tSQX_L_strip, SQY_L_strip, CsI_L_strip,\n\t\t\t\t\t\t\t\tSQX_R_strip, SQY_R_strip, CsI_R_strip);\n\n\n\n\tout_aF5 = in_aF5;\n\tout_nx1=in_nx1;\n\tout_nx2=in_nx2;\n\tout_ny1=in_ny1;\n\tout_ny2=in_ny2;\n\tout_trig=in_trig;\n\tout_tof = in_tof;\n\tout_AZ = in_AZ;\n\n\t//4 channels loop\n\tfor (int iii=0; iii<4; iii++)\n\t{\n\t\tout_tF3[iii]=in_tF3[iii];\n\t\tout_F3[iii]=in_F3[iii];\n\t\tout_tF5[iii]=in_tF5[iii];\n\t\tout_F5[iii]=in_F5[iii];\n\t\tout_tF6[iii]=in_tF6[iii];\n\t\tout_F6[iii]=in_F6[iii];\n\t\tout_tMWPC[iii] = in_tMWPC[iii];\n\t}\n\n\t//16 channels loop\n\tfor (int iii=0; iii<16; iii++)\n\t{\n\t\tif (in_tSQY_L[iii]>cs::tc_SQY_L)\n\t\t{\n\t\t\tSQY_L_mult++;\n\t\t\tSQY_L_Edep[SQY_L_mult]=SQY_L[iii];\n\t\t\tSQY_L_strip[SQY_L_mult]=iii;\n\t\t}\n\n\t\tif (in_tSQY_R[iii]>cs::tc_SQY_R)\n\t\t{\n\t\t\tSQY_R_mult++;\n\t\t\tSQY_R_Edep[SQY_R_mult]=SQY_R[iii];\n\t\t\tSQY_R_strip[SQY_R_mult]=iii;\n\t\t}\n/*\n\t\tif (in_tSQ300[iii]>2.0)\n\t\t{\n\t\t\tSQ300_mult++;\n\t\t\tSQ300_Edep[SQ300_mult]=SQ300[iii];\n\t\t\tSQ300_strip[SQ300_mult]=iii;\n\t\t}\n*/\n\t\tif (in_tCsI_R[iii]>cs::tc_CsI_R)\n\t\t{\n\t\t\tif (memE_CsI_R<CsI_R[iii])\n\t\t\t{\n\t\t\t\tmemE_CsI_R = CsI_R[iii];\n\t\t\t\tmemS_CsI_R = iii;\n\t\t\t}\n\n\t\t\tCsI_R_mult++;\n\t\t\tCsI_R_Edep[CsI_R_mult]=CsI_R[iii];\n\t\t\tCsI_R_strip[CsI_R_mult]=iii;\n\t\t}\n\n\t\tif (in_tCsI_L[iii]>cs::tc_CsI_L)\n\t\t{\n\t\t\tif (memE_CsI_L<CsI_L[iii])\n\t\t\t{\n\t\t\t\tmemE_CsI_L = CsI_L[iii];\n\t\t\t\tmemS_CsI_L = iii;\n\t\t\t}\n\n\t\t\tCsI_L_mult++;\n\t\t\tCsI_L_Edep[CsI_L_mult]=CsI_L[iii];\n\t\t\tCsI_L_strip[CsI_L_mult]=iii;\n\t\t}\n\t\tc_SQX_L[iii]=SQX_L[iii];\n\t\tc_SQX_R[iii]=SQX_R[iii];\n\t\tc_SQY_L[iii]=SQY_L[iii];\n\t\tc_SQY_R[iii]=SQY_R[iii];\n\t\tc_CsI_L[iii]=CsI_L[iii];\n\t\tc_CsI_R[iii]=CsI_R[iii];\n\n\t\traw_SQX_L[iii]=r_SQX_L[iii];\n\t\traw_SQX_R[iii]=r_SQX_R[iii];\n\t\traw_SQY_L[iii]=r_SQY_L[iii];\n\t\traw_SQY_R[iii]=r_SQY_R[iii];\n\t\traw_CsI_L[iii]=r_CsI_L[iii];\n\t\traw_CsI_R[iii]=r_CsI_R[iii];\n\n\n\t\tout_tCsI_L[iii]=in_tCsI_L[iii];\n\t\tout_tCsI_R[iii]=in_tCsI_R[iii];\n\t\tout_tSQY_L[iii]=in_tSQY_L[iii];\n\t\tout_tSQY_R[iii]=in_tSQY_R[iii];\n\t}\n\n\t//32 channels loop\n\tfor (int iii=0; iii<32; iii++)\n\t{\n\t\tout_x1[iii]=in_x1[iii];\n\t\tout_x2[iii]=in_x2[iii];\n\t\tout_y1[iii]=in_y1[iii];\n\t\tout_y2[iii]=in_y2[iii];\n\n\t\tif (in_tSQX_L[iii]>cs::tc_SQX_L)\n\t\t{\n\t\t\tSQX_L_mult++;\n\t\t\tSQX_L_Edep[SQX_L_mult]=SQX_L[iii];\n\t\t\tSQX_L_Edep2[SQX_L_mult]=SQX_Ln[iii];\n\t\t\tSQX_L_strip[SQX_L_mult]=iii;\n\t\t}\n\n\t\tif (in_tSQX_R[iii]>cs::tc_SQX_R)\n\t\t{\n\t\t\tSQX_R_mult++;\n\t\t\tSQX_R_Edep[SQX_R_mult]=SQX_R[iii];\n\t\t\tSQX_R_strip[SQX_R_mult]=iii;\n\t\t}\n\n\t\t\tout_tSQX_L[iii]=in_tSQX_L[iii];\n\t\t\tout_tSQX_R[iii]=in_tSQX_R[iii];\n\t}\n\t//MWPC\n\tmaynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, cs::MWPC_1_X_id);\n\tmaynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, cs::MWPC_1_Y_id);\n\tmaynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, cs::MWPC_2_X_id);\n\tmaynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id);\n\n\n\t\n\t//displacement + go to corner of MWPC + follow wire order - get event point\n\tMWPC_1_X += rnd->Uniform(0.0,1.25)-0.6125;\n\tMWPC_1_Y += rnd->Uniform(0.0,1.25)-0.6125;\n\tMWPC_1_Z = -816.0;\n\tMWPC_2_X += rnd->Uniform(0.0,1.25)-0.6125;\n\tMWPC_2_Y += rnd->Uniform(0.0,1.25)-0.6125;\n\tMWPC_2_Z = -270.0;\n\n\tif (out_tMWPC[0]>1000 && out_tMWPC[1]>1000 && out_tMWPC[2]>1000 && out_tMWPC[3]>1000)\n\t{\n\t\ttmw=true;\n\t}\n\n\tdX=MWPC_2_X-MWPC_1_X;\n\tdY=MWPC_2_Y-MWPC_1_Y;\n\tdZ=MWPC_2_Z-MWPC_1_Z;\n\t\t\n\tv_beam.SetXYZ(dX,dY,dZ);\n\tFloat_t ToFMWPC = 440.0/(cos(v_beam.Theta()));\n\tFloat_t det_thcknss = 1000.0/(cos(v_beam.Theta()));\n\t// choose correct Eloss method\n\n\tif (gcut_he6->IsInside(in_AZ,in_aF5))\n\t{\n\t\ttempT1 = maynard->getT(in_tof,cs::mass_6He);\n\t\tout_T1 = he6_Si->GetE(tempT1, 440.0);\n\t\tout_T2 = he6_Si->GetE(tempT1, ToFMWPC);\n\t\tfsqde1 = out_T1 - he6_Si->GetE(out_T1, 1000.0);\n\t\tfsqde2 = out_T2 - he6_Si->GetE(out_T2, det_thcknss);\n\t\tIon_ID = 62;\n\t\ttempT1 = out_T1;\n\t\ttempT2 = out_T2;\n\t\tout_T1 = he6_CD2->GetE(tempT1,  tar_thcknss/(2*cos(tar_angle)));\n\t\tout_T2 = he6_CD2->GetE(tempT2,  tar_thcknss/(2*cos(tar_angle)));\n\t}\n\n\telse if (in_aF5==0 && in_AZ>2.75 && in_AZ<3.1)\n\t{\n\t\ttempT1 = maynard->getT(in_tof,cs::mass_6He);\n\t\tout_T1 = he6_Si->GetE(tempT1, 440.0);\n\t\tout_T2 = he6_Si->GetE(tempT1, ToFMWPC);\n\t\tfsqde1 = out_T1 - he6_Si->GetE(out_T1, 1000.0);\n\t\tfsqde2 = out_T2 - he6_Si->GetE(out_T2, det_thcknss);\n\t\tIon_ID = 61;\n\t\ttempT1 = out_T1;\n\t\ttempT2 = out_T2;\n\t\tout_T1 = he6_CD2->GetE(tempT1,  tar_thcknss/(2*cos(tar_angle)));\n\t\tout_T2 = he6_CD2->GetE(tempT2,  tar_thcknss/(2*cos(tar_angle)));\n\t}\n\n\telse if (gcut_li8->IsInside(in_AZ,in_aF5))\n\t{\n\t\ttempT1 = maynard->getT(in_tof,cs::mass_8Li);\n\t\tout_T1 = li8_Si->GetE(tempT1, 440.0);\n\t\tout_T2 = li8_Si->GetE(tempT1, ToFMWPC);\n\t\tfsqde1 = out_T1 - li8_Si->GetE(out_T1, 1000.0);\n\t\tfsqde2 = out_T2 - li8_Si->GetE(out_T2, det_thcknss);\n\t\tIon_ID = 83;\n\t}\n\n\telse if (gcut_h3->IsInside(in_AZ,in_aF5))\n\t{\n\t\ttempT1 = maynard->getT(in_tof,cs::mass_3H);\n\t\tout_T1 = h3_Si->GetE(tempT1, 440.0);\n\t\tout_T2 = h3_Si->GetE(tempT1, ToFMWPC);\n\t\tfsqde1 = out_T1 - h3_Si->GetE(out_T1, 1000.0);\n\t\tfsqde2 = out_T2 - h3_Si->GetE(out_T2, det_thcknss);\n\t\tIon_ID = 31;\n\t}\n\n\telse if (gcut_be9->IsInside(in_AZ,in_aF5))\n\t{/*\n\t\ttempT = maynard->getT(in_tof,cs::mass_9Be);\n\t\tout_T1 = be9_Si->GetE(tempT, 440.0);\n\t\tout_T2 = be9_Si->GetE(tempT, ToFMWPC);\n\t\tfsqde1 = out_T1 - be9_Si->GetE(out_T1, 1000.0);\n\t\tfsqde2 = out_T2 - be9_Si->GetE(out_T2, det_thcknss);\n\t\tIon_ID = 94;*/\n\t}\n\n\t\telse if (gcut_h2->IsInside(in_AZ,in_aF5))\n\t{\n\t\ttempT1 = maynard->getT(in_tof,cs::mass_2H);\n\t\tout_T1 = h2_Si->GetE(tempT1, 440.0);\n\t\tout_T2 = h2_Si->GetE(tempT1, ToFMWPC);\n\t\tfsqde1 = out_T1 - h2_Si->GetE(out_T1, 1000.0);\n\t\tfsqde2 = out_T2 - h2_Si->GetE(out_T2, det_thcknss);\n\t\tIon_ID = 21;\n\t\t//printf(\"Co ja robie tuuu %i\\n\",Ion_ID );*/\n\t}\n\n\telse if (gcut_he4->IsInside(in_AZ,in_aF5))\n\t{\n\t\ttempT1 = maynard->getT(in_tof,cs::mass_4He);\n\t\tout_T1 = he4_Si->GetE(tempT1, 440.0);\n\t\tout_T2 = he4_Si->GetE(tempT1, ToFMWPC);\n\t\tfsqde1 = out_T1 - he4_Si->GetE(out_T1, 1000.0);\n\t\tfsqde2 = out_T2 - he4_Si->GetE(out_T2, det_thcknss);\n\t\tIon_ID = 42;\n\t}\n\n\telse if (gcut_li7->IsInside(in_AZ,in_aF5))\n\t{\n\t\ttempT1 = maynard->getT(in_tof,cs::mass_7Li);\n\t\tout_T1 = li7_Si->GetE(tempT1, 440.0);\n\t\tout_T2 = li7_Si->GetE(tempT1, ToFMWPC);\n\t\tfsqde1 = out_T1 - li7_Si->GetE(out_T1, 1000.0);\n\t\tfsqde2 = out_T2 - li7_Si->GetE(out_T2, det_thcknss);\n\t\tIon_ID = 73;\n\t}\n\n\telse\n\t{\n\t\tIon_ID = 0;\n\t}\n\n\t\n\t//rotation matrix that will convert 2H or 6He particle so that they will see beam as Z axis\n\tbeam_setting_array.SetZAxis(v_beam.Unit(),zx);\n\tbeam_setting_array.Invert();\n\n\t//v_beam.Transform(beam_setting_array);\n\tene_beam = cs::mass_6He + out_T2;\n\tmom_beam = sqrt(ene_beam*ene_beam - cs::mass_6He*cs::mass_6He);\n\n\tv_beam.SetMag(mom_beam);\n\t//printf(\"Wat wat wat%f\\n\",v_beam.Mag());\t\n\t\n\tLV_beam->SetVectM(v_beam, cs::mass_6He);\n\tTcoef=(cos(tar_angle)*cs::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);\n\tTcoef2=(cs::dist_Tar_to_F6-MWPC_1_Z)/dZ;\n\tTcoef3=(cs::dist_Tar_to_F5-MWPC_1_Z)/dZ;\n\n\tXZsum= - sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z;\n\n\tevX = MWPC_1_X + dX*Tcoef;\n\tevY = MWPC_1_Y + dY*Tcoef;\n\tevZ = MWPC_1_Z + dZ*Tcoef;\n\n\tf6X = MWPC_1_X + dX*Tcoef2;\n\tf6Y = MWPC_1_Y + dY*Tcoef2;\n\tf6Z = MWPC_1_Z + dZ*Tcoef2;\n\n\tf5X = MWPC_1_X + dX*Tcoef3;\n\tf5Y = MWPC_1_Y + dY*Tcoef3;\n\tf5Z = MWPC_1_Z + dZ*Tcoef3;\n\tif (evX > tar_cut_lo_X && evX < tar_cut_hi_X\t&&\n\t\tevY > tar_cut_lo_Y && evY < tar_cut_lo_Y\t)\n\t{\n\t\ttar=true;\n\t}\n\t\n\tftot = rnd->Uniform(0.0,50.0);\n\tfel_2H = h2_Si->GetE(ftot, 1000.0);\n\tfdel_2H = ftot - fel_2H;\n\n\n\n\t//SQL energy - deuterium\n\tif (SQX_L_mult*SQY_L_mult==1 && SQX_L_Edep[1]>0)\n\t{\n\n\t\t// coordinates of hit in LAB system\n\t\tX2H_lab = SQL_dist*sin(SQL_ang) + cs::SQL_start_X * cos(SQL_ang);\n\t\tY2H_lab = cs::SQL_start_Y;\n\t\tZ2H_lab = SQL_dist*cos(SQL_ang) - cs::SQL_start_X * sin(SQL_ang);\t\t\n\n\t\tX2H_det=-2. *\t(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * cos(SQL_ang);\n\t\tY2H_det=4.\t* \t(SQY_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5);\n\t\tZ2H_det=2.\t*\t(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * sin(SQL_ang);\n\n\t\tX2H = X2H_lab + X2H_det;\n\t\tY2H = Y2H_lab + Y2H_det;\n\t\tZ2H = Z2H_lab + Z2H_det;\n\t\tTVector3 vect2H(X2H-evX, Y2H-evY, Z2H-evZ);\n\t\tTVector3 v2H_1(vect2H), v2H_2(vect2H), v2H_3(vect2H), v2H_4(vect2H);\n\t\tsqlphi=vect2H.Phi()*cs::rad_to_deg;\n\t\tsqltheta=vect2H.Theta()*cs::rad_to_deg;\n\t\tsqlang = vect2H.Angle(v_beam)*cs::rad_to_deg;\n\n\t\t//printf(\"%f\\n\",SQX_L_Edep[1] );\n\t\t//Energy deposited in Si detector corrected for dead layer\n\t\tdummy1\t=\th2_Si->GetE(SQX_L_Edep[1], -2.5);\n\t\tsqlde\t=\th2_CD2->GetE(dummy1, -tar_thcknss/(2*cos(vect2H.Theta()-tar_angle)));\n\t\tSi_L_bank = SQX_L_Edep[1];\n\n\t\tdummy2\t=\th2_Si->GetE(SQX_L_Edep2[1], -2.5);\n\t\tsqlde2\t=\th2_CD2->GetE(dummy2, -tar_thcknss/(2*cos(vect2H.Theta()-tar_angle)));\n\n\n\t\tsqletot = memE_CsI_L;\n\n\t\t\n\t\tcr = memS_CsI_L;\n\t\tif (sqletot>0)\n\t\t{\n\t\t\t//input1 = (-D1[cr]*exp(-D1[cr]/C1[cr]-(r_CsI_L[cr]-pede1[cr])/(2*B1[cr]*C1[cr])))/C1[cr];\n\t\t\t//printf(\"%f\\t%f\\t%f\\t%i\\n\",D1[cr], C1[cr],r_CsI_L[cr]-pede1[cr], cr);\n\t\t\t//sqletot1 = 2* (-C1[cr] * gsl_sf_lambert_W0(input1) - D1[cr]);\n\n\t\t\tsqletot2 = A2[cr] + B2[cr]*((r_CsI_L[cr]-pede2[cr])-C2[cr]*log((r_CsI_L[cr]-pede2[cr]+D2[cr])/D2[cr]));\n\t\t\tsqletot4 = A4[cr] + B4[cr]*((r_CsI_L[cr])-C4[cr]*log((r_CsI_L[cr]+D4[cr])/D4[cr]));\n\t\t\t//input4 = (-D4[cr]*exp(-D4[cr]/C4[cr]-(r_CsI_L[cr]-pede4[cr])/(2*B4[cr]*C4[cr])))/C4[cr];\n\t\t\t//printf(\"%f\\n\", input);\n\t\t\t//sqletot4 = 2* (-C4[cr] * gsl_sf_lambert_W0(input4) - D4[cr]);\n\t\t}\n\n\n\n\t\t//printf(\"%f\\t%f\\t%f\\n\", sqletot, sqletot2, sqletot4);\n\n\t\tif (memE_CsI_L==0)\n\t\t{\n\t\t\tene_2H = sqlde + cs::mass_2H;\n\t\t\tene2_2H = sqlde + cs::mass_2H;\n\t\t\tene3_2H = sqlde + cs::mass_2H;\n\t\t\tene4_2H = sqlde + cs::mass_2H;\n\t\t}\n\n\t\telse if (memE_CsI_L>0)\n\t\t{\n\t\t\tene_2H = sqlde + sqletot + cs::mass_2H;\n\t\t\tene2_2H = sqlde + sqletot2 + cs::mass_2H;\n\t\t\tene3_2H = sqlde + sqletot3 + cs::mass_2H;\n\t\t\tene4_2H = sqlde + sqletot4 + cs::mass_2H;\n\t\t}\n\n\t\tif (SQX_L_strip[1]<16)\n\t\t{\n\t\t\tsqlxtime=out_tSQX_L[SQX_L_strip[1]]-tcor_sqLX_I/sqlde;\n\t\t}\n\t\telse if (SQX_L_strip[1]>15)\n\t\t{\n\t\t\tsqlxtime=out_tSQX_L[SQX_L_strip[1]]-tcor_sqLX_II/sqlde;\n\t\t}\n\t\telse\n\t\t{\n\t\t\treturn 0;\n\t\t}\n\t\t\n\t\tsqlytime=out_tSQY_L[SQY_L_strip[1]]-tcor_sqLY/sqlde;\n\n\n\n\t\tmom_2H = sqrt(ene_2H*ene_2H-cs::mass_2H*cs::mass_2H);\n\t\tvect2H.SetMag(mom_2H);\n\t\tLV_2H->SetVectM(vect2H, cs::mass_2H);\n\t\t*LV_6He = *LV_tar_2H + *LV_beam - *LV_2H;\n\t\tmml = LV_6He->M() - cs::mass_6He;\n\n\t\tmom1_2H = sqrt(ene1_2H*ene1_2H-cs::mass_2H*cs::mass_2H);\n\t\tv2H_1.SetMag(mom1_2H);\n\t\tLV_2H->SetVectM(v2H_1, cs::mass_2H);\n\t\t*LV_6He = *LV_tar_2H + *LV_beam - *LV_2H;\n\t\tmml1 = LV_6He->M() - cs::mass_6He;\n\n\n\t\tmom2_2H = sqrt(ene2_2H*ene2_2H-cs::mass_2H*cs::mass_2H);\n\t\tv2H_2.SetMag(mom2_2H);\n\t\tLV_2H->SetVectM(v2H_2, cs::mass_2H);\n\t\t*LV_6He = *LV_tar_2H + *LV_beam - *LV_2H;\n\t\tmml2 = LV_6He->M() - cs::mass_6He;\n\n\n\n\n\n\t\tmom4_2H = sqrt(ene4_2H*ene4_2H-cs::mass_2H*cs::mass_2H);\n\t\tv2H_4.SetMag(mom4_2H);\n\t\tLV_2H->SetVectM(v2H_4, cs::mass_2H);\n\t\t*LV_6He = *LV_tar_2H + *LV_beam - *LV_2H;\n\t\tmml4 = LV_6He->M() - cs::mass_6He;\n\t\t\n\n\n\t\t//With Ivan's calibration\n\n\n\n\n\t\t\nmml3=0;\n\t\tif (sqlang>0 && sqlde>0)\n\t\t{\n\t\t\t//Deuterium energy after reaction\n\t\t\tkinsqle1 = maynard->kin_GetERecoil(vect2H.Angle(v_beam), out_T2, cs::mass_1H/cs::mass_6He);\n\t\t\tkinsqle2 = maynard->kin_GetERecoil(vect2H.Angle(v_beam), out_T2, cs::mass_2H/cs::mass_6He);\n\t\t\t//After leaving target\t\t\t\n\t\t\tdummy1 = h2_CD2->GetE(kinsqle2, tar_thcknss/(2.*cos(vect2H.Theta()-tar_angle)));\n\t\t\t//after Si 1st dead layer\n\t\t\tfsqlE = h2_Si->GetE(dummy1, 2.5/cos(vect2H.Theta()-SQL_ang));\n\t\t\t//lost in Si\n\t\t\tdummy2 = fsqlE - Si_L_bank;\n\t\t\tmom3_2H = sqrt(kinsqle2*kinsqle2-cs::mass_2H*cs::mass_2H);\n\t\t\tv2H_3.SetMag(mom3_2H);\n\t\t\tLV_2H->SetVectM(v2H_3, cs::mass_2H);\n\t\t\t*LV_6He = *LV_tar_2H + *LV_beam - *LV_2H;\n\t\t\tmml3 = LV_6He->M() - cs::mass_6He+3;\n\n\t\t\tif (dummy2>0)\n\t\t\t{\n\t\t\t\t//after Si 2nd dead layer\n\t\t\t\tdummy1 = h2_Si->GetE(dummy2, 2.5/cos(vect2H.Theta()-SQL_ang));\n\t\t\t\t//after BoPET\n\t\t\t\t\n\t\t\t\tdummy2 = h2_BoPET->GetE(dummy1, 2.5/cos(vect2H.Theta()-SQL_ang));\n\t\t\t\t//lost in CsI dead layer\n\t\t\t\t\n\t\t\t\tcsilDep = h2_CsI->GetE(dummy2, 2.5/cos(vect2H.Theta()-SQL_ang));\n\t\t\t\t\n\t\t\t}\n\n\t\t\telse\n\t\t\t{\n\t\t\t\tcsilDep=0.0;\n\t\t\t}\n\n\n\t\t}\n\t\tfsqltheta1 = maynard->kin_GetAngRecoil(sqlde,out_T1, cs::mass_2H/cs::mass_6He);\n\t\tfsqltheta2 = maynard->kin_GetAngRecoil(sqlde,out_T2, cs::mass_2H/cs::mass_6He);\n\t\tfsqrtheta1 = maynard->kin_GetAngProjectile(kinsqle1,out_T2, cs::mass_1H/cs::mass_6He);\n\t\tfsqrtheta2 = maynard->kin_GetAngProjectile(kinsqle2,out_T2, cs::mass_2H/cs::mass_6He);\n\n\n\n\t/*\n\t\t\n\t\n\t\tlamb = (-D2[cris]*exp(\t-D2[cris]/C2[cris] - (r_CsI_L[cris]-pede2[cris])/(2*B2[cris]*C2[cris]))\t)/C2[cris];\n\t\tsqletot2 =  2* (-C2[cris] * gsl_sf_lambert_W0(input) - D2[cris]);\n\t*/\n\t}\n\t//SQR energy - helium\n\tif(SQX_R_mult*SQY_R_mult==1)\n\t{\t\t\n\t\tsqrde=SQY_R_Edep[1];\n\t\tsqretot=memE_CsI_R;\n\n\t\tif (SQX_R_strip[1]<16)\n\t\t{\n\t\t\tsqrxtime=out_tSQX_R[SQX_R_strip[1]]-tcor_sqRX_I/sqrde;\n\t\t}\n\t\telse if (SQX_R_strip[1]>15)\n\t\t{\n\t\t\tsqrxtime=out_tSQX_R[SQX_R_strip[1]]-tcor_sqRX_II/sqrde;\n\t\t}\n\t\telse\n\t\treturn 0;\n\t\tsqrytime=out_tSQY_R[SQY_R_strip[1]]-tcor_sqRY/sqrde;\n\n\t\t// coordinates of hit in LAB system\n\t\tX6He_lab = SQR_dist*(-sin(SQR_ang)) + cs::SQR_start_X * cos(SQR_ang);\n\t\tY6He_lab = cs::SQR_start_Y;\n\t\tZ6He_lab = SQR_dist*cos(SQR_ang) + cs::SQR_start_X * sin(SQR_ang);\t\t\n\n\t\tX6He_det= 2.*(SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * cos(SQR_ang);\n\t\tY6He_det= 4.* (SQY_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5);\n\t\tZ6He_det= 2.*(SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * sin(SQR_ang);\n\n\t\tX6He = X6He_lab + X6He_det;\n\t\tY6He = Y6He_lab + Y6He_det;\n\t\tZ6He = Z6He_lab + Z6He_det;\n\n\t\t//setting deuterium vector\n\t\tTVector3 vect6He(X6He-evX, Y6He-evY, Z6He-evZ);\n\t\tene_6He = sqrde + sqretot + cs::mass_6He;\n\t\tmom_6He = sqrt(ene_6He*ene_6He-cs::mass_6He*cs::mass_6He);\n\t\tvect6He.SetMag(mom_6He);\n\t\tLV_6He_solo->SetVectM(vect6He, cs::mass_6He);\n\t\t*LV_2H_solo = *LV_tar_2H + *LV_beam - *LV_6He_solo;\n\t\tmmr = LV_2H_solo->M() - cs::mass_2H;\n\n\t\t//setting LAB angles of scattered 6 He - reference is beam vector\n\t\t//vect6He=beam_setting_array*vect6He;\n\t\tsqrtheta=vect6He.Theta()*cs::rad_to_deg;\n\t\tsqrphi=vect6He.Phi()*cs::rad_to_deg;\n\t\tsqrang = vect6He.Angle(v_beam)*cs::rad_to_deg;\n\t\tif (gcut_dehe6->IsInside(sqretot,sqrde) && sqlde>0 && out_T2>0)\n\t\t{\n\t\t\the6=true;\n\t\t}\n\n\t\tif (sqletot==0 && he6 && gcut_AngAng2H->IsInside(sqrang,sqlang-(angShift-3.0)))\n\t\t{\n\t\t\tmmHist->Fill(mml);\n\t\t\tmmCounter++;\n\t\t\tmmBool=true;\n\t\t}\n\t}\n\t\n\toutTree->Fill();\n}\noutTree->Write();\nmmHist->Fit(gausFit, \"Q\");\nprintf(\"Missing mass statistic: %lli\\n\", mmCounter);\nprintf(\"1st filter: %lli, 2nd filter: %lli, 3rd filter: %lli from: %lli\\n\",st, nd, rd, th);\nTString outFname(s_curFile.Copy().ReplaceAll(\"cal_\",\"dE_\").Data());\nprintf(\"#\tCreating file: %s with tree named \\\"dE_E\\\" \\n\",outFname.Data());\nreturn gausFit->GetParameter(1);\n}",
 			"file": "dE_E_angle.cpp",
-			"file_size": 28960,
-			"file_write_time": 131836363807278845,
 			"settings":
 			{
-				"buffer_size": 28972,
+				"buffer_size": 37086,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "muchobojca.cpp",
+			"settings":
+			{
+				"buffer_size": 7747,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "muchobojca.h",
+			"settings":
+			{
+				"buffer_size": 2120,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "TOOL.cpp",
+			"settings":
+			{
+				"buffer_size": 15536,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "TOOL.h",
+			"settings":
+			{
+				"buffer_size": 1737,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -187,7 +225,8 @@
 			"file": "butler.C",
 			"settings":
 			{
-				"buffer_size": 7114,
+				"buffer_size": 7095,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
@@ -195,7 +234,8 @@
 			"file": "cutler.cpp",
 			"settings":
 			{
-				"buffer_size": 7860,
+				"buffer_size": 12274,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
@@ -203,15 +243,8 @@
 			"file": "constants.h",
 			"settings":
 			{
-				"buffer_size": 7731,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "dE_E_angle.h",
-			"settings":
-			{
-				"buffer_size": 4898,
+				"buffer_size": 7757,
+				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		}
@@ -246,8 +279,20 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
+	"expanded_folders":
+	[
+		"/home/guar/aku/wrk"
+	],
 	"file_history":
 	[
+		"/home/guar/aku/wrk/muchobojca.h",
+		"/home/guar/aku/wrk/muchobojca.cpp",
+		"/home/guar/aku/wrk/calibrate_tree.h",
+		"/home/guar/aku/wrk/calibrate_tree.cpp",
+		"/home/guar/aku/wrk/constants.h",
+		"/home/guar/aku/wrk/dE_E_angle.cpp",
+		"/home/guar/aku/wrk/macro.cpp",
+		"/home/guar/aku/wrk/TOOL.h",
 		"/home/guar/geant4/geant4.10.03.p02/examples/advanced/human_phantom/src/G4HumanPhantomPhysicsList.cc",
 		"/home/guar/geant4/geant4.10.03.p02/examples/advanced/human_phantom/src/G4HumanPhantomMessenger.cc",
 		"/home/guar/geant4/geant4.10.03.p02/examples/advanced/human_phantom/src/G4BasePhantomBuilder.cc",
@@ -333,7 +378,6 @@
 		"/home/guar/aku/initial/dE_E_angle.cpp",
 		"/home/guar/aku/initial/README.md",
 		"/home/guar/aku/initial/dE_E_angle.h",
-		"/home/guar/aku/wrk/constants.h",
 		"/home/guar/aku/misc/getDeadLayer.C",
 		"/home/guar/aku/ELC/ELC.cpp",
 		"/home/guar/aku/ELC/ELC.h",
@@ -356,30 +400,23 @@
 		"/home/guar/aku/wrk/README.md",
 		"/home/guar/aku/wrk/libEloss.so",
 		"/home/guar/aku/wrk/ELOSS.f90",
-		"/home/guar/aku/wrk/calibrate_tree.h",
-		"/home/guar/aku/wrk/calibrate_tree.cpp",
 		"/home/guar/aku/wrk/butler.C",
 		"/home/guar/aku/wrk/calibrate_sqr.cpp",
 		"/home/guar/aku/wrk/calibrate_sqr.h",
 		"/home/guar/aku/wrk/freader.cpp",
 		"/home/guar/aku/wrk/ElossCint_rdict.pcm",
 		"/home/guar/aku/wrk/dE_E_angle.h",
-		"/home/guar/aku/wrk/dE_E_angle.cpp",
 		"/home/guar/aku/wrk/crossTalk2.cpp",
 		"/home/guar/aku/wrk/crossTalk.cpp",
 		"/home/guar/aku/misc/cleanMySpectra.cpp",
 		"/home/guar/aku/misc/dE_E_angle.h",
 		"/home/guar/aku/misc/interface.h",
 		"/home/guar/aku/misc/calibrate_tree.cpp",
-		"/home/guar/aku/misc/calibrate_tree.h",
-		"/home/guar/Desktop/MC/interface.h",
-		"/home/guar/Desktop/MC/calibrate_tree.cpp",
-		"/home/guar/Desktop/MC/calibrate_tree.h",
-		"/home/guar/Desktop/MC/dE_E_angle.cpp"
+		"/home/guar/aku/misc/calibrate_tree.h"
 	],
 	"find":
 	{
-		"height": 24.0
+		"height": 38.0
 	},
 	"find_in_files":
 	{
@@ -394,6 +431,52 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"fsqltheta_1H",
+			"vect2H",
+			"sqlang",
+			"vBeam",
+			"fsqltheta1_1H",
+			"fsqltheta2",
+			"fsqltheta1",
+			"vBea",
+			"kinsqle_1H",
+			"TLore",
+			"kinsqle2",
+			"kinsqle1",
+			"v_tar",
+			"v_beam",
+			"tar",
+			"tar ",
+			"tar",
+			"tmw",
+			"run",
+			"dist_tar_det",
+			"sumF5",
+			"SQX_R_tc",
+			"print",
+			"in_AZ",
+			"gcut_he6",
+			"vChiSquare_1H",
+			"ptr_stdV_Sqlang_1H",
+			"delete",
+			"printSetup",
+			"printSe",
+			"printf",
+			"geoNo",
+			"printf",
+			"cs::run",
+			"count",
+			"Double_T",
+			"}\n",
+			"TVectorT",
+			"TVe",
+			"angAngFit_2H",
+			"stdV_Sqlang_1H",
+			"v_beam",
+			"v_beam.",
+			"fsqrtheta",
+			"s::",
+			"v_beam",
 			"G4Exception",
 			"missMass",
 			"Geo_ID",
@@ -411,6 +494,17 @@
 		"regex": false,
 		"replace_history":
 		[
+			"fsqltheta_1H",
+			"fsqltheta_2H",
+			"fsqltheta1_1H",
+			"kinsqle_2H",
+			"kinsqle_1H",
+			"vTarget",
+			"vBeam",
+			"Double_t",
+			"v_beam->",
+			"cs::",
+			"geoNo",
 			"mml",
 			"440.0"
 		],
@@ -423,53 +517,24 @@
 	"groups":
 	[
 		{
-			"selected": 5,
+			"selected": 8,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "calibrate_tree.cpp",
+					"file": "dE_E_angle.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7808,
+						"buffer_size": 4753,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "calibrate_tree.h",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2802,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
+								2819,
+								2819
 							]
 						],
 						"settings":
@@ -477,27 +542,27 @@
 							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 90.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 5,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 2,
+					"buffer": 1,
 					"file": "dE_E_angle.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 28972,
+						"buffer_size": 37086,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								13313,
-								13313
+								35630,
+								35630
 							]
 						],
 						"settings":
@@ -506,85 +571,27 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 5346.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 3,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "butler.C",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 7114,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "cutler.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 7860,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 10163.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "constants.h",
+					"buffer": 2,
+					"file": "muchobojca.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 7731,
+						"buffer_size": 7747,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6506,
-								6506
+								4199,
+								4199
 							]
 						],
 						"settings":
@@ -593,27 +600,84 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 2025.0,
+						"translation.y": 1035.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 0,
+					"stack_index": 6,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "dE_E_angle.h",
+					"buffer": 3,
+					"file": "muchobojca.h",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 4898,
+						"buffer_size": 2120,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1703,
+								1703
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1035.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "TOOL.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 15536,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11005,
+								11005
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2368.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "TOOL.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1737,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								968,
+								968
 							]
 						],
 						"settings":
@@ -624,7 +688,94 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 4,
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "butler.C",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7095,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3373,
+								3373
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1025.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "cutler.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 12274,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1429,
+								1429
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 264.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "constants.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7757,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1607,
+								1607
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -669,7 +820,7 @@
 	"project": "untitled.sublime-project",
 	"replace":
 	{
-		"height": 44.0
+		"height": 68.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -678,6 +829,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"mu",
+				"muchobojca.h"
+			],
 			[
 				"i",
 				"interface.h"
@@ -708,10 +863,10 @@
 	{
 	},
 	"show_minimap": true,
-	"show_open_files": true,
+	"show_open_files": false,
 	"show_tabs": true,
-	"side_bar_visible": false,
-	"side_bar_width": 444.0,
+	"side_bar_visible": true,
+	"side_bar_width": 292.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

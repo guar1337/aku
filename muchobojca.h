@@ -104,10 +104,12 @@ UShort_t out_tMWPC[4];
 Float_t MWPC_1_X, MWPC_1_Y, MWPC_1_Z;
 Float_t MWPC_2_X, MWPC_2_Y, MWPC_2_Z;
 Float_t dX,  dY,  dZ,  XZsum;
-Double_t sumF5, tof;
-Bool_t mwpc, amp, tac, tof_range;
-Float_t a_tSQX_R[32], b_tSQX_R[32], tSQX_R[32], AZ;
+Double_t tof;
+Bool_t mwpc, amp, tac, tof_range, he6_in_ToF_spctr;
+Float_t a_tSQX_R[32], b_tSQX_R[32], tSQX_R[32], AZ, sumF5;
 Short_t sql_count, sqr_count;
+
+TCutG (*gcut_he6);
 
 ClassDef(muchobojca,0);
 };
