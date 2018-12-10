@@ -14,14 +14,14 @@ namespace cs
 	static const float		sql_ang_s0		=	0.0	* (3.1415/180.0);
 	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
 
-	static const float		sql_ang_s1		=	(65.0+ 2.2)	* (3.1415/180.0);
-	static const float		sqr_ang_s1		=	(15.0/* - 0.08*/)	* (3.1415/180.0);
+	static const float		sql_ang_s1		=	(65.0 + 3.53)	* (3.1415/180.0);
+	static const float		sqr_ang_s1		=	(15.0 - 0.08)	* (3.1415/180.0);
 
-	static const float		sql_ang_s2		=	(50.0 + 2.2)	* (3.1415/180.0);
-	static const float		sqr_ang_s2		=	(15.0/* - 0.08*/)	* (3.1415/180.0);
+	static const float		sql_ang_s2		=	(50.0 + 3.31)	* (3.1415/180.0);
+	static const float		sqr_ang_s2		=	(15.0 - 0.08)	* (3.1415/180.0);
 
-	static const float		sql_ang_s3		=	(35.0 + 2.2)	* (3.1415/180.0);
-	static const float		sqr_ang_s3		=	(15.0/* - 0.08*/)	* (3.1415/180.0);
+	static const float		sql_ang_s3		=	(35.0 + 3.81)	* (3.1415/180.0);
+	static const float		sqr_ang_s3		=	(15.0 - 0.08)	* (3.1415/180.0);
 
 	static const float		sql_ang_s4		=	(75.0 + 1.0)	* (3.1415/180.0);
 	static const float		sqr_ang_s4		=	10.58	* (3.1415/180.0);
