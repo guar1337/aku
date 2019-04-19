@@ -76,7 +76,7 @@ void jasper::SlaveBegin(TTree * /*tree*/)
 	dY0 = -7.5 * width_strip_Y;
 	dZ0 = l_sqldist * cos(l_sqlang*TMath::DegToRad()) + -1 * width_strip_X * 15.5 * sin(l_sqlang*TMath::DegToRad());
 
-	hX0 = -1 * l_sqrdist * sin(l_sqrang*TMath::DegToRad()) - width_strip_X * 15.5 * cos(l_sqrang*TMath::DegToRad());
+	hX0 = -1 * l_sqrdist * sin(l_sqrang*TMath::DegToRad()) + width_strip_X * 15.5 * cos(l_sqrang*TMath::DegToRad());
 	hY0 = -7.5 * width_strip_Y;
 	hZ0 = l_sqrdist * cos(l_sqrang*TMath::DegToRad()) - width_strip_X * 15.5 * sin(l_sqrang*TMath::DegToRad());
 
@@ -162,8 +162,8 @@ Bool_t jasper::Process(Long64_t entry)
 
 		out_sqlang = lvBeam->Vect().Angle(*v2H)*TMath::RadToDeg();
 		out_sqrang = lvBeam->Vect().Angle(*v6He)*TMath::RadToDeg();
-		out_fsqlang = *sqlang;
-		out_fsqrang = *sqrang;
+		out_fsqlang = *fsqlang;
+		out_fsqrang = *fsqrang;
 		//reco_sqlang.push_back(sqlang);
 		//reco_sqrang.push_back(sqrang);
 
