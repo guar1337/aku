@@ -15,11 +15,12 @@ muchobojca::muchobojca()
 
 bool muchobojca::wrk(TTree *inTree, TTree *outTree, TString fname) 
 {
-maynard = new TOOL();
 
+maynard = new TOOL();
+/*
 gcut_he6 = new TCutG("He6",maynard->gcut_noPoints(fname, "he6.dat", cs::runNo),&AZ,&sumF5);
 maynard->gcuts_loader(fname, gcut_he6, "he6.dat", cs::runNo);
-
+*/
 
 //Creating addresses of BEAM holding branches
 inTree->SetMakeClass(1);
@@ -122,12 +123,12 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4.0+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+cs::tof_const;
 		sumF5 = (in_aF5[0] + in_aF5[1] + in_aF5[2] + in_aF5[3])/4.0;
 		AZ = 0.017142857 * tof;
-
+/*
 		if (gcut_he6->IsInside(AZ,sumF5) || (sumF5==0 && AZ>2.75 && AZ<3.1))
 		{
 			he6_in_ToF_spctr = true;
 		}
-
+*/
 		out_nx1=in_nx1;
 		out_nx2=in_nx2;
 		out_ny1=in_ny1;
@@ -173,12 +174,12 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			out_tSQX_R[iii]=in_tSQX_R[iii];
 			out_tSQX_L[iii]=in_tSQX_L[iii];
 
-			if (in_tSQX_L[iii]>200)
+			if (in_SQX_L[iii]>200)
 			{
 				sql_count++;
 			}
 
-			if (in_tSQX_R[iii]>200)
+			if (in_SQX_R[iii]>200)
 			{
 				sqr_count++;
 			}
@@ -196,8 +197,8 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		if (maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, cs::MWPC_1_X_id)*
 			maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, cs::MWPC_1_Y_id)*
 			maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, cs::MWPC_2_X_id)*
-			maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id)	&&
-			in_tMWPC[0]>3000 && in_tMWPC[1]>3000 && in_tMWPC[2]>3000 && in_tMWPC[3]>3000)
+			maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id)/*	&&
+			in_tMWPC[0]>3000 && in_tMWPC[1]>3000 && in_tMWPC[2]>3000 && in_tMWPC[3]>3000*/)
 		{
 
 			mwpc=true;
@@ -222,11 +223,10 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			zero_mult++;
 		}
 
-		if (tac*mwpc*amp*tof_range*(sql_count==1)*(sqr_count==1)*he6_in_ToF_spctr)		
-		{
-			outTree->Fill();
-			//printf("%f\n", sumF5);
-		}
+
+		outTree->Fill();
+
+
 
 	}
 

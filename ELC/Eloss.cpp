@@ -245,7 +245,7 @@ namespace {
     static const char* includePaths[] = {
 "/usr/local/include",
 "/usr/local/include",
-"/home/guar/aku/ELC/",
+"/home/guar/aku/wrk/ELC/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(

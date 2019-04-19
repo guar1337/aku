@@ -20,8 +20,9 @@ class dE_E_angle
 public:
 
 dE_E_angle();
-dE_E_angle(TTree *inTree, TTree *outTree, TString inFile);
+dE_E_angle(TTree *inTree, TTree *outTree, TString inFile, int geoNo);
 virtual ~dE_E_angle();
+Float_t actual_work_gas();
 Float_t actual_work(Int_t);
 Float_t actual_work(Int_t, Float_t, Float_t, std::vector<Float_t> &,  std::vector<Float_t> &,  std::vector<Float_t> &,  std::vector<Float_t> &);
 
@@ -41,7 +42,7 @@ UShort_t in_x1[32], in_x2[32], in_y1[32], in_y2[32];
 UShort_t CsI_L_strip[17], CsI_R_strip[17], SQX_L_strip[33], SQX_R_strip[17], SQY_L_strip[17], SQY_R_strip[17], SQ300_strip[17];
 UShort_t out_nx1, out_nx2, out_ny1, out_ny2, out_x1[32], out_x2[32], out_y1[32], out_y2[32];
 UShort_t CsI_L_mult, CsI_R_mult, SQX_L_mult, SQX_R_mult, SQY_L_mult, SQY_R_mult, SQ300_mult;
-UShort_t memS_CsI_R, memS_CsI_L, memS_CsI_0L, Ion_ID, Run_ID, Geo_ID;
+UShort_t memS_CsI_R, memS_CsI_L, memS_CsI_0L, Ion_ID, Run_ID, Geo_ID, s_csir, s_csil;
 Short_t run;
 
 Int_t rest_of_events;
@@ -62,7 +63,6 @@ Float_t MWPC_1_X,  MWPC_1_Y,  MWPC_1_Z,  MWPC_2_X,  MWPC_2_Y,  MWPC_2_Z;
 Float_t dummy01, dummy02, dummy1, dummy2;
 
 Double_t SQ300[16], r_SQ300[16], in_tSQ300[16], SQ300_Edep[16];
-Double_t Tcoef, Tcoef2, Tcoef3, time_Tar, fsqde1, fsqde2, fsqrde;
 Double_t CsI_L[16], CsI_0L[16], CsI_R[16], SQX_L[32], SQX_Ln[32], SQX_R[32], SQY_L[16],	SQY_R[16];
 Double_t c_CsI_L[16], c_CsI_R[16], c_SQX_L[32], c_SQX_R[32], c_SQY_L[16], c_SQY_R[16];
 Double_t r_CsI_L[16], r_CsI_R[16], r_SQX_L[32], r_SQX_R[32], r_SQY_L[16], r_SQY_R[16];
@@ -87,7 +87,7 @@ Float_t tar_cut_lo_X, tar_cut_hi_X, tar_cut_lo_Y, tar_cut_hi_Y;
 Float_t tcor_sqLX_I, tcor_sqLX_II, tcor_sqLY, tcor_sqRX_I, tcor_sqRX_II, tcor_sqRY;
 
 Double_t cut_SQX_L, cut_SQX_R, cut_SQY_L, cut_SQY_R, cut_CsI_L, cut_CsI_R;
-Double_t Si_L_bank;
+Double_t Si_L_bank, Tcoef;
 Int_t cr;
 
 Float_t pede1[16], A1[16], B1[16], C1[16], D1[16];

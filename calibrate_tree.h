@@ -25,6 +25,11 @@ bool wrk(TTree *, TTree *, TString);
 TOOL *maynard;
 
 protected:
+
+Int_t tof_shift_A;
+Float_t tof_shift_B ;
+int counter;
+
 UShort_t in_CsI_L[16];
 UShort_t in_CsI_R[16];
 UShort_t in_SQX_L[32];
@@ -126,6 +131,13 @@ float a_SQY_R[16];
 float a_SQ300[16];
 float a_SQ300t[16];
 float pede_CsI_L[16];
+
+float a_DSDX_L_5[32], b_DSDX_L_5[32];
+float a_DSDX_R_5[32], b_DSDX_R_5[32];
+float a_DSDY_L_5[16], b_DSDY_L_5[16];
+float a_DSDY_R_5[16], b_DSDY_R_5[16];
+float a_SSD_L_5[16], b_SSD_L_5[16];
+float a_CsI_R_5[16], b_CsI_R_5[16];
 
 float b_CsI_L[16];
 float b_CsI_0L[16];

@@ -230,6 +230,7 @@ float loop(Float_t left_det_shift, Float_t right_det_shift, std::vector<Float_t>
 
 			angAngGraph_1H_geo3 =  new TGraph(stdV_Sqlang_1H.size(), &stdV_Sqlang_1H[0], &stdV_Sqrang_1H[0]);
 			angAngGraph_2H_geo3 =  new TGraph(stdV_Sqlang_2H.size(), &stdV_Sqlang_2H[0], &stdV_Sqrang_2H[0]);
+			
 			stdV_Sqlang_1H.clear(); stdV_Sqrang_1H.clear(); stdV_Sqlang_2H.clear(); stdV_Sqrang_2H.clear();
 
 			}
