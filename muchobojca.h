@@ -26,7 +26,17 @@ bool wrk(TTree *, TTree *, TString);
 TOOL *maynard;
 
 protected:
+UShort_t in_SSD_L[16];
+UShort_t in_DSDX_L[32];
+UShort_t in_DSDX_R[32];
+UShort_t in_DSDY_L[16];
+UShort_t in_DSDY_R[16];
 
+UShort_t in_tSSD_L[16];
+UShort_t in_tDSDX_L[32];
+UShort_t in_tDSDX_R[32];
+UShort_t in_tDSDY_L[16];
+UShort_t in_tDSDY_R[16];
 
 UShort_t in_CsI_L[16];
 UShort_t in_CsI_R[16];
@@ -105,7 +115,7 @@ Float_t MWPC_1_X, MWPC_1_Y, MWPC_1_Z;
 Float_t MWPC_2_X, MWPC_2_Y, MWPC_2_Z;
 Float_t dX,  dY,  dZ,  XZsum;
 Double_t tof;
-Bool_t mwpc, amp, tac, tof_range, he6_in_ToF_spctr;
+Bool_t mwpc, amp, tac, tof_range, sqr, sql;
 Float_t a_tSQX_R[32], b_tSQX_R[32], tSQX_R[32], AZ, sumF5;
 Short_t sql_count, sqr_count;
 

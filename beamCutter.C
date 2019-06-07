@@ -123,7 +123,7 @@ void beamCutter::Begin(TTree * /*tree*/)
 	// When running with PROOF Begin() is only called on the client.
 	// The tree argument is deprecated (on PROOF 0 is passed).
 
-	outF = new TFile("/home/guar/aku/geant4/beamSource.root","RECREATE");
+	outF = new TFile("/home/guar/aku/geant4/beamSource_5.root","RECREATE");
 	outTree = new TTree("beamSource","beam_Source");
 	rnd = new TRandom3();
 
@@ -148,6 +148,13 @@ void beamCutter::SlaveBegin(TTree * /*tree*/)
 	vBeam = new TVector3();
 	lvBeam = new TLorentzVector();
 
+	//create target volume
+	new TGeoManager("gasVolume", "interaction point");
+	TGeoVolume *deutDiscTube = gGeoManager->MakeTube("deutDiscTube", 0.0, 12.5, 2.0);
+	TGeoVolume *deutSphere = gGeoManager->MakeSphere("deutSphere", 0.0, 78.63, 0.0, 4.0*TMath::Pi(), 0.0, 12.95*2*TMath::RadToDeg());
+	TGeoVolume *sphereCutoff = gGeoManager->MakeBox("sphereCutoff", 100.0, 100.0, 77.63)
+	TGeoVolume *deutCap = new TGeoSubtraction("deutSphere-sphereCutoff", deutSphere, );
+
 	TString option = GetOption();
 	
 	counter=0;
@@ -155,7 +162,7 @@ void beamCutter::SlaveBegin(TTree * /*tree*/)
 }
 
 Bool_t beamCutter::Process(Long64_t entry)
-{
+{/*
 	// The Process() function is called for each entry in the tree (or possibly
 	// keyed object in the case of PROOF) to be processed. The entry argument
 	// specifies which entry in the currently loaded tree is to be processed.
@@ -227,27 +234,32 @@ Bool_t beamCutter::Process(Long64_t entry)
 
 		dX=MWPC_2_X-MWPC_1_X;
 		dY=MWPC_2_Y-MWPC_1_Y;
-		dZ=MWPC_2_Z-MWPC_1_Z;			
+		dZ=MWPC_2_Z-MWPC_1_Z;
 		vBeam->SetXYZ(dX,dY,dZ);
+
+		if (geoNo==5)
+		{
+			Tcoef=(cos(tar_angle)*cs::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
+			XZsum= - sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z;
+		
+			evX = MWPC_1_X + dX*Tcoef;	//X,Y,Z coordinates on target plane
+			evY = MWPC_1_Y + dY*Tcoef;
+			evZ = MWPC_1_Z + dZ*Tcoef;
+			//need to calculate distance to the gas target volume
+		}
+		
 
 		ene_beam = cs::mass_6He + kinE;
 		mom_beam = sqrt(ene_beam*ene_beam - cs::mass_6He*cs::mass_6He);
 		
-		vBeam->SetMag(mom_beam);		
+		vBeam->SetMag(mom_beam);
 		lvBeam->SetVectM(*vBeam, cs::mass_6He);
 
 		outTree->Fill();
 	}
-/*
-	if (entry==100000)
-	{
-		outTree->Write();
-		outF->Close();
-		Abort("Because I want");
-	}
-*/
+
 }
-	return kTRUE;
+	return kTRUE;*/
 }
 
 void beamCutter::SlaveTerminate()

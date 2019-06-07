@@ -58,14 +58,15 @@ bool butler()
 	{			
 		str_name = obj->GetName();
 		s_outFName = str_name.Copy().ReplaceAll(cs::inDir.Data(),s_fnamePrefix.Data());
-		//printf("%s\n", str_name.Data());
+		//printf("%s\n", s_outFName.Data());
 		
-		if (str_name.Contains(".root") && str_name.Contains("geo"/*cs::inDir.Data()*/))
+		if (str_name.Contains("run_09.root") && str_name.Contains(cs::inDir.Data()))
 		{
-			//printf("%s%s%s\t%i%s%s\n", "\x1B[32m", "\e[1m", str_name.Data(), str_name.Atoi(), "\x1b[0m", "\e[0m");
+			printf("%s%s%s\t%i%s%s\n", "\x1B[32m", "\e[1m", str_name.Data(), str_name.Atoi(), "\x1b[0m", "\e[0m");
 			inF = new TFile{(sourceDir+str_name).Data(), "READ"};
 			inT = (TTree*)inF->Get(s_inTreeName.Data());
 			outF = new TFile{destinationDir+s_outFName, "RECREATE"};
+			//printf("%s\n", (destinationDir+s_outFName).Data());
 			outT= new TTree{s_outTreeName.Data(),s_outTreeName.Data()};
 
 			if (cs::inDir=="raw")
@@ -83,7 +84,7 @@ bool butler()
 			else if(cs::inDir=="cal")
 			{
 				dE_E_angle *Hermes = new dE_E_angle(inT,outT, str_name, cs::runNo);
-				Hermes->actual_work(cs::runNo);
+				(cs::runNo == 5) ? Hermes->actual_work_gas() : Hermes->actual_work(cs::runNo);
 			}
 
 			outT->Write();

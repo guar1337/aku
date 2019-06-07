@@ -1,5 +1,5 @@
-#define jasper_cxx
-// The class definition in jasper.h has been generated automatically
+#define jasperNo5_cxx
+// The class definition in jasperNo5.h has been generated automatically
 // by the ROOT utility TTree::MakeSelector(). This class is derived
 // from the ROOT class TSelector. For more information on the TSelector
 // framework see $ROOTSYS/README/README.SELECTOR or the ROOT User Manual.
@@ -19,17 +19,17 @@
 //
 // To use this file, try the following session on your Tree T:
 //
-// root> T->Process("jasper.C")
-// root> T->Process("jasper.C","some options")
-// root> T->Process("jasper.C+")
+// root> T->Process("jasperNo5.C")
+// root> T->Process("jasperNo5.C","some options")
+// root> T->Process("jasperNo5.C+")
 //
 
 
-#include "jasper.h"
+#include "jasperNo5.hh"
 #include <TH2.h>
 #include <TStyle.h>
 
-void jasper::Begin(TTree * /*tree*/)
+void jasperNo5::Begin(TTree * /*tree*/)
 {
 	// The Begin() function is called at the start of the query.
 	// When running with PROOF Begin() is only called on the client.
@@ -77,31 +77,28 @@ void jasper::Begin(TTree * /*tree*/)
 	TString option = GetOption();
 }
 
-void jasper::SlaveBegin(TTree * /*tree*/)
+void jasperNo5::SlaveBegin(TTree * /*tree*/)
 {
 	// The SlaveBegin() function is called after the Begin() function.
 	// When running with PROOF SlaveBegin() is called on each slave server.
 	// The tree argument is deprecated (on PROOF 0 is passed).
-	l_sqlang = 65.0;
-	l_sqrang = 15.0;
-	l_sqldist = 170.0;
-	l_sqrdist = 250.0;
+	m_sqlang = 70.0;
+	m_sqrang = 9.92;
+	m_sqrDetAng = 10.65;
+	m_sqldist = 170.0;
+	m_sqrdist = 300.0;
 
-	dX0 = l_sqldist * sin(l_sqlang*TMath::DegToRad()) + width_strip_X * 15.5 * cos(l_sqlang*TMath::DegToRad());
+	dX0 = m_sqldist * sin(m_sqlang*TMath::DegToRad()) + width_strip_X * 15.5 * cos(m_sqlang*TMath::DegToRad());
 	dY0 = -7.5 * width_strip_Y;
-	dZ0 = l_sqldist * cos(l_sqlang*TMath::DegToRad()) + -1 * width_strip_X * 15.5 * sin(l_sqlang*TMath::DegToRad());
+	dZ0 = m_sqldist * cos(m_sqlang*TMath::DegToRad()) + -1 * width_strip_X * 15.5 * sin(m_sqlang*TMath::DegToRad());
 
-	hX0 = -1 * l_sqrdist * sin(l_sqrang*TMath::DegToRad()) + width_strip_X * 15.5 * cos(l_sqrang*TMath::DegToRad());
+	hX0 = -1 * m_sqrdist * sin(m_sqrang*TMath::DegToRad()) + width_strip_X * 15.5 * cos(m_sqrDetAng*TMath::DegToRad());
 	hY0 = -7.5 * width_strip_Y;
-	hZ0 = l_sqrdist * cos(l_sqrang*TMath::DegToRad()) + width_strip_X * 15.5 * sin(l_sqrang*TMath::DegToRad());
-
-
-
-	TString option = GetOption();
+	hZ0 = m_sqrdist * cos(m_sqrang*TMath::DegToRad()) + width_strip_X * 15.5 * sin(m_sqrDetAng*TMath::DegToRad());
 
 }
 
-Bool_t jasper::Process(Long64_t entry)
+Bool_t jasperNo5::Process(Long64_t entry)
 {
 	fReader.SetEntry(entry);
 	// The Process() function is called for each entry in the tree (or possibly
@@ -163,13 +160,13 @@ Bool_t jasper::Process(Long64_t entry)
 
 	if (Sideut_multX*Sihe_multX*Sideut_multY*Sihe_multY==1)
 	{	
-		dX = dX0 - (SQX_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * cos(l_sqlang*TMath::DegToRad());
+		dX = dX0 - (SQX_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * cos(m_sqlang*TMath::DegToRad());
 		dY = dY0 + (SQY_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_Y;
-		dZ = dZ0 + (SQX_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * sin(l_sqlang*TMath::DegToRad());
+		dZ = dZ0 + (SQX_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * sin(m_sqlang*TMath::DegToRad());
 
-		hX = hX0 - (SQX_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * cos(l_sqrang*TMath::DegToRad());
+		hX = hX0 - (SQX_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * cos(m_sqrDetAng*TMath::DegToRad());
 		hY = hY0 + (SQY_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_Y;
-		hZ = hZ0 - (SQX_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * sin(l_sqrang*TMath::DegToRad());
+		hZ = hZ0 - (SQX_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * sin(m_sqrDetAng*TMath::DegToRad());
 
 		fdX = *X2H;
 		fdY = *Y2H;
@@ -215,7 +212,7 @@ Bool_t jasper::Process(Long64_t entry)
 	return kTRUE;
 }
 
-void jasper::SlaveTerminate()
+void jasperNo5::SlaveTerminate()
 {
 
 	//TGraph *gr = new TGraph(reco_sqlang.size(), &reco_sqlang[0], &reco_sqrang[0]);
@@ -223,7 +220,7 @@ void jasper::SlaveTerminate()
 
 }
 
-void jasper::Terminate()
+void jasperNo5::Terminate()
 {
 	// The Terminate() function is the last function to be called during
 	// a query. It always runs on the client, it can be used to present

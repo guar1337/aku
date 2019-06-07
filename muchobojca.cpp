@@ -24,22 +24,43 @@ maynard->gcuts_loader(fname, gcut_he6, "he6.dat", cs::runNo);
 
 //Creating addresses of BEAM holding branches
 inTree->SetMakeClass(1);
+if (cs::runNo==5)
+{
+	inTree->SetBranchAddress("NeEvent.SSD_L[16]",	in_CsI_L);
+	inTree->SetBranchAddress("NeEvent.CsI_R[16]",	in_CsI_R);
+	inTree->SetBranchAddress("NeEvent.DSDX_L[32]",	in_SQX_L);
+	inTree->SetBranchAddress("NeEvent.DSDX_R[32]",	in_SQX_R);
+	inTree->SetBranchAddress("NeEvent.DSDY_L[16]",	in_SQY_L);
+	inTree->SetBranchAddress("NeEvent.DSDY_R[16]",	in_SQY_R);
+	//inTree->SetBranchAddress("NeEvent.SQ300[16]",	in_SQ300);
 
-inTree->SetBranchAddress("NeEvent.CsI_L[16]",	in_CsI_L);
-inTree->SetBranchAddress("NeEvent.CsI_R[16]",	in_CsI_R);
-inTree->SetBranchAddress("NeEvent.SQX_L[32]",	in_SQX_L);
-inTree->SetBranchAddress("NeEvent.SQX_R[32]",	in_SQX_R);
-inTree->SetBranchAddress("NeEvent.SQY_L[16]",	in_SQY_L);
-inTree->SetBranchAddress("NeEvent.SQY_R[16]",	in_SQY_R);
-//inTree->SetBranchAddress("NeEvent.SQ300[16]",	in_SQ300);
-
-inTree->SetBranchAddress("NeEvent.tSQX_L[32]",	in_tSQX_L);
-inTree->SetBranchAddress("NeEvent.tSQX_R[32]",	in_tSQX_R);
-inTree->SetBranchAddress("NeEvent.tCsI_L[16]",	in_tCsI_L);
-inTree->SetBranchAddress("NeEvent.tCsI_R[16]",	in_tCsI_R);
-inTree->SetBranchAddress("NeEvent.tSQY_L[16]",	in_tSQY_L);
-inTree->SetBranchAddress("NeEvent.tSQY_R[16]",	in_tSQY_R);
+	inTree->SetBranchAddress("NeEvent.tSSD_L[16]",	in_tCsI_L);
+	inTree->SetBranchAddress("NeEvent.tCsI_R[16]",	in_tCsI_R);
+	inTree->SetBranchAddress("NeEvent.tDSDX_L[32]",	in_tSQX_L);
+	inTree->SetBranchAddress("NeEvent.tDSDX_R[32]",	in_tSQX_R);
+	inTree->SetBranchAddress("NeEvent.tDSDY_L[16]",	in_tSQY_L);
+	inTree->SetBranchAddress("NeEvent.tDSDY_R[16]",	in_tSQY_R);
 //inTree->SetBranchAddress("NeEvent.tSQ300[16]",	in_tSQ300);
+}
+
+else if (cs::runNo!=5)
+{
+	inTree->SetBranchAddress("NeEvent.CsI_L[16]",	in_CsI_L);
+	inTree->SetBranchAddress("NeEvent.CsI_R[16]",	in_CsI_R);
+	inTree->SetBranchAddress("NeEvent.SQX_L[32]",	in_SQX_L);
+	inTree->SetBranchAddress("NeEvent.SQX_R[32]",	in_SQX_R);
+	inTree->SetBranchAddress("NeEvent.SQY_L[16]",	in_SQY_L);
+	inTree->SetBranchAddress("NeEvent.SQY_R[16]",	in_SQY_R);
+	//inTree->SetBranchAddress("NeEvent.SQ300[16]",	in_SQ300);
+
+	inTree->SetBranchAddress("NeEvent.tSQX_L[32]",	in_tSQX_L);
+	inTree->SetBranchAddress("NeEvent.tSQX_R[32]",	in_tSQX_R);
+	inTree->SetBranchAddress("NeEvent.tCsI_L[16]",	in_tCsI_L);
+	inTree->SetBranchAddress("NeEvent.tCsI_R[16]",	in_tCsI_R);
+	inTree->SetBranchAddress("NeEvent.tSQY_L[16]",	in_tSQY_L);
+	inTree->SetBranchAddress("NeEvent.tSQY_R[16]",	in_tSQY_R);
+//inTree->SetBranchAddress("NeEvent.tSQ300[16]",	in_tSQ300);
+}
 
 inTree->SetBranchAddress("NeEvent.tF3[4]",	in_tdcF3);
 inTree->SetBranchAddress("NeEvent.F3[4]",	in_aF3);
@@ -116,19 +137,24 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		printf("#Progress: %i%%\n",counter);
 		counter+=10;
 	}
-	tac=false; mwpc=false; tof_range=false; amp=false, sql_count=0; sqr_count=0, he6_in_ToF_spctr = false;
+	tac=false; mwpc=false; tof_range=false; amp=false, sql_count=0; sqr_count=0, sql = false, sqr = false;
 	if (in_nx1<100 && in_nx2<100 && in_ny1<100 && in_ny2<100)
 	{
-
-		tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4.0+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+cs::tof_const;
-		sumF5 = (in_aF5[0] + in_aF5[1] + in_aF5[2] + in_aF5[3])/4.0;
-		AZ = 0.017142857 * tof;
-/*
-		if (gcut_he6->IsInside(AZ,sumF5) || (sumF5==0 && AZ>2.75 && AZ<3.1))
+		if (cs::runNo != 5)
 		{
-			he6_in_ToF_spctr = true;
+			tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4.0+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+cs::tof_const;
+			sumF5 = (in_aF5[0] + in_aF5[1] + in_aF5[2] + in_aF5[3])/4.0;
+			AZ = 0.017142857 * tof;
 		}
-*/
+
+		else if (cs::runNo == 5)
+		{
+			tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4.0+(in_tdcF5[0]+in_tdcF5[1])/2)*0.0625+cs::tof_const_5;
+			sumF5 = (in_aF5[0] + in_aF5[1] + in_aF5[2] + in_aF5[3])/4.0;
+			AZ = 0.017142857 * tof;
+		}
+
+
 		out_nx1=in_nx1;
 		out_nx2=in_nx2;
 		out_ny1=in_ny1;
@@ -145,6 +171,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			out_F6[iii]=in_aF6[iii];
 			out_tMWPC[iii] = in_tMWPC[iii];
 		}
+
 		for (int iii=0; iii<16; iii++)
 		{
 
@@ -177,18 +204,25 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			if (in_SQX_L[iii]>200)
 			{
 				sql_count++;
+				sql=true;
 			}
 
 			if (in_SQX_R[iii]>200)
 			{
 				sqr_count++;
+				sqr=true;
 			}
 
 		}
 
 
 		if(	(in_tdcF3[0]-in_tdcF3[1]) > -50.0 && (in_tdcF3[0]-in_tdcF3[1]) < 50.0 &&
-			(in_tdcF5[0]-in_tdcF5[1]) > -50.0 && (in_tdcF5[0]-in_tdcF5[1]) < 50.0	)
+			(in_tdcF3[0]-in_tdcF3[2]) > -50.0 && (in_tdcF3[0]-in_tdcF3[2]) < 50.0 &&
+			(in_tdcF3[0]-in_tdcF3[3]) > -50.0 && (in_tdcF3[0]-in_tdcF3[3]) < 50.0 &&
+
+			(in_tdcF5[0]-in_tdcF5[1]) > -50.0 && (in_tdcF5[0]-in_tdcF5[1]) < 50.0 &&
+			(in_tdcF5[0]-in_tdcF5[2]) > -50.0 && (in_tdcF5[0]-in_tdcF5[2]) < 50.0 &&
+			(in_tdcF5[0]-in_tdcF5[3]) > -50.0 && (in_tdcF5[0]-in_tdcF5[3]) < 50.0 )
 		{
 			tac=true;
 			tac_count++;
@@ -197,34 +231,25 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		if (maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, cs::MWPC_1_X_id)*
 			maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, cs::MWPC_1_Y_id)*
 			maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, cs::MWPC_2_X_id)*
-			maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id)/*	&&
-			in_tMWPC[0]>3000 && in_tMWPC[1]>3000 && in_tMWPC[2]>3000 && in_tMWPC[3]>3000*/)
+			maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id))
 		{
 
 			mwpc=true;
 			mwpc_count++;
 		}
 		
-//		if (sumF5>0)
-//		{
-			amp=true;
-//			amp_count++;
-//
-//		}
 
-		if (tof>100 && tof<200)
+		if (tof>150 && tof<200)
 		{
 			tof_range=true;
 			tof_range_count++;
 		}
 
-		if (in_nx1*in_nx2*in_ny1*in_ny2)
+		if (in_trig==2 && mwpc && tac && tof_range && sql && sqr)
 		{
-			zero_mult++;
+			outTree->Fill();
 		}
-
-
-		outTree->Fill();
+		
 
 
 

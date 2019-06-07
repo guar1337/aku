@@ -5,8 +5,8 @@
 // found on file: /home/guar/aku/geant4/build/gurney.root
 //////////////////////////////////////////////////////////
 
-#ifndef jasper_h
-#define jasper_h
+#ifndef jasperNo5_h
+#define jasperNo5_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -21,7 +21,7 @@
 
 
 
-class jasper : public TSelector {
+class jasperNo5 : public TSelector {
 public :
 	TTreeReader		fReader;	//!the tree reader
 	TTree			 *fChain = 0;	//!pointer to the analyzed TTree or TChain
@@ -72,7 +72,9 @@ public :
 	Int_t Sihe_multX;
 	Int_t Sihe_multY;
 	//int mult_0_count, mult_1_count, mult_2_count, mult_3_count;
-	Double_t l_sqlang, l_sqrang, l_sqldist, l_sqrdist;
+	Double_t m_sqlang, m_sqrang, m_sqldist, m_sqrdist;
+	Double_t m_sqrDetAng;
+	Double_t hX1, hY1, hZ1;
 	Double_t dX, dY, dZ, hX, hY, hZ;
 	Double_t fdX, fdY, fdZ, fhX, fhY, fhZ;
 	Double_t dX0, dY0, dZ0, hX0, hY0, hZ0;
@@ -88,8 +90,10 @@ public :
 	std::vector<float> reco_sqlang;
 	std::vector<float> reco_sqrang;
 
-	jasper(TTree * /*tree*/ =0) { }
-	virtual ~jasper() { }
+
+
+	jasperNo5(TTree * /*tree*/ =0) { }
+	virtual ~jasperNo5() { }
 	virtual Int_t	Version() const { return 2; }
 	virtual void	Begin(TTree *tree);
 	virtual void	SlaveBegin(TTree *tree);
@@ -104,14 +108,14 @@ public :
 	virtual void	SlaveTerminate();
 	virtual void	Terminate();
 
-	ClassDef(jasper,0);
+	ClassDef(jasperNo5,0);
 
 };
 
 #endif
 
-#ifdef jasper_cxx
-void jasper::Init(TTree *tree)
+#ifdef jasperNo5_cxx
+void jasperNo5::Init(TTree *tree)
 {
 	// The Init() function is called when the selector needs to initialize
 	// a new tree or chain. Typically here the reader is initialized.
@@ -123,7 +127,7 @@ void jasper::Init(TTree *tree)
 	fReader.SetTree(tree);
 }
 
-Bool_t jasper::Notify()
+Bool_t jasperNo5::Notify()
 {
 	// The Notify() function is called when a new file is opened. This
 	// can be either for a new TTree in a TChain or when when a new TTree
@@ -135,4 +139,4 @@ Bool_t jasper::Notify()
 }
 
 
-#endif // #ifdef jasper_cxx
+#endif // #ifdef jasperNo5_cxx

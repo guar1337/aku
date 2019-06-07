@@ -13,19 +13,62 @@ R__LOAD_LIBRARY(/home/guar/aku/wrk/ELC/libEloss.so);
 bool MakeSelector_handler();
 bool tree_extractor();
 bool daisy_chain_files(bool printout);
+bool kniggit();
 
 
 void werter ()
 {
+	ofstream outStreamQ("/home/guar/Desktop/qualityControl_2.dat", ios::trunc);
+	Double_t qualityControl[4];
 	TStopwatch *stopwatch = new TStopwatch();
 	printf("We should definitely do something, aight?\n");
 	//daisy_chain_files(false);
-	MakeSelector_handler();
+	//MakeSelector_handler();
+	/*
+	TFile *inF = new TFile{"/home/guar/data/he6_d/cal/geo5/cal_run_09.root", "READ"};
+	TTree *inT = (TTree*)inF->Get("calibrated");
+	TFile *outF = new TFile{"/home/guar/data/he6_d/dE/geo5/tmp.root", "RECREATE"};
+	TTree *outT= new TTree{"tmptree", "ha"};
+	*/
+	TString str_name = "cal_run_09.root";
 
+	
+
+	Double_t MWPC_X_1_shift = -5.0, MWPC_X_2_shift = -5.0;
+	outStreamQ<<"MWPC_X_1_shift"<<"\t"<<"MWPC_X_2_shift"<<"\t"<<"sqlde+sqletot-kinsqle_2H"<<"\t"<<"sqlde+sqletot-kinsqle_2H sigma"<<"\t"<<"mml"<<"\t"<<"paramA"<<endl;
+
+	for (int iii = 0; iii < 20; iii++)
+	{
+		for (int jjj = 0; jjj < 20; jjj++)
+		{
+			TFile *inF = new TFile{"/home/guar/data/he6_d/cal/geo5/cal_run_09.root", "READ"};
+			TTree *inT = (TTree*)inF->Get("calibrated");
+			TFile *outF = new TFile{"/home/guar/data/he6_d/dE/geo5/tmp.root", "RECREATE"};
+			TTree *outT= new TTree{"tmptree", "ha"};
+			dE_E_angle *Hermes = new dE_E_angle(inT,outT, str_name, cs::runNo);
+			Hermes->actual_work_gas(MWPC_X_1_shift, MWPC_X_2_shift, qualityControl);
+			//printf("%f\t%f\t%f\t\n", qualityControl[0], qualityControl[1], qualityControl[2]);
+			outStreamQ<<MWPC_X_1_shift<<" "<<MWPC_X_2_shift<<" "<<qualityControl[0]<<" "<<qualityControl[1]<<" "<<qualityControl[2]<<" "<<qualityControl[3]<<endl;
+			outStreamQ.flush();
+			outT->Write();
+			delete inT;
+			delete inF;
+			delete outT;
+			delete outF;			
+			delete Hermes;
+			//outStreamQ<<MWPC_X_1_shift<<" "<<MWPC_X_2_shift<<"\t\t";		
+			MWPC_X_2_shift+=0.5;
+
+		}
+		//outStreamQ<<endl;
+		MWPC_X_1_shift+=0.5;
+		MWPC_X_2_shift = -5.0;
+	}
+
+	
 	stopwatch->Print();
 	
 }
-
 bool MakeSelector_handler()
 {
 	TString fpath = "/home/guar/aku/geant4/build/gurney.root";
@@ -51,7 +94,7 @@ bool MakeSelector_handler()
 
 
 
-	inChain->Process("jasper.C");
+	inChain->Process("jasperNo5.C");
 	inFile->Close();
 	delete inFile;
 	return 1;
@@ -117,7 +160,7 @@ bool daisy_chain_files(bool printout)
 {
 	//	remove this line to use multi-file processing
 
-	TString raw_data_path{"/home/guar/data/mar2018/raw/geo2/"};
+	TString raw_data_path{"/home/guar/data/mar2018/raw/geo1/"};
 	TString fileName, TreePath;
 	TString treeName{"/AnalysisxTree"};
 	TChain *inChain = new TChain();
@@ -157,4 +200,13 @@ bool daisy_chain_files(bool printout)
 	}
 	MakeSelector_handler(inChain);
 	return 1;
+}
+
+bool kniggit()
+{
+	for (int iii = 0; iii < 10; iii++)
+	{
+		printf("%d\n",iii);
+	}
+	return true;
 }

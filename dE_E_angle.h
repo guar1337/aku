@@ -21,8 +21,8 @@ public:
 
 dE_E_angle();
 dE_E_angle(TTree *inTree, TTree *outTree, TString inFile, int geoNo);
-virtual ~dE_E_angle();
-Float_t actual_work_gas();
+virtual ~dE_E_angle();		//MWPC_X_1_shift, MWPC_X_2_shift, container for evX, container for mml, 
+Float_t actual_work_gas(Float_t MWPC_X_1_shift = -4.0, Float_t MWPC_X_2_shift = -5.0, Double_t qualityControl[4] = nullptr);
 Float_t actual_work(Int_t);
 Float_t actual_work(Int_t, Float_t, Float_t, std::vector<Float_t> &,  std::vector<Float_t> &,  std::vector<Float_t> &,  std::vector<Float_t> &);
 
@@ -58,6 +58,11 @@ Float_t X2H_det,  Y2H_det,  Z2H_det, X2H_lab,  Y2H_lab,  Z2H_lab;
 Float_t X2H, Y2H, Z2H;
 //Float_t virt_E, beta_squared, gamma, time, par_beta;
 Float_t MWPC_1_X,  MWPC_1_Y,  MWPC_1_Z,  MWPC_2_X,  MWPC_2_Y,  MWPC_2_Z;
+Float_t ToFMWPC, gasTargetSi;
+
+TH1F *hist_ene_diff;
+TH1F *hist_mml;
+TGraph *evX_vs_mml_graph;
 
 
 Float_t dummy01, dummy02, dummy1, dummy2;
@@ -68,7 +73,7 @@ Double_t c_CsI_L[16], c_CsI_R[16], c_SQX_L[32], c_SQX_R[32], c_SQY_L[16], c_SQY_
 Double_t r_CsI_L[16], r_CsI_R[16], r_SQX_L[32], r_SQX_R[32], r_SQY_L[16], r_SQY_R[16];
 Double_t raw_CsI_L[16], raw_CsI_R[16], raw_SQX_L[32], raw_SQX_R[32], raw_SQY_L[16], raw_SQY_R[16];
 Double_t in_tF3[4],	in_F3[4], in_tF5[4], in_F5[4], in_tF6[4], in_F6[4];
-Double_t in_tof, out_tof, tempT1, tempT2, out_T1, out_T2, T, in_AZ, out_AZ;
+Double_t in_tof, out_tof, tempE, kinE, in_AZ, out_AZ;
 Double_t CsI_L_Edep[17], CsI_R_Edep[17], SQX_L_Edep[33], SQX_L_Edep2[33], SQX_R_Edep[33], SQY_L_Edep[17], SQY_R_Edep[17];
 Double_t out_tF3[4], out_F3[4], out_tF5[4], out_F5[4], out_tF6[4], out_F6[4];
 Double_t sqlde, sqletot, kinsqle_1H, kinsqle_2H, sqlphi, sqltheta, fsqltheta_1H, fsqltheta_2H, sqlang, sqlxtime, sqlytime, fel_2H, fdel_2H, ftot;
@@ -124,7 +129,7 @@ AELC *be9_Si;
 TOOL *maynard;
 
 TCutG *gcut_h2, *gcut_h3, *gcut_he4, *gcut_he6, *gcut_li7, *gcut_li8;
-TCutG *gcut_be9, *gcut_dehe6, *gcut_AngAng1H_w6He, *gcut_AngAng2H_w6He;
+TCutG *gcut_be9, *gcut_dehe6, *gcut_AngAng1H_w6He, *gcut_AngAng2H_w6He, *deut_geo5;
 TF1 *angAngFit_2H = new TF1();
 
 double si_A[1];

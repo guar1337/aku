@@ -19,7 +19,7 @@ namespace cs
 	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
 
 	static const float		sql_ang_s1		=	(65.0 + 0.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s1		=	(15.0 + 0.0)	* (3.1415/180.0);
+	static const float		sqr_ang_s1		=	(13.0 + 0.0)	* (3.1415/180.0);
 
 	static const float		sql_ang_s2		=	(50.0 + 3.31)	* (3.1415/180.0);
 	static const float		sqr_ang_s2		=	(15.0 - 0.08)	* (3.1415/180.0);
@@ -31,9 +31,9 @@ namespace cs
 	static const float		sqr_ang_s4		=	10.58	* (3.1415/180.0);
 
 	static const float		sql_ang_s5		=	(70.0 + 0.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s5		=	9.0	* (3.1415/180.0);
+	static const float		sqr_ang_s5		=	(9.0+0.92)	* (3.1415/180.0);
 
-	static const float		tar_ang_s1		=	45.0	* (3.1415/180.0);
+	static const float		tar_ang_s1		=	35.0	* (3.1415/180.0);
 	static const float		tar_ang_s2		=	6.0		* (3.1415/180.0);
 	static const float		tar_ang_s3		=	0.0		* (3.1415/180.0);
 	static const float		tar_ang_s4		=	32.0	* (3.1415/180.0);
@@ -56,7 +56,7 @@ namespace cs
 	static const float		sql_dist_s0	=	170.0;
 	static const float		sqr_dist_s0	=	300.0;
 
-	static const float		sql_dist_s1	=	170.0;
+	static const float		sql_dist_s1	=	100.0;
 	static const float		sqr_dist_s1	=	250.0;
 
 	static const float		sql_dist_s2	=	170.0;
@@ -87,8 +87,8 @@ namespace cs
 	static const float		SQL_zero_X	=	width_strip_X * 15.5;//28.09375;
 	static const float		SQL_zero_Y	=	-width_strip_Y * 7.5;//-27.1875;
 
-	static const float		SQL_start_X	=	SQL_displacement_X + SQL_zero_X;
-	static const float		SQL_start_Y	=	SQL_displacement_Y + SQL_zero_Y;
+	static const float		SQL_start_X	=	SQL_zero_X;
+	static const float		SQL_start_Y	=	SQL_zero_Y;
 
 
 	static const float		SQR_displacement_X	=	-0.606;
@@ -97,7 +97,7 @@ namespace cs
 	static const float		SQR_zero_X	=	-width_strip_X * 15.5;//28.09375;
 	static const float		SQR_zero_Y	=	-width_strip_Y * 7.5;//-27.1875;
 
-	static const float		SQR_start_X	=	SQR_displacement_X + SQR_zero_X;
+	static const float		SQR_start_X	=	SQR_zero_X;
 	static const float		SQR_start_Y	=	SQR_displacement_Y + SQR_zero_Y;
 	//DETS DISPLACEMENT - MADE FOR SQR dist = 250. Same for 300? Prolly
 
@@ -161,10 +161,10 @@ namespace cs
 	static const float		MWPC2_Y_displacement	=	-1.125;
 
 
-	static const float		MWPC1_X_displacement_5	=	-1.0;
-	static const float		MWPC1_Y_displacement_5	=	-2.1375;
-	static const float		MWPC2_X_displacement_5	=	0.2;
-	static const float		MWPC2_Y_displacement_5	=	-1.125;
+	static const float		MWPC1_X_displacement_5	=	0.0;
+	static const float		MWPC1_Y_displacement_5	=	0.0;
+	static const float		MWPC2_X_displacement_5	=	0.0;
+	static const float		MWPC2_Y_displacement_5	=	0.0;
 
 	static const float		MWPC1_X_zero_position	=	15.5*1.25;
 	static const float		MWPC1_Y_zero_position	=	-15.5*1.25;
@@ -197,21 +197,21 @@ namespace cs
 	static const float		dist_Tar_to_F5	=	-953.0;
 	static const float		dist_Tar_to_F6	=	478.0;
 	static const float		tof_const		=	87.8;
-	static const float		tof_const_5		=	68.55;
+	static const float		tof_const_5		=	68.475;
 
 
-	static const TString 	dir_runs("/home/guar/data/mar2018/");
-	static const TString 	dir_CsI("/home/guar/data/mar2018/miscroot/CsI/parts");
-	static const TString 	dir_params("/home/guar/data/mar2018/calib_utilities/params/");	
+	static const TString 	dir_runs("/home/guar/data/he6_d/");
+	static const TString 	dir_CsI("/home/guar/data/he6_d/miscroot/CsI/parts");
+	static const TString 	dir_params("/home/guar/data/he6_d/calib_utilities/params/");	
 	static const TString 	s_inFname("run00_12");
 	static const TString	s_playground("/home/guar/data/tools/");
-	static const TString	dir_gcut("/home/guar/data/mar2018/GCuts/");
+	static const TString	dir_gcut("/home/guar/data/he6_d/GCuts/");
 
 	static const TString	dir_len_data("/home/guar/data/");
 	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
 
 
-	static const int		runNo=	1;
+	static const int		runNo=	5;
 	static const TString	inDir = "cal";
 }
 #endif

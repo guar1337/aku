@@ -50,28 +50,58 @@ Double_t TOOL::getVelo(Double_t T, Float_t mass)
 bool TOOL::Get_MWPC_pos(UShort_t multi, UShort_t *wireNo,
 						Float_t *MWPC_pos,Short_t MWPC_id)
 {
-	switch (MWPC_id)
+	if (cs::runNo != 5)
 	{
-		case cs::MWPC_1_X_id:
-		displacement = cs::MWPC1_X_displacement;
-		zero_position = cs::MWPC1_X_zero_position;
-		break;
+		switch (MWPC_id)
+		{
+			case cs::MWPC_1_X_id:
+			displacement = cs::MWPC1_X_displacement;
+			zero_position = cs::MWPC1_X_zero_position;
+			break;
 
-		case cs::MWPC_1_Y_id:
-		displacement = cs::MWPC1_Y_displacement;
-		zero_position = cs::MWPC1_Y_zero_position;
-		break;
+			case cs::MWPC_1_Y_id:
+			displacement = cs::MWPC1_Y_displacement;
+			zero_position = cs::MWPC1_Y_zero_position;
+			break;
 
-		case cs::MWPC_2_X_id:
-		displacement = cs::MWPC2_X_displacement;
-		zero_position = cs::MWPC2_X_zero_position;
-		break;
+			case cs::MWPC_2_X_id:
+			displacement = cs::MWPC2_X_displacement;
+			zero_position = cs::MWPC2_X_zero_position;
+			break;
 
-		case cs::MWPC_2_Y_id:
-		displacement = cs::MWPC2_Y_displacement;
-		zero_position = cs::MWPC2_Y_zero_position;
-		break;
+			case cs::MWPC_2_Y_id:
+			displacement = cs::MWPC2_Y_displacement;
+			zero_position = cs::MWPC2_Y_zero_position;
+			break;
+		}
 	}
+
+	else if (cs::runNo == 5)
+	{
+		switch (MWPC_id)
+		{
+			case cs::MWPC_1_X_id:
+			displacement = cs::MWPC1_X_displacement_5;
+			zero_position = cs::MWPC1_X_zero_position;
+			break;
+
+			case cs::MWPC_1_Y_id:
+			displacement = cs::MWPC1_Y_displacement_5;
+			zero_position = cs::MWPC1_Y_zero_position;
+			break;
+
+			case cs::MWPC_2_X_id:
+			displacement = cs::MWPC2_X_displacement_5;
+			zero_position = cs::MWPC2_X_zero_position;
+			break;
+
+			case cs::MWPC_2_Y_id:
+			displacement = cs::MWPC2_Y_displacement_5;
+			zero_position = cs::MWPC2_Y_zero_position;
+			break;
+		}
+	}
+
 	
 	UShort_t sizeof_clust=1;
 	if (multi!=0)
