@@ -168,12 +168,10 @@ bool TOOL::initializeGeometry(	Int_t geoNo, Double_t *sqr_ang, Double_t *sql_ang
 								Double_t *sqr_dist, Double_t *sql_dist,
 								Float_t *tar_angle, Float_t *tar_thcknss) 
 {
-	printf("\n*****************************************");
 	//Read detectors geometry parameters depending on run
 	switch (geoNo)
 	{
 		case 7:
-		printf("\nLoaded exprimental setup parameters for geometry 7:\n");
 		*sqr_ang=cs::sqr_ang7;
 		*sql_ang=cs::sql_ang7;
 
@@ -181,12 +179,9 @@ bool TOOL::initializeGeometry(	Int_t geoNo, Double_t *sqr_ang, Double_t *sql_ang
 		*sql_dist=cs::sql_dist_s7;
 		*tar_angle=cs::tar_ang_s3;
 		*tar_thcknss=cs::tar_thcknss_7;
-		printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
-		return 1;
 		break;
 
 		case 9:
-		printf("\nLoaded exprimental setup parameters for geometry 9:\n");
 		*sqr_ang=cs::sqr_ang9;
 		*sql_ang=cs::sql_ang9;
 		
@@ -194,12 +189,9 @@ bool TOOL::initializeGeometry(	Int_t geoNo, Double_t *sqr_ang, Double_t *sql_ang
 		*sql_dist=cs::sql_dist_s9;
 		*tar_angle=cs::tar_ang_s3;
 		*tar_thcknss=cs::tar_thcknss_9;
-		printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
-		return 1;
 		break;
 
 		case 1:
-		printf("\nLoaded exprimental setup parameters for geometry 1:\n");
 		*sqr_ang=cs::sqr_ang_s1;
 		*sql_ang=cs::sql_ang_s1;
 		
@@ -207,12 +199,9 @@ bool TOOL::initializeGeometry(	Int_t geoNo, Double_t *sqr_ang, Double_t *sql_ang
 		*sql_dist=cs::sql_dist_s1;
 		*tar_angle=cs::tar_ang_s1;
 		*tar_thcknss=cs::tar_thcknss_1;
-		printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
-		return 1;
 		break;
 
 		case 2:
-		printf("\nLoaded exprimental setup parameters for geometry 2:\n");
 		*sqr_ang=cs::sqr_ang_s2;
 		*sql_ang=cs::sql_ang_s2;
 		
@@ -220,12 +209,9 @@ bool TOOL::initializeGeometry(	Int_t geoNo, Double_t *sqr_ang, Double_t *sql_ang
 		*sql_dist=cs::sql_dist_s2;
 		*tar_angle=cs::tar_ang_s2;
 		*tar_thcknss=cs::tar_thcknss_2;
-		printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
-		return 1;
 		break;
 
 		case 3:
-		printf("\nLoaded exprimental setup parameters for geometry 3:\n");
 		*sqr_ang=cs::sqr_ang_s3;
 		*sql_ang=cs::sql_ang_s3;
 		
@@ -233,12 +219,9 @@ bool TOOL::initializeGeometry(	Int_t geoNo, Double_t *sqr_ang, Double_t *sql_ang
 		*sql_dist=cs::sql_dist_s3;
 		*tar_angle=cs::tar_ang_s3;
 		*tar_thcknss=cs::tar_thcknss_3;
-		printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
-		return 1;
 		break;
 
 		case 4:
-		printf("\nLoaded exprimental setup parameters for geometry 4:\n");
 		*sqr_ang=cs::sqr_ang_s4;
 		*sql_ang=cs::sql_ang_s4;
 		
@@ -246,26 +229,19 @@ bool TOOL::initializeGeometry(	Int_t geoNo, Double_t *sqr_ang, Double_t *sql_ang
 		*sql_dist=cs::sql_dist_s4;
 		*tar_angle=cs::tar_ang_s4;
 		*tar_thcknss=cs::tar_thcknss_4;
-		printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
-		return 1;
 		break;
 
 		case 5:
-		printf("\nLoaded exprimental setup parameters for geometry 5:\n");
 		*sqr_ang=cs::sqr_ang_s5;
 		*sql_ang=cs::sql_ang_s5;
 		
 		*sqr_dist=cs::sqr_dist_s5;
 		*sql_dist=cs::sql_dist_s5;
 		*tar_angle=cs::tar_ang_s5;
-
 		*tar_thcknss=cs::tar_thcknss_5;
-		printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
-		return 1;
 		break;
 
 		case 0:
-		printf("\nLoaded exprimental setup parameters for geometry 0:\n");
 		*sqr_ang=cs::sqr_ang_s0;
 		*sql_ang=cs::sql_ang_s0;
 		
@@ -273,8 +249,6 @@ bool TOOL::initializeGeometry(	Int_t geoNo, Double_t *sqr_ang, Double_t *sql_ang
 		*sql_dist=cs::sql_dist_s0;
 		*tar_angle=cs::tar_ang_s3;
 		*tar_thcknss=cs::tar_thcknss_0;
-		printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
-		return 1;
 		break;
 
 		default:
@@ -282,6 +256,8 @@ bool TOOL::initializeGeometry(	Int_t geoNo, Double_t *sqr_ang, Double_t *sql_ang
 		return 0;
 		break;
 	}
+	//printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
+	return 1;
 }
 
 

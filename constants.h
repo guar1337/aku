@@ -19,7 +19,7 @@ namespace cs
 	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
 
 	static const float		sql_ang_s1		=	(65.0 + 0.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s1		=	(13.0 + 0.0)	* (3.1415/180.0);
+	static const float		sqr_ang_s1		=	(15.0 + 0.0)	* (3.1415/180.0);
 
 	static const float		sql_ang_s2		=	(50.0 + 3.31)	* (3.1415/180.0);
 	static const float		sqr_ang_s2		=	(15.0 - 0.08)	* (3.1415/180.0);
@@ -33,7 +33,7 @@ namespace cs
 	static const float		sql_ang_s5		=	(70.0 + 0.0)	* (3.1415/180.0);
 	static const float		sqr_ang_s5		=	(9.0+0.92)	* (3.1415/180.0);
 
-	static const float		tar_ang_s1		=	35.0	* (3.1415/180.0);
+	static const float		tar_ang_s1		=	45.0	* (3.1415/180.0);
 	static const float		tar_ang_s2		=	6.0		* (3.1415/180.0);
 	static const float		tar_ang_s3		=	0.0		* (3.1415/180.0);
 	static const float		tar_ang_s4		=	32.0	* (3.1415/180.0);
@@ -56,7 +56,7 @@ namespace cs
 	static const float		sql_dist_s0	=	170.0;
 	static const float		sqr_dist_s0	=	300.0;
 
-	static const float		sql_dist_s1	=	100.0;
+	static const float		sql_dist_s1	=	170.0;
 	static const float		sqr_dist_s1	=	250.0;
 
 	static const float		sql_dist_s2	=	170.0;
@@ -94,7 +94,7 @@ namespace cs
 	static const float		SQR_displacement_X	=	-0.606;
 	static const float		SQR_displacement_Y	=	1.697;
 
-	static const float		SQR_zero_X	=	-width_strip_X * 15.5;//28.09375;
+	static const float		SQR_zero_X	=	width_strip_X * 15.5;//28.09375;
 	static const float		SQR_zero_Y	=	-width_strip_Y * 7.5;//-27.1875;
 
 	static const float		SQR_start_X	=	SQR_zero_X;
@@ -211,7 +211,7 @@ namespace cs
 	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
 
 
-	static const int		runNo=	5;
+	static const int		runNo=	1;
 	static const TString	inDir = "cal";
 }
 #endif

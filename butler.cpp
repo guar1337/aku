@@ -17,6 +17,8 @@ R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
 
 bool butler()
 {
+	Double_t qualityControl[4];
+	Double_t inputPars[]{0.0,0.0,0.0,0.0};
 	TStopwatch time{};
 	TString sourceDir, destinationDir, s_fnamePrefix, s_outFName;
 	TString s_outTreeName, s_inTreeName, str_name;
@@ -60,7 +62,7 @@ bool butler()
 		s_outFName = str_name.Copy().ReplaceAll(cs::inDir.Data(),s_fnamePrefix.Data());
 		//printf("%s\n", s_outFName.Data());
 		
-		if (str_name.Contains("run_09.root") && str_name.Contains(cs::inDir.Data()))
+		if (str_name.Contains("cal_pro1.root") && str_name.Contains(cs::inDir.Data()))
 		{
 			printf("%s%s%s\t%i%s%s\n", "\x1B[32m", "\e[1m", str_name.Data(), str_name.Atoi(), "\x1b[0m", "\e[0m");
 			inF = new TFile{(sourceDir+str_name).Data(), "READ"};
@@ -84,7 +86,7 @@ bool butler()
 			else if(cs::inDir=="cal")
 			{
 				dE_E_angle *Hermes = new dE_E_angle(inT,outT, str_name, cs::runNo);
-				(cs::runNo == 5) ? Hermes->actual_work_gas() : Hermes->actual_work(cs::runNo);
+				(cs::runNo == 5) ? Hermes->actual_work_gas() : Hermes->actual_work_1H(inputPars, qualityControl);
 			}
 
 			outT->Write();

@@ -23,8 +23,8 @@ dE_E_angle();
 dE_E_angle(TTree *inTree, TTree *outTree, TString inFile, int geoNo);
 virtual ~dE_E_angle();		//MWPC_X_1_shift, MWPC_X_2_shift, container for evX, container for mml, 
 Float_t actual_work_gas(Float_t MWPC_X_1_shift = -4.0, Float_t MWPC_X_2_shift = -5.0, Double_t qualityControl[4] = nullptr);
-Float_t actual_work(Int_t);
-Float_t actual_work(Int_t, Float_t, Float_t, std::vector<Float_t> &,  std::vector<Float_t> &,  std::vector<Float_t> &,  std::vector<Float_t> &);
+Float_t actual_work_1H(Double_t inputPars[4] = nullptr, Double_t qualityControl[4] = nullptr);
+Float_t actual_work_2H(Double_t inputPars[4] = nullptr, Double_t qualityControl[4] = nullptr);
 
 private:
 TTree *inTree;
@@ -62,7 +62,7 @@ Float_t ToFMWPC, gasTargetSi;
 
 TH1F *hist_ene_diff;
 TH1F *hist_mml;
-TGraph *evX_vs_mml_graph;
+TGraph *lang_vs_rang;
 
 
 Float_t dummy01, dummy02, dummy1, dummy2;
@@ -78,8 +78,9 @@ Double_t CsI_L_Edep[17], CsI_R_Edep[17], SQX_L_Edep[33], SQX_L_Edep2[33], SQX_R_
 Double_t out_tF3[4], out_F3[4], out_tF5[4], out_F5[4], out_tF6[4], out_F6[4];
 Double_t sqlde, sqletot, kinsqle_1H, kinsqle_2H, sqlphi, sqltheta, fsqltheta_1H, fsqltheta_2H, sqlang, sqlxtime, sqlytime, fel_2H, fdel_2H, ftot;
 Double_t sqrde, sqretot, sqrphi, sqrtheta, fsqrtheta1, fsqrtheta2, sqrang, sqrxtime, sqrytime;
+Double_t lvsqrang, lvsqlang;
 
-Double_t mml, mom_2H, ene_2H;
+Double_t mml, mom_2H, ene_2H, mom_1H, ene_1H;
 Double_t mom_6He, ene_6He, mom_beam, ene_beam;
 
 Double_t in_tSQX_L[32], in_tSQX_R[32], out_tSQX_L[32], out_tSQX_R[32];
@@ -106,7 +107,7 @@ Float_t D[16];
 
 
 //double gsl_sf_lambert_Wm1(double in);
-TLorentzVector *LV_6He, *LV_2H, *LV_beam, *LV_tar_2H;
+TLorentzVector *LV_6He, *LV_2H, *LV_1H, *LV_beam, *LV_tar_1H, *LV_tar_2H;
 TRotation beam_setting_array;
 TString s_curFile;
 
@@ -114,6 +115,11 @@ AELC *h2_Si;
 AELC *h2_CsI;
 AELC *h2_BoPET;
 AELC *h2_CD2;
+
+AELC *h1_Si;
+AELC *h1_CsI;
+AELC *h1_BoPET;
+AELC *h1_CD2;
 
 AELC *h3_Si;
 AELC *he4_Si;
@@ -131,6 +137,7 @@ TOOL *maynard;
 TCutG *gcut_h2, *gcut_h3, *gcut_he4, *gcut_he6, *gcut_li7, *gcut_li8;
 TCutG *gcut_be9, *gcut_dehe6, *gcut_AngAng1H_w6He, *gcut_AngAng2H_w6He, *deut_geo5;
 TF1 *angAngFit_2H = new TF1();
+TF1 *angAngFit_1H = new TF1();
 
 double si_A[1];
 double si_Z[1];

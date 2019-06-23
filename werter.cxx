@@ -14,61 +14,108 @@ bool MakeSelector_handler();
 bool tree_extractor();
 bool daisy_chain_files(bool printout);
 bool kniggit();
-
+void Xerox();
+void madLooper();
+const TString MWPCID = "2";
 
 void werter ()
 {
-	ofstream outStreamQ("/home/guar/Desktop/qualityControl_2.dat", ios::trunc);
-	Double_t qualityControl[4];
+	TProof::Open("");
 	TStopwatch *stopwatch = new TStopwatch();
-	printf("We should definitely do something, aight?\n");
+	printf("\n**We should definitely do something, aight?\n");
 	//daisy_chain_files(false);
 	//MakeSelector_handler();
-	/*
-	TFile *inF = new TFile{"/home/guar/data/he6_d/cal/geo5/cal_run_09.root", "READ"};
+	madLooper();
+	//Xerox();
+	stopwatch->Print();
+}
+
+void Xerox()
+{
+	Double_t qualityControl[4];
+	Double_t inputPars[]{0.0,0.0,0.0,0.0};
+	TString str_name = "cal_geo1.root";
+	TFile *inF = new TFile{"/home/guar/data/he6_d/cal/geo1/cal_geo1.root", "READ"};
 	TTree *inT = (TTree*)inF->Get("calibrated");
-	TFile *outF = new TFile{"/home/guar/data/he6_d/dE/geo5/tmp.root", "RECREATE"};
+	TFile *outF = new TFile{"/home/guar/data/he6_d/cal/geo1/cal_pro1.root", "RECREATE"};
+	TTree *outT = inT->CloneTree(0);
+	outT->SetName("calibrated");
+	dE_E_angle *Hermes = new dE_E_angle(inT, outT, str_name, cs::runNo);
+	Hermes->actual_work_1H(inputPars, qualityControl);
+	outT->Write();
+	delete inT;
+	delete inF;
+	delete outT;
+	delete outF;			
+	delete Hermes;	
+}
+
+void madLooper()
+{
+
+	ofstream outStreamQ("/home/guar/Desktop/findingX.dat", ios::trunc);
+	Double_t qualityControl_1H[4];
+	Double_t qualityControl_2H[4];
+	TString str_name = "cal_geo1.root";
+	/*
+	TFile *inF = new TFile{"/home/guar/data/he6_d/cal/geo1/cal_geo1.root", "READ"};
+	TTree *inT = (TTree*)inF->Get("calibrated");
+	TFile *outF = new TFile{"/home/guar/data/he6_d/dE/geo1/tmp.root", "RECREATE"};
 	TTree *outT= new TTree{"tmptree", "ha"};
 	*/
-	TString str_name = "cal_run_09.root";
-
 	
 
-	Double_t MWPC_X_1_shift = -5.0, MWPC_X_2_shift = -5.0;
-	outStreamQ<<"MWPC_X_1_shift"<<"\t"<<"MWPC_X_2_shift"<<"\t"<<"sqlde+sqletot-kinsqle_2H"<<"\t"<<"sqlde+sqletot-kinsqle_2H sigma"<<"\t"<<"mml"<<"\t"<<"paramA"<<endl;
-
+	
+	//38.0 - best shift of left detector
+	Double_t inputPars[]{-20.0,-20.0,-20.0,-20.0};
+	outStreamQ<<"MWPC_X_1_shift"<<"\t"<<"MWPC_X_2_shift"<<"\t"<<"mml"<<"\t"<<"mml_sigma"<<"\t"<<"ang-ang_ChiSquare"<<"\t"<<endl;
+	int counter{0};
 	for (int iii = 0; iii < 20; iii++)
 	{
 		for (int jjj = 0; jjj < 20; jjj++)
 		{
-			TFile *inF = new TFile{"/home/guar/data/he6_d/cal/geo5/cal_run_09.root", "READ"};
-			TTree *inT = (TTree*)inF->Get("calibrated");
-			TFile *outF = new TFile{"/home/guar/data/he6_d/dE/geo5/tmp.root", "RECREATE"};
-			TTree *outT= new TTree{"tmptree", "ha"};
-			dE_E_angle *Hermes = new dE_E_angle(inT,outT, str_name, cs::runNo);
-			Hermes->actual_work_gas(MWPC_X_1_shift, MWPC_X_2_shift, qualityControl);
-			//printf("%f\t%f\t%f\t\n", qualityControl[0], qualityControl[1], qualityControl[2]);
-			outStreamQ<<MWPC_X_1_shift<<" "<<MWPC_X_2_shift<<" "<<qualityControl[0]<<" "<<qualityControl[1]<<" "<<qualityControl[2]<<" "<<qualityControl[3]<<endl;
-			outStreamQ.flush();
-			outT->Write();
-			delete inT;
-			delete inF;
-			delete outT;
-			delete outF;			
-			delete Hermes;
-			//outStreamQ<<MWPC_X_1_shift<<" "<<MWPC_X_2_shift<<"\t\t";		
-			MWPC_X_2_shift+=0.5;
+			for (int kkk = 0; kkk < 20; kkk++)
+			{
+				TFile *inF = new TFile{"/home/guar/data/he6_d/cal/geo1/cal_pro1.root", "READ"};
+				TTree *inT = (TTree*)inF->Get("calibrated");
+				TFile *outF = new TFile{"/home/guar/data/he6_d/dE/geo1/dE_pro1.root", "RECREATE"};
+				TTree *outT= new TTree{"tmptree", "ha"};
+				dE_E_angle *Hermes = new dE_E_angle(inT,outT, str_name, cs::runNo);
+				Hermes->actual_work_1H(inputPars, qualityControl_1H);
+				outT->Write();
+				delete inT;
+				delete inF;
+				delete outT;
+				delete outF;			
+				delete Hermes;	
 
+				inF = new TFile{"/home/guar/data/he6_d/cal/geo1/cal_deu1.root", "READ"};
+				inT = (TTree*)inF->Get("calibrated");
+				outF = new TFile{"/home/guar/data/he6_d/dE/geo1/dE_deu1.root", "RECREATE"};
+				outT= new TTree{"tmptree", "ha"};
+				Hermes = new dE_E_angle(inT,outT, str_name, cs::runNo);
+				Hermes->actual_work_2H(inputPars, qualityControl_2H);
+				outStreamQ<<inputPars[0]<<" "<<inputPars[1]<<" "<<inputPars[2]<<" "<<qualityControl_1H[0]<<" "<<qualityControl_1H[2]<<" "<<qualityControl_2H[0]<<" "<<qualityControl_2H[2]<<endl;
+																		
+				outStreamQ.flush();
+				outT->Write();
+
+				delete inT;
+				delete inF;
+				delete outT;
+				delete outF;			
+				delete Hermes;
+				inputPars[0] += 2;
+			}
+			inputPars[0] = -20.0;
+			inputPars[1] += 2;
 		}
-		//outStreamQ<<endl;
-		MWPC_X_1_shift+=0.5;
-		MWPC_X_2_shift = -5.0;
-	}
-
-	
-	stopwatch->Print();
-	
+		inputPars[1] = -20.0;
+		inputPars[2] += 2;
+		printf("## We have like, I don't know? Eeee %d%% or what\n",counter+=5);
+	}	
 }
+
 bool MakeSelector_handler()
 {
 	TString fpath = "/home/guar/aku/geant4/build/gurney.root";
@@ -102,8 +149,8 @@ bool MakeSelector_handler()
 
 bool MakeSelector_handler(TChain *inChain)
 {
-	//inChain->MakeSelector("beamCutter");
-	inChain->Process("beamCutter.C");
+	//inChain->MakeSelector("geoMaker");
+	inChain->Process("geoMaker.C", MWPCID.Data());
 	return 1;
 }
 
@@ -160,7 +207,7 @@ bool daisy_chain_files(bool printout)
 {
 	//	remove this line to use multi-file processing
 
-	TString raw_data_path{"/home/guar/data/mar2018/raw/geo1/"};
+	TString raw_data_path{"/home/guar/data/he6_d/calib_utilities/"};
 	TString fileName, TreePath;
 	TString treeName{"/AnalysisxTree"};
 	TChain *inChain = new TChain();
@@ -170,7 +217,8 @@ bool daisy_chain_files(bool printout)
 	while (TObject *obj = bluster())
 	{
 		fileName = obj->GetName();
-		if (	fileName.Contains("root") &&  //if we want to ommit some phrase (np.li9_3_21_0)
+		if (	fileName.Contains("MWPC")	&&  
+				fileName.Contains(MWPCID)	&&//if we want to ommit some phrase (np.li9_3_21_0)
 				!fileName.Contains("li9_3_21_0") //  "!"  sign is important
 					)
 		{
