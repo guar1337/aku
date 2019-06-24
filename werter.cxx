@@ -67,8 +67,8 @@ void madLooper()
 
 	
 	//38.0 - best shift of left detector
-	Double_t inputPars[]{-20.0,-20.0,-20.0,-20.0};
-	outStreamQ<<"MWPC_X_1_shift"<<"\t"<<"MWPC_X_2_shift"<<"\t"<<"mml"<<"\t"<<"mml_sigma"<<"\t"<<"ang-ang_ChiSquare"<<"\t"<<endl;
+	Double_t inputPars[]{-20.0,-20.0,-20.0,-16.0};
+	outStreamQ<<"xL"<<"\t"<<"zL"<<"\t"<<"xR"<<"\t"<<"zR"<<"\t"<<"mm1H"<<"\t"<<"angang_1H"<<"\t"<<"mm2H"<<"\t"<<"angang_2H"<<"\t"<<endl;
 	int counter{0};
 	for (int iii = 0; iii < 20; iii++)
 	{
@@ -95,7 +95,7 @@ void madLooper()
 				outT= new TTree{"tmptree", "ha"};
 				Hermes = new dE_E_angle(inT,outT, str_name, cs::runNo);
 				Hermes->actual_work_2H(inputPars, qualityControl_2H);
-				outStreamQ<<inputPars[0]<<" "<<inputPars[1]<<" "<<inputPars[2]<<" "<<qualityControl_1H[0]<<" "<<qualityControl_1H[2]<<" "<<qualityControl_2H[0]<<" "<<qualityControl_2H[2]<<endl;
+				outStreamQ<<inputPars[0]<<" "<<inputPars[1]<<" "<<inputPars[2]<<" "<<inputPars[3]<<" "<<qualityControl_1H[0]<<" "<<qualityControl_1H[2]<<" "<<qualityControl_2H[0]<<" "<<qualityControl_2H[2]<<endl;
 																		
 				outStreamQ.flush();
 				outT->Write();

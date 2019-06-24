@@ -627,7 +627,7 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 
 			X6He = X6He_lab + X6He_det + inputPars[2];
 			Y6He = Y6He_lab + Y6He_det;
-			Z6He = Z6He_lab + Z6He_det + inputPars[1];
+			Z6He = Z6He_lab + Z6He_det + inputPars[3];
 
 			//setting deuterium vector
 			TVector3 vect6He(X6He-evX, Y6He-evY, Z6He-evZ);
@@ -976,7 +976,7 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 
 			X6He = X6He_lab + X6He_det + inputPars[2];
 			Y6He = Y6He_lab + Y6He_det;
-			Z6He = Z6He_lab + Z6He_det + inputPars[1];
+			Z6He = Z6He_lab + Z6He_det + inputPars[3];
 
 			//setting deuterium vector
 			TVector3 vect6He(X6He-evX, Y6He-evY, Z6He-evZ);
