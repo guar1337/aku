@@ -13,7 +13,7 @@ dE_E_angle::dE_E_angle(TTree *inT, TTree *outT, TString inFile, int geoNo)
 {
 	create_input_tree(inT);
 	create_output_tree(outT);
-	/*
+/*	
 	outTree=outT;
 	
 	LV_6He = new TLorentzVector();
@@ -22,8 +22,8 @@ dE_E_angle::dE_E_angle(TTree *inT, TTree *outT, TString inFile, int geoNo)
 
 	LV_tar_1H = new TLorentzVector();
 	LV_tar_2H = new TLorentzVector();
-	LV_beam = new TLorentzVector();*/
-	maynard = new TOOL();
+	LV_beam = new TLorentzVector();
+*/	maynard = new TOOL();
 	s_curFile = inFile;
 
 
@@ -47,7 +47,7 @@ dE_E_angle::dE_E_angle(TTree *inT, TTree *outT, TString inFile, int geoNo)
 	int CD2_Nel=2;
 	CD2_A[0]=2;
 	CD2_Z[0]=1;
-	CD2_W[0]=1;
+	CD2_W[0]=2;
 
 	CD2_A[1]=12;
 	CD2_Z[1]=6;
@@ -66,18 +66,18 @@ dE_E_angle::dE_E_angle(TTree *inT, TTree *outT, TString inFile, int geoNo)
 	BoPET_Z[2]=8;
 	BoPET_W[2]=4;
 
-	h2_Si 		= new ELC(2, 1, si_Nel, 2.35, si_A, si_Z, si_W, 500.,1500);
-	h2_CsI 		= new ELC(2, 1, csi_Nel, 4.51, si_A, si_Z, csi_W, 500.,1500);
-	h2_BoPET	= new ELC(2, 1, BoPET_Nel, 1.4, BoPET_A, BoPET_Z, BoPET_W, 500.,1500);
-	h2_CD2		= new ELC(2, 1, CD2_Nel, 1.4, CD2_A, CD2_Z, CD2_W, 500.,1500);
+	h2_Si 		= new ELC(2, 1, si_Nel, 2.35, si_A, si_Z, si_W, 100.,1500);
+	h2_CsI 		= new ELC(2, 1, csi_Nel, 4.51, si_A, si_Z, csi_W, 100.,1500);
+	h2_BoPET	= new ELC(2, 1, BoPET_Nel, 1.4, BoPET_A, BoPET_Z, BoPET_W, 100.,1500);
+	h2_CD2		= new ELC(2, 1, CD2_Nel, 1.0, CD2_A, CD2_Z, CD2_W, 100.,1500);
 
-	h1_Si 		= new ELC(1, 1, si_Nel, 2.35, si_A, si_Z, si_W, 500.,1500);
-	h1_CsI 		= new ELC(1, 1, csi_Nel, 4.51, si_A, si_Z, csi_W, 500.,1500);
-	h1_BoPET	= new ELC(1, 1, BoPET_Nel, 1.4, BoPET_A, BoPET_Z, BoPET_W, 500.,1500);
-	h1_CD2		= new ELC(1, 1, CD2_Nel, 1.4, CD2_A, CD2_Z, CD2_W, 500.,1500);
+	h1_Si 		= new ELC(1, 1, si_Nel, 2.35, si_A, si_Z, si_W, 100.,1500);
+	h1_CsI 		= new ELC(1, 1, csi_Nel, 4.51, si_A, si_Z, csi_W, 100.,1500);
+	h1_BoPET	= new ELC(1, 1, BoPET_Nel, 1.4, BoPET_A, BoPET_Z, BoPET_W, 100.,1500);
+	h1_CD2		= new ELC(1, 1, CD2_Nel, 1.0, CD2_A, CD2_Z, CD2_W, 100.,1500);
 
 	he6_Si 		= new ELC(6, 2, si_Nel, 2.35, si_A, si_Z, si_W, 300.,1500);
-	he6_CD2		= new ELC(6, 2, CD2_Nel, 1.16, CD2_A, CD2_Z, CD2_W, 200.,1500);
+	he6_CD2		= new ELC(6, 2, CD2_Nel, 1.0, CD2_A, CD2_Z, CD2_W, 200.,1500);
 	he6_BoPET	= new ELC(6, 2, BoPET_Nel, 1.4, BoPET_A, BoPET_Z, BoPET_W, 200.,1500);
 	he6_CsI 	= new ELC(6, 2, csi_Nel, 4.51, csi_A, csi_Z, csi_W, 300.,1500);
 
@@ -205,6 +205,7 @@ bool dE_E_angle::create_output_tree(TTree *out)
 
 	
 	outTree->SetMakeClass(1);
+	/*
 	outTree->Branch("SQX_L_m",	&SQX_L_mult,	"SQX_L_m/S");
 	outTree->Branch("SQX_R_m",	&SQX_R_mult,	"SQX_R_m/S");
 	outTree->Branch("SQY_L_m",	&SQY_L_mult,	"SQY_L_m/S");
@@ -232,14 +233,22 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("SQY_R_s",	SQY_R_strip,	"SQY_R_s[16]/S");
 	outTree->Branch("CsI_L_s",	CsI_L_strip,	"CsI_L_s[16]/S");
 	outTree->Branch("CsI_R_s",	CsI_R_strip,	"CsI_R_s[16]/S");
+*/
+	outTree->Branch("SQX_L_sNo",	&SQX_L_stripNo,	"SQX_L_sNo/F");
+	outTree->Branch("SQX_R_sNo",	&SQX_R_stripNo,	"SQX_R_sNo/F");
+	outTree->Branch("SQY_L_sNo",	&SQY_L_stripNo,	"SQY_L_sNo/F");
+	outTree->Branch("SQY_R_sNo",	&SQY_R_stripNo,	"SQY_R_sNo/F");
 
 	//LEFT
 	outTree->Branch("sqlde",		&sqlde,		"sqlde/D");
 	outTree->Branch("sqletot",		&sqletot,	"sqletot/D");
+
 	outTree->Branch("sqlphi",		&sqlphi,	"sqlphi/D");
 	outTree->Branch("sqltheta",		&sqltheta,	"sqltheta/D");
+	
 	outTree->Branch("sqlang",		&sqlang,	"sqlang/D");
-	outTree->Branch("lvsqlang",		&lvsqlang,	"lvsqlang/D");
+	outTree->Branch("sqlang1",		&sqlang1,	"sqlang1/D");
+	outTree->Branch("sqlang2",		&sqlang2,	"sqlang2/D");
 	outTree->Branch("sqlxtime",		&sqlxtime,	"sqlxtime/D");
 	outTree->Branch("sqlytime",		&sqlytime,	"sqlytime/D");
 	outTree->Branch("fsqltheta_1H",	&fsqltheta_1H,"fsqltheta_1H/D");
@@ -250,10 +259,12 @@ bool dE_E_angle::create_output_tree(TTree *out)
 
 	outTree->Branch("sqrde",		&sqrde,		"sqrde/D");
 	outTree->Branch("sqretot",		&sqretot,	"sqretot/D");
+
 	outTree->Branch("sqrtheta",		&sqrtheta,	"sqrtheta/D");
 	outTree->Branch("sqrphi",		&sqrphi,	"sqrphi/D");
 	outTree->Branch("sqrang",		&sqrang,	"sqrang/D");
-	outTree->Branch("lvsqrang",		&lvsqrang,	"lvsqrang/D");
+	outTree->Branch("sqrang1",		&sqrang1,	"sqrang1/D");
+	outTree->Branch("sqrang2",		&sqrang2,	"sqrang2/D");
 	outTree->Branch("sqrxtime",		&sqrxtime,	"sqrxtime/D");
 	outTree->Branch("sqrytime",		&sqrytime,	"sqrytime/D");
 	outTree->Branch("fsqrtheta1",	&fsqrtheta1,	"fsqrtheta1/D");
@@ -274,6 +285,10 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("evY",	&evY,	"evY/F");
 	outTree->Branch("evZ",	&evZ,	"evZ/F");
 
+	outTree->Branch("dX",	&dX,	"dX/F");
+	outTree->Branch("dY",	&dY,	"dY/F");
+	outTree->Branch("dZ",	&dZ,	"dZ/F");
+/*
 	outTree->Branch("f6X",	&f6X,	"f6X/F");
 	outTree->Branch("f6Y",	&f6Y,	"f6Y/F");
 	outTree->Branch("f6Z",	&f6Z,	"f6Z/F");
@@ -289,11 +304,11 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("F5",	out_F5,		"F5[4]/D");
 	outTree->Branch("tF6",	out_tF6,	"tF6[4]/D");
 	outTree->Branch("F6",	out_F6,		"F6[4]/D");
-
+*/
 	outTree->Branch("tof",	&out_tof,	"tof/D");
 	outTree->Branch("aF5",	&out_aF5,	"aF5/D");
 	outTree->Branch("az",	&out_AZ,	"az/D");
-	outTree->Branch("kinE",	&kinE,	"kinE/D");
+/*
 
 	outTree->Branch("ion",	&Ion_ID,	"ion/S");
 	outTree->Branch("geo",	&Geo_ID,	"geo/S");
@@ -326,14 +341,18 @@ bool dE_E_angle::create_output_tree(TTree *out)
 	outTree->Branch("r_SQY_R",	raw_SQY_R,	"r_SQY_R[16]/D");
 	outTree->Branch("r_CsI_L",	raw_CsI_L,	"r_CsI_L[16]/D");
 	outTree->Branch("r_CsI_R",	raw_CsI_R,	"r_CsI_R[16]/D");
-
+*/
 	outTree->Branch("he6",	&he6,	"he6/O");
+
 	outTree->Branch("deu",	&angAng2H,	"deu/O");
 	outTree->Branch("pro",	&angAng1H,	"pro/O");
-
+/*
 	outTree->Bronch("LV_6He.",	"TLorentzVector",	&LV_6He);
 	outTree->Bronch("LV_2H.",	"TLorentzVector",	&LV_2H);
+*/
+	outTree->Branch("kinE",	&kinE,	"kinE/D");
 	outTree->Bronch("LV_beam.",	"TLorentzVector",	&LV_beam);
+
 	return true;
 }
 
@@ -349,25 +368,44 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 	TF1 *fit;
 	Long64_t nEntries = inTree->GetEntries();
 	maynard->initializeGeometry(geoNo, &SQR_ang, &SQL_ang, &SQR_dist, &SQL_dist, &tar_angle, &tar_thcknss);
+
 	counter=0;
-	int pies{0};
+
 	for (Long64_t entry=0; entry<nEntries; entry++)
 		{
 
 		inTree->GetEntry(entry);
-/*	
+	/*	
 		if( entry % ( nEntries / 10 ) == 0)
 		{
 			printf("# Progress: %i %%\n", counter);
 			counter+=10;
 		}
-*/
+
+	*/		
+	SQL_dist += inputPars[1];
+		if (run==3)
+		{
+			tar_pos_Z = cs::tar_pos_Z + 2.0;
+			tar_angle = 6.0 * cs::deg_to_rad;
+			SQL_ang = (50.0 + inputPars[0]) * cs::deg_to_rad;
+			SQR_ang = (15.0 ) * cs::deg_to_rad;
+		}
+
+		else
+		{
+			tar_pos_Z = cs::tar_pos_Z;
+			tar_angle = 45.0 * cs::deg_to_rad;
+			SQL_ang = (65.0 + inputPars[0]) * cs::deg_to_rad;
+			SQR_ang = (15.0) * cs::deg_to_rad;
+		}
+
 		//NULLing everything
 		LV_tar_1H->SetVectM(*vTarget,cs::mass_1H);
 		memE_CsI_R=0.0; memE_CsI_L=0.0; memE_CsI_0L=0.0; memS_CsI_R=20; memS_CsI_L=20;
 		kine_2H=0.0, kine_1H=0.0, rest_of_events = 0;
 		Ion_ID = 0, Geo_ID = cs::runNo, kinE = 0.0;
-		evX=0.0;evY=0.0;evZ=0.0; Run_ID = run;
+		evX=0.0; evY=0.0; evZ=0.0; Run_ID = run;
 
 		he6=false, angAng1H=false, angAng2H=false;
 
@@ -500,9 +538,8 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 		maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, cs::MWPC_1_X_id);
 		maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, cs::MWPC_1_Y_id);
 		maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, cs::MWPC_2_X_id);
-		maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id);	
+		maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id);
 
-	
 		//displacement + go to corner of MWPC + follow wire order - get event point
 		MWPC_1_X += rnd->Uniform(0.0,1.25)-0.6125;
 		MWPC_1_Y += rnd->Uniform(0.0,1.25)-0.6125;
@@ -517,7 +554,7 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 		
 		vBeam->SetXYZ(dX,dY,dZ);
 
-		if ((in_aF5>600 && in_aF5<1200 && in_tof>175 && in_tof<190) || (in_aF5==0 && in_tof>175 && in_tof<190))
+		if ((in_aF5>600 && in_aF5<1200 && in_tof>162 && in_tof<182) || (in_aF5==0 && in_tof>162 && in_tof<182))
 		{
 			kinE = maynard->getT(in_tof,cs::mass_6He);
 			tempE = he6_Si->GetE(kinE, ToFMWPC);
@@ -536,7 +573,7 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 		vBeam->SetMag(mom_beam);
 	
 		LV_beam->SetVectM(*vBeam, cs::mass_6He);
-		Tcoef=(cos(tar_angle)*cs::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
+		Tcoef=(cos(tar_angle)*tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
 
 		evX = MWPC_1_X + dX*Tcoef;
 		evY = MWPC_1_Y + dY*Tcoef;
@@ -558,13 +595,32 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 
 		lv6He_EL.Boost(boostVect_EL);
 		lv1H_EL.Boost(boostVect_EL);
-		lvsqlang = 180.0 * (LV_beam->Angle(lv1H_EL.Vect()))/double(TMath::Pi());
-		lvsqrang = 180.0 * (LV_beam->Angle(lv6He_EL.Vect()))/double(TMath::Pi());
+		sqlang1 = 180.0 * (LV_beam->Angle(lv1H_EL.Vect()))/double(TMath::Pi());
+		sqrang1 = 180.0 * (LV_beam->Angle(lv6He_EL.Vect()))/double(TMath::Pi());
+
+
+		lv6He_EL = *LV_beam;
+		TLorentzVector lv2H_EL(0,0,0,cs::mass_2H);
+		lvCM_EL = lv6He_EL+lv2H_EL;
+		boostVect_EL = lvCM_EL.BoostVector();
+
+		lv6He_EL.Boost(-boostVect_EL);
+		lv2H_EL.Boost(-boostVect_EL);
+
+		lv6He_EL.SetTheta(TMath::Pi()-theta_CM);
+		lv2H_EL.SetTheta(theta_CM);
+
+		lv6He_EL.Boost(boostVect_EL);
+		lv2H_EL.Boost(boostVect_EL);
+		sqlang2 = 180.0 * (LV_beam->Angle(lv2H_EL.Vect()))/double(TMath::Pi());
+		sqrang2 = 180.0 * (LV_beam->Angle(lv6He_EL.Vect()))/double(TMath::Pi());
 
 
 		//SQL energy - deuterium
 		if (SQX_L_mult*SQY_L_mult==1 && SQX_L_Edep[1]>0 && (Ion_ID==62 || Ion_ID==61))
 		{
+			SQX_L_stripNo = SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5;
+			SQY_L_stripNo = SQY_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5;
 			// coordinates of hit in LAB system
 			X2H_lab = SQL_dist*sin(SQL_ang) + cs::SQL_start_X * cos(SQL_ang);
 			Y2H_lab = cs::SQL_start_Y;
@@ -574,10 +630,14 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 			Y2H_det	=	cs::width_strip_Y	* 	(SQY_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5);
 			Z2H_det	=	cs::width_strip_X	*	(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * sin(SQL_ang);
 
-			X2H = X2H_lab + X2H_det + inputPars[0];
+			X2H = X2H_lab + X2H_det;
 			Y2H = Y2H_lab + Y2H_det;
-			Z2H = Z2H_lab + Z2H_det + inputPars[1];
-
+			Z2H = Z2H_lab + Z2H_det;
+/*
+			X2H = 1.8125 * (-15.5 + (SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5)) * cos(SQL_ang) + SQL_dist*sin(SQL_ang) + inputPars[0];
+			Y2H = 3.625 * ((SQY_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5) - 7.5);
+			Z2H = 1.8125 * (-15.5 + (SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5)) * sin(SQL_ang) + SQL_dist*cos(SQL_ang) + inputPars[1];
+*/
 			TVector3 vect1H(X2H-evX, Y2H-evY, Z2H-evZ);
 			sqlphi=vect1H.Phi()*cs::rad_to_deg;
 			sqltheta=vect1H.Theta()*cs::rad_to_deg;
@@ -611,7 +671,9 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 
 		//SQR energy - helium
 		if(SQX_R_mult*SQY_R_mult==1)
-		{		
+		{
+			SQX_R_stripNo = SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5;
+			SQY_R_stripNo = SQY_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5;
 			sqrde=SQY_R_Edep[1];
 			sqretot=memE_CsI_R;
 			s_csir = memS_CsI_R;
@@ -621,13 +683,13 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 			Y6He_lab = cs::SQR_start_Y;
 			Z6He_lab = SQR_dist*cos(SQR_ang) - cs::SQR_start_X * sin(SQR_ang);		
 
-			X6He_det = cs::width_strip_X * (SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * cos(SQR_ang);
-			Y6He_det = cs::width_strip_Y * (SQY_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5);
-			Z6He_det = cs::width_strip_X * (SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * sin(SQR_ang);
+			X6He_det = cs::width_strip_X * SQX_R_stripNo * cos(SQR_ang);
+			Y6He_det = cs::width_strip_Y * SQY_R_stripNo;
+			Z6He_det = cs::width_strip_X * SQX_R_stripNo * sin(SQR_ang);
 
-			X6He = X6He_lab + X6He_det + inputPars[2];
+			X6He = X6He_lab + X6He_det;
 			Y6He = Y6He_lab + Y6He_det;
-			Z6He = Z6He_lab + Z6He_det + inputPars[3];
+			Z6He = Z6He_lab + Z6He_det;
 
 			//setting deuterium vector
 			TVector3 vect6He(X6He-evX, Y6He-evY, Z6He-evZ);
@@ -642,27 +704,33 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 		}
 
 
-		if (gcut_dehe6->IsInside(sqretot,sqrde) && sqlde>0 && kinE>0 && sqletot==0)
+		if (gcut_dehe6->IsInside(sqretot,sqrde) && sqlde>0 && kinE>0)
 		{
-			//printf("aaa\n");
 			he6=true;
-			//printf("sqrang: %f\tsqlang: %f\n", sqrang, sqlang);
+			
 			if (gcut_AngAng1H_w6He->IsInside(sqrang, sqlang))
 			{
 				angAng1H=true;
+				//printf("ZONK\n");
 				
 			}
 			
 		}
-		outTree->Fill();
-		vec_lang.push_back(sqlang);
-		vec_rang.push_back(sqrang);
+
+		if (sqletot==0 && sqlde>7)
+		{
+			
+		}
+outTree->Fill();
+		if (sqlang>0)
+		{
+			vec_lang.push_back(sqlang);
+			vec_rang.push_back(sqrang);
+		}
 		
-		
-		//printf("1llo\t%f\n",mml );
 		
 	}
-
+	/*
 	TF1 *angAngFit_1H = new TF1("angAngFit_1H","[2]*atan(sin([0]*x)/([1]-cos([0]*x)))");
 	angAngFit_1H->FixParameter(0, 2*cs::deg_to_rad);
 	angAngFit_1H->FixParameter(1, cs::mass_6He/cs::mass_1H);
@@ -671,21 +739,23 @@ Float_t dE_E_angle::actual_work_1H(Double_t inputPars[4], Double_t qualityContro
 	lang_vs_rang =  new TGraph(vec_lang.size(), &vec_lang[0], &vec_rang[0]);
 
 	outTree->Draw("mml>>hist_mml", "");
-	
+
 	lang_vs_rang->Draw("AP");
-	lang_vs_rang->Fit(angAngFit_1H, "Q");
+	
 	hist_mml->Fit("gaus", "Q");
 
 	fit = hist_mml->GetFunction("gaus");
 
 	qualityControl[0] = fit->GetParameter(1);
 	qualityControl[1] = fit->GetParameter(2);
+
+	lang_vs_rang->Fit(angAngFit_1H, "Q");
 	qualityControl[2] = angAngFit_1H->GetChisquare();
 
 	delete fit;
 	delete hist_mml;
 	delete lang_vs_rang;
-
+	*/
 	return 3.3;
 }
 
@@ -698,19 +768,38 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 	
 	Long64_t nEntries = inTree->GetEntries();
 	maynard->initializeGeometry(geoNo, &SQR_ang, &SQL_ang, &SQR_dist, &SQL_dist, &tar_angle, &tar_thcknss);
+
+
 	counter=0;
 
 	for (Long64_t entry=0; entry<nEntries; entry++)
 		{
 
 		inTree->GetEntry(entry);
-/*
+	/*	
 		if( entry % ( nEntries / 10 ) == 0)
 		{
 			printf("# Progress: %i %%\n", counter);
 			counter+=10;
 		}
-*/
+	*/
+	SQL_dist += inputPars[1];
+		if (run==3)
+		{
+			tar_pos_Z = cs::tar_pos_Z + 2.0;
+			tar_angle = 6.0 * cs::deg_to_rad;
+			SQL_ang = (50.0 + inputPars[0]) * cs::deg_to_rad;
+			SQR_ang = (15.0 ) * cs::deg_to_rad;
+		}
+
+		else
+		{
+			tar_pos_Z = cs::tar_pos_Z;
+			tar_angle = 45.0 * cs::deg_to_rad;
+			SQL_ang = (65.0 + inputPars[0]) * cs::deg_to_rad;
+			SQR_ang = (15.0) * cs::deg_to_rad;
+		}
+
 		//NULLing everything
 		LV_tar_2H->SetVectM(*vTarget,cs::mass_2H);
 		memE_CsI_R=0.0; memE_CsI_L=0.0; memE_CsI_0L=0.0; memS_CsI_R=20; memS_CsI_L=20;
@@ -758,7 +847,7 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 		//16 channels loop
 		for (int iii=0; iii<16; iii++)
 		{
-			if (in_tSQY_L[iii]>cs::tc_SQY_L)
+			if (SQY_L[iii]>3.0)
 			{
 				SQY_L_mult++;
 				SQY_L_Edep[SQY_L_mult]=SQY_L[iii];
@@ -827,7 +916,7 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 			out_y1[iii]=in_y1[iii];
 			out_y2[iii]=in_y2[iii];
 
-			if (in_tSQX_L[iii]>cs::tc_SQX_L)
+			if (SQX_L[iii]>3.0)
 			{
 				SQX_L_mult++;
 				SQX_L_Edep[SQX_L_mult]=SQX_L[iii];
@@ -849,8 +938,7 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 		maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, cs::MWPC_1_X_id);
 		maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, cs::MWPC_1_Y_id);
 		maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, cs::MWPC_2_X_id);
-		maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id);	
-
+		maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id);		
 	
 		//displacement + go to corner of MWPC + follow wire order - get event point
 		MWPC_1_X += rnd->Uniform(0.0,1.25)-0.6125;
@@ -866,7 +954,7 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 		
 		vBeam->SetXYZ(dX,dY,dZ);
 
-		if ((in_aF5>600 && in_aF5<1200 && in_tof>175 && in_tof<190) || (in_aF5==0 && in_tof>175 && in_tof<190))
+		if ((in_aF5>600 && in_aF5<1200 && in_tof>162 && in_tof<182) || (in_aF5==0 && in_tof>162 && in_tof<182))
 		{
 			kinE = maynard->getT(in_tof,cs::mass_6He);
 			tempE = he6_Si->GetE(kinE, ToFMWPC);
@@ -885,7 +973,7 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 		vBeam->SetMag(mom_beam);
 	
 		LV_beam->SetVectM(*vBeam, cs::mass_6He);
-		Tcoef=(cos(tar_angle)*cs::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
+		Tcoef=(cos(tar_angle)*tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
 
 		evX = MWPC_1_X + dX*Tcoef;
 		evY = MWPC_1_Y + dY*Tcoef;
@@ -893,28 +981,48 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 
 
 		TLorentzVector lv6He_EL(*LV_beam);
-		TLorentzVector lv2H_EL(0,0,0,cs::mass_2H);
-		TLorentzVector lvCM_EL = lv6He_EL+lv2H_EL;
+		TLorentzVector lv1H_EL(0,0,0,cs::mass_1H);
+		TLorentzVector lvCM_EL = lv6He_EL+lv1H_EL;
 		TVector3 boostVect_EL = lvCM_EL.BoostVector();
 
 		lv6He_EL.Boost(-boostVect_EL);
-		lv2H_EL.Boost(-boostVect_EL);
+		lv1H_EL.Boost(-boostVect_EL);
 
 		double theta_CM = rnd->Uniform(0.0,TMath::Pi());
+
+		lv6He_EL.SetTheta(TMath::Pi()-theta_CM);
+		lv1H_EL.SetTheta(theta_CM);
+
+		lv6He_EL.Boost(boostVect_EL);
+		lv1H_EL.Boost(boostVect_EL);
+		sqlang1 = 180.0 * (LV_beam->Angle(lv1H_EL.Vect()))/double(TMath::Pi());
+		sqrang1 = 180.0 * (LV_beam->Angle(lv6He_EL.Vect()))/double(TMath::Pi());
+
+
+		lv6He_EL = *LV_beam;
+		TLorentzVector lv2H_EL(0,0,0,cs::mass_2H);
+		lvCM_EL = lv6He_EL+lv2H_EL;
+		boostVect_EL = lvCM_EL.BoostVector();
+
+		lv6He_EL.Boost(-boostVect_EL);
+		lv2H_EL.Boost(-boostVect_EL);
 
 		lv6He_EL.SetTheta(TMath::Pi()-theta_CM);
 		lv2H_EL.SetTheta(theta_CM);
 
 		lv6He_EL.Boost(boostVect_EL);
 		lv2H_EL.Boost(boostVect_EL);
-		lvsqlang = 180.0 * (LV_beam->Angle(lv2H_EL.Vect()))/double(TMath::Pi());
-		lvsqrang = 180.0 * (LV_beam->Angle(lv6He_EL.Vect()))/double(TMath::Pi());
+		sqlang2 = 180.0 * (LV_beam->Angle(lv2H_EL.Vect()))/double(TMath::Pi());
+		sqrang2 = 180.0 * (LV_beam->Angle(lv6He_EL.Vect()))/double(TMath::Pi());
 
 
 		//SQL energy - deuterium
 		if (SQX_L_mult*SQY_L_mult==1 && SQX_L_Edep[1]>0 && (Ion_ID==62 || Ion_ID==61))
 		{
 			// coordinates of hit in LAB system
+			SQX_L_stripNo = SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5;
+			SQY_L_stripNo = SQY_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5;
+
 			X2H_lab = SQL_dist*sin(SQL_ang) + cs::SQL_start_X * cos(SQL_ang);
 			Y2H_lab = cs::SQL_start_Y;
 			Z2H_lab = SQL_dist*cos(SQL_ang) - cs::SQL_start_X * sin(SQL_ang);		
@@ -923,9 +1031,9 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 			Y2H_det	=	cs::width_strip_Y	* 	(SQY_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5);
 			Z2H_det	=	cs::width_strip_X	*	(SQX_L_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * sin(SQL_ang);
 
-			X2H = X2H_lab + X2H_det + inputPars[0];
+			X2H = X2H_lab + X2H_det;
 			Y2H = Y2H_lab + Y2H_det;
-			Z2H = Z2H_lab + Z2H_det + inputPars[1];
+			Z2H = Z2H_lab + Z2H_det;
 
 			TVector3 vect2H(X2H-evX, Y2H-evY, Z2H-evZ);
 			sqlphi=vect2H.Phi()*cs::rad_to_deg;
@@ -960,7 +1068,10 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 
 		//SQR energy - helium
 		if(SQX_R_mult*SQY_R_mult==1)
-		{		
+		{
+			SQX_R_stripNo = SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5;
+			SQY_R_stripNo = SQY_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5;
+
 			sqrde=SQY_R_Edep[1];
 			sqretot=memE_CsI_R;
 			s_csir = memS_CsI_R;
@@ -974,9 +1085,9 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 			Y6He_det = cs::width_strip_Y * (SQY_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5);
 			Z6He_det = cs::width_strip_X * (SQX_R_strip[1]+rnd->Uniform(0.0,1.0)-0.5) * sin(SQR_ang);
 
-			X6He = X6He_lab + X6He_det + inputPars[2];
+			X6He = X6He_lab + X6He_det;
 			Y6He = Y6He_lab + Y6He_det;
-			Z6He = Z6He_lab + Z6He_det + inputPars[3];
+			Z6He = Z6He_lab + Z6He_det;
 
 			//setting deuterium vector
 			TVector3 vect6He(X6He-evX, Y6He-evY, Z6He-evZ);
@@ -993,28 +1104,28 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 		if (gcut_dehe6->IsInside(sqretot,sqrde) && sqlde>0 && kinE>0)
 		{
 			he6=true;
-
-			if (gcut_AngAng1H_w6He->IsInside(sqrang, sqlang))
-			{
-				angAng1H=true;
-				
-			}
-
-			if (/*gcut_AngAng2H_w6He->IsInside(sqrang, sqlang) && */sqletot==0)
+			
+			if (gcut_AngAng2H_w6He->IsInside(sqrang, sqlang)/* && sqletot==0*/)
 			{
 				angAng2H=true;
-
-								
+				outTree->Fill();
 			}
 		}
 
-		outTree->Fill();
-		vec_lang.push_back(sqlang);
-		vec_rang.push_back(sqrang);
-		//printf("2llo\t%f\n",mml );
+		if (sqletot==0 && sqlde>7)
+		{
+			
+		}
+		if (sqlang>0)
+		{
+			vec_lang.push_back(sqlang);
+			vec_rang.push_back(sqrang);
+		}
+
+		
 		
 	}
-
+	/*
 	hist_mml = new TH1F("hist_mml", "blabla", 200, -10.0, 10.0);
 	TF1 *fit;
 	TF1 *angAngFit_2H = new TF1("angAngFit_2H","[2]*atan(sin([0]*x)/([1]-cos([0]*x)))");
@@ -1038,10 +1149,9 @@ Float_t dE_E_angle::actual_work_2H(Double_t inputPars[4], Double_t qualityContro
 	delete fit;
 	delete hist_mml;
 	delete lang_vs_rang;
-
+	*/
 	return 3.3;
 }
-
 
 Float_t dE_E_angle::actual_work_gas(Float_t MWPC_X_1_shift, Float_t MWPC_X_2_shift, Double_t qualityControl[4])
 {

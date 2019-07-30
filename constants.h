@@ -18,11 +18,11 @@ namespace cs
 	static const float		sql_ang_s0		=	0.0	* (3.1415/180.0);
 	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
 
-	static const float		sql_ang_s1		=	(65.0 + 0.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s1		=	(15.0 + 0.0)	* (3.1415/180.0);
+	static const float		sql_ang_s1		=	(65.0 + 4.4)	* (3.1415/180.0);
+	static const float		sqr_ang_s1		=	(15.0 - 0.8)	* (3.1415/180.0);
 
-	static const float		sql_ang_s2		=	(50.0 + 3.31)	* (3.1415/180.0);
-	static const float		sqr_ang_s2		=	(15.0 - 0.08)	* (3.1415/180.0);
+	static const float		sql_ang_s2		=	(50.0 + 4.4)	* (3.1415/180.0);
+	static const float		sqr_ang_s2		=	(15.0 - 0.8)	* (3.1415/180.0);
 
 	static const float		sql_ang_s3		=	(35.0 + 3.81)	* (3.1415/180.0);
 	static const float		sqr_ang_s3		=	(15.0 - 0.08)	* (3.1415/180.0);
@@ -39,8 +39,8 @@ namespace cs
 	static const float		tar_ang_s4		=	32.0	* (3.1415/180.0);
 	static const float		tar_ang_s5		=	33.0	* (3.1415/180.0);
 
-	static const float		tar_thcknss_1		=	100;
-	static const float		tar_thcknss_2		=	200;
+	static const float		tar_thcknss_1		=	80;
+	static const float		tar_thcknss_2		=	160;
 	static const float		tar_thcknss_3		=	200;
 	static const float		tar_thcknss_4		=	20;
 	static const float		tar_thcknss_5		=	100;
@@ -48,8 +48,6 @@ namespace cs
 	static const float		tar_thcknss_7		=	100;
 	static const float		tar_thcknss_9		=	10;
 	static const float		tar_thcknss_0		=	20;
-
-	static const float		tar_pos_Z		=	0.0;
 
 
 	//*************************DETS geometry**********************************************
@@ -209,9 +207,9 @@ namespace cs
 
 	static const TString	dir_len_data("/home/guar/data/");
 	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
+	static const float		tar_pos_Z		=	0.0;
 
-
-	static const int		runNo=	1;
+	static const int		runNo =	1;
 	static const TString	inDir = "cal";
 }
 #endif

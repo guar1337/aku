@@ -21,7 +21,7 @@ class calibrate_tree
 public:
 calibrate_tree();
 virtual ~calibrate_tree();
-bool wrk(TTree *, TTree *, TString);
+bool wrk(TTree *, TTree *);
 TOOL *maynard;
 
 protected:

@@ -22,8 +22,16 @@ class muchobojca
 public:
 muchobojca();
 virtual ~muchobojca();
-bool wrk(TTree *, TTree *, TString);
+bool wrk(TTree *, TTree *);
 TOOL *maynard;
+
+Double_t cal_SQX_L[32];
+float b_SQX_L[32];
+float a_SQX_L[32];
+
+Double_t cal_SQX_R[32];
+float b_SQX_R[32];
+float a_SQX_R[32];
 
 protected:
 UShort_t in_SSD_L[16];

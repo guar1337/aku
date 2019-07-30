@@ -34,8 +34,9 @@ bool create_output_tree(TTree *outTree);
 
 
 Bool_t he6, angAng1H, angAng2H;
-
+bool f_track;
 int out_trig, in_trig, counter;
+double tar_pos_Z;
 
 UShort_t in_nx1, in_nx2, in_ny1, in_ny2;
 UShort_t in_x1[32], in_x2[32], in_y1[32], in_y2[32];
@@ -49,7 +50,7 @@ Int_t rest_of_events;
 
 Float_t memE_CsI_R, memE_CsI_L, memE_CsI_0L;
 Float_t dist_tar_det;
-Float_t dX,  dY,  dZ,  XZsum;
+Double_t dX,  dY,  dZ,  XZsum;
 Float_t evX,  evY,  evZ, f5X,  f5Y,  f5Z, f6X,  f6Y,  f6Z;
 Float_t Xpos,  Ypos,  Zpos;
 Float_t X6He_det,  Y6He_det,  Z6He_det, X6He_lab,  Y6He_lab,  Z6He_lab;
@@ -59,6 +60,7 @@ Float_t X2H, Y2H, Z2H;
 //Float_t virt_E, beta_squared, gamma, time, par_beta;
 Float_t MWPC_1_X,  MWPC_1_Y,  MWPC_1_Z,  MWPC_2_X,  MWPC_2_Y,  MWPC_2_Z;
 Float_t ToFMWPC, gasTargetSi;
+Float_t SQX_L_stripNo, SQX_R_stripNo, SQY_L_stripNo, SQY_R_stripNo;
 
 TH1F *hist_ene_diff;
 TH1F *hist_mml;
@@ -78,7 +80,7 @@ Double_t CsI_L_Edep[17], CsI_R_Edep[17], SQX_L_Edep[33], SQX_L_Edep2[33], SQX_R_
 Double_t out_tF3[4], out_F3[4], out_tF5[4], out_F5[4], out_tF6[4], out_F6[4];
 Double_t sqlde, sqletot, kinsqle_1H, kinsqle_2H, sqlphi, sqltheta, fsqltheta_1H, fsqltheta_2H, sqlang, sqlxtime, sqlytime, fel_2H, fdel_2H, ftot;
 Double_t sqrde, sqretot, sqrphi, sqrtheta, fsqrtheta1, fsqrtheta2, sqrang, sqrxtime, sqrytime;
-Double_t lvsqrang, lvsqlang;
+Double_t sqrang1, sqlang1, sqrang2, sqlang2;
 
 Double_t mml, mom_2H, ene_2H, mom_1H, ene_1H;
 Double_t mom_6He, ene_6He, mom_beam, ene_beam;

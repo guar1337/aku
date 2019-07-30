@@ -16,7 +16,7 @@ calibrate_tree::calibrate_tree()
 
 }
 
-bool calibrate_tree::wrk(TTree *inTree, TTree *outTree, TString fName) 
+bool calibrate_tree::wrk(TTree *inTree, TTree *outTree) 
 {
 
 //Creating addresses of BEAM holding branches
@@ -147,7 +147,14 @@ else
 	return 0;
 }
 
-Run_ID = 1337/*maynard->GetRunNumber(fName)*/;
+TString fileName = inTree->GetCurrentFile()->GetName();
+fileName.ReplaceAll(".root", "");
+fileName.Remove(0,38);
+fileName.Remove(2,2);
+
+Run_ID = fileName.Atoi();
+printf("%d\n",fileName.Atoi());
+
 Long64_t nEntries = inTree->GetEntries();
 printf("##############################################################################\n");
 printf("#\tLoaded files have %lli entries. \n#\tProcessing...\n", nEntries);

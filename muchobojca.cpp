@@ -13,7 +13,7 @@ muchobojca::muchobojca()
 {
 }
 
-bool muchobojca::wrk(TTree *inTree, TTree *outTree, TString fname) 
+bool muchobojca::wrk(TTree *inTree, TTree *outTree) 
 {
 
 maynard = new TOOL();
@@ -124,6 +124,9 @@ outTree->Branch("tof",		&tof,		"tof/D");
 outTree->Branch("sumF5",	&sumF5,		"sumF5/F");
 outTree->Branch("trig",		&out_trig,	"trig/I");
 
+maynard->params_loader("SQX_L_ec.cal", a_SQX_L, b_SQX_L, 32);
+maynard->params_loader("SQX_R_ec.cal", a_SQX_R, b_SQX_R, 32);
+
 Long64_t nEntries = inTree->GetEntries();
 counter = 0;
 Long64_t tac_count=0, mwpc_count=0, sql_count=0, tof_range_count=0, zero_mult=0;
@@ -201,13 +204,16 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			out_tSQX_R[iii]=in_tSQX_R[iii];
 			out_tSQX_L[iii]=in_tSQX_L[iii];
 
-			if (in_SQX_L[iii]>200)
+			cal_SQX_L[iii]=(in_SQX_L[iii]+gRandom->Uniform())*b_SQX_L[iii]+a_SQX_L[iii];
+			cal_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
+
+			if (cal_SQX_L[iii]>3.0)
 			{
 				sql_count++;
 				sql=true;
 			}
 
-			if (in_SQX_R[iii]>200)
+			if (cal_SQX_R[iii]>10.0)
 			{
 				sqr_count++;
 				sqr=true;
@@ -245,7 +251,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			tof_range_count++;
 		}
 
-		if (in_trig==2 && mwpc && tac && tof_range && sql && sqr)
+		if (mwpc && tac && sqr && sql)
 		{
 			outTree->Fill();
 		}
