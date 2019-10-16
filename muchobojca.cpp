@@ -141,6 +141,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		counter+=10;
 	}
 	tac=false; mwpc=false; tof_range=false; amp=false, sql_count=0; sqr_count=0, sql = false, sqr = false;
+	
 	if (in_nx1<100 && in_nx2<100 && in_ny1<100 && in_ny2<100)
 	{
 		if (cs::runNo != 5)
@@ -251,7 +252,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			tof_range_count++;
 		}
 
-		if (mwpc && tac && sqr && sql)
+		if (mwpc && tac && sqr && tof>100 && tof<200 && sql)
 		{
 			outTree->Fill();
 		}

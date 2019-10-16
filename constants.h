@@ -18,20 +18,20 @@ namespace cs
 	static const float		sql_ang_s0		=	0.0	* (3.1415/180.0);
 	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
 
-	static const float		sql_ang_s1		=	(65.0 + 4.4)	* (3.1415/180.0);
-	static const float		sqr_ang_s1		=	(15.0 - 0.8)	* (3.1415/180.0);
+	static const float		sql_ang_s1		=	(65.0)	* (3.1415/180.0);
+	static const float		sqr_ang_s1		=	(15.0)	* (3.1415/180.0);
 
-	static const float		sql_ang_s2		=	(50.0 + 4.4)	* (3.1415/180.0);
-	static const float		sqr_ang_s2		=	(15.0 - 0.8)	* (3.1415/180.0);
+	static const float		sql_ang_s2		=	(50.0)	* (3.1415/180.0);
+	static const float		sqr_ang_s2		=	(15.0)	* (3.1415/180.0);
 
-	static const float		sql_ang_s3		=	(35.0 + 3.81)	* (3.1415/180.0);
-	static const float		sqr_ang_s3		=	(15.0 - 0.08)	* (3.1415/180.0);
+	static const float		sql_ang_s3		=	(35.0)	* (3.1415/180.0);
+	static const float		sqr_ang_s3		=	(15.0 )	* (3.1415/180.0);
 
-	static const float		sql_ang_s4		=	(75.0 + 1.0)	* (3.1415/180.0);
+	static const float		sql_ang_s4		=	(75.0)	* (3.1415/180.0);
 	static const float		sqr_ang_s4		=	10.58	* (3.1415/180.0);
 
-	static const float		sql_ang_s5		=	(70.0 + 0.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s5		=	(9.0+0.92)	* (3.1415/180.0);
+	static const float		sql_ang_s5		=	(70.0)	* (3.1415/180.0);
+	static const float		sqr_ang_s5		=	(9.0)	* (3.1415/180.0);
 
 	static const float		tar_ang_s1		=	45.0	* (3.1415/180.0);
 	static const float		tar_ang_s2		=	6.0		* (3.1415/180.0);
@@ -51,52 +51,52 @@ namespace cs
 
 
 	//*************************DETS geometry**********************************************
-	static const float		sql_dist_s0	=	170.0;
-	static const float		sqr_dist_s0	=	300.0;
+	static const float		sqlDist0	=	170.0;
+	static const float		sqrDist0	=	300.0;
 
-	static const float		sql_dist_s1	=	170.0;
-	static const float		sqr_dist_s1	=	250.0;
+	static const float		sqlDist1	=	170.0;
+	static const float		sqrDist1	=	250.0;
 
-	static const float		sql_dist_s2	=	170.0;
-	static const float		sqr_dist_s2	=	250.0;
+	static const float		sqlDist2	=	170.0;
+	static const float		sqrDist2	=	250.0;
 
-	static const float		sql_dist_s3	=	170.0;
-	static const float		sqr_dist_s3	=	250.0;
+	static const float		sqlDist3	=	170.0;
+	static const float		sqrDist3	=	250.0;
 
-	static const float		sql_dist_s4	=	170.0;
-	static const float		sqr_dist_s4	=	300.0;
+	static const float		sqlDist4	=	170.0;
+	static const float		sqrDist4	=	300.0;
 
-	static const float		sql_dist_s5	=	170.0;
-	static const float		sqr_dist_s5	=	300.0;
+	static const float		sqlDist5	=	170.0;
+	static const float		sqrDist5	=	300.0;
 
-	static const float		sql_dist_s7	=	170.0;
-	static const float		sqr_dist_s7	=	170.0;
+	static const float		sqlDist7	=	170.0;
+	static const float		sqrDist7	=	170.0;
 
-	static const float		sql_dist_s9	=	170.0;
-	static const float		sqr_dist_s9	=	170.0;
+	static const float		sqlDist9	=	170.0;
+	static const float		sqrDist9	=	170.0;
 
 	//*************************DETS DISPLACEMENT*******************************************
-	static const float		width_strip_X	=	1.8125;
-	static const float		width_strip_Y	=	3.625;
+	static const float		widthStripX	=	1.8125;
+	static const float		widthStripY	=	3.625;
 
-	static const float		SQL_displacement_X	=	2.116;
-	static const float		SQL_displacement_Y	=	1.282;
+	static const float		SQLdisplacementX	=	2.116;
+	static const float		SQLdisplacementY	=	1.282;
 
-	static const float		SQL_zero_X	=	width_strip_X * 15.5;//28.09375;
-	static const float		SQL_zero_Y	=	-width_strip_Y * 7.5;//-27.1875;
+	static const float		SQLzeroX	=	widthStripX * 15.5;//28.09375;
+	static const float		SQLzeroY	=	-widthStripY * 7.5;//-27.1875;
 
-	static const float		SQL_start_X	=	SQL_zero_X;
-	static const float		SQL_start_Y	=	SQL_zero_Y;
+	static const float		SQLstartX	=	SQLzeroX;
+	static const float		SQLstartY	=	SQLzeroY;
 
 
-	static const float		SQR_displacement_X	=	-0.606;
-	static const float		SQR_displacement_Y	=	1.697;
+	static const float		SQRdisplacementX	=	-0.606;
+	static const float		SQRdisplacementY	=	1.697;
 
-	static const float		SQR_zero_X	=	width_strip_X * 15.5;//28.09375;
-	static const float		SQR_zero_Y	=	-width_strip_Y * 7.5;//-27.1875;
+	static const float		SQRzeroX	=	widthStripX * 15.5;//28.09375;
+	static const float		SQRzeroY	=	-widthStripY * 7.5;//-27.1875;
 
-	static const float		SQR_start_X	=	SQR_zero_X;
-	static const float		SQR_start_Y	=	SQR_displacement_Y + SQR_zero_Y;
+	static const float		SQRstartX	=	SQRzeroX;
+	static const float		SQRstartY	=	SQRzeroY;
 	//DETS DISPLACEMENT - MADE FOR SQR dist = 250. Same for 300? Prolly
 
 	//************************* CUTS FOR FOR 0-2*******************************************
@@ -178,16 +178,11 @@ namespace cs
 	static const float		alpha_from_Ra226[4]{4.751, 5.459, 5.972, 7.661};
 	static const float		u_to_MeV	=	931.4936;
 
-	static const float 		mass_1H 	= 1.00782503*u_to_MeV;
-	static const float 		mass_2H 	= 2.01410177*u_to_MeV;
-	static const float 		mass_3H 	= 3.01604927*u_to_MeV;
-	static const float 		mass_4He 	= 4.00260325*u_to_MeV;
-	static const float 		mass_6He 	= 6.01888589*u_to_MeV;
-	static const float 		mass_7Li 	= 7.01600343*u_to_MeV;
-	static const float 		mass_8Li 	= 8.02248624*u_to_MeV;
-	static const float 		mass_9Li 	= 9.02679019*u_to_MeV;
-	static const float 		mass_9Be 	= 9.01218306*u_to_MeV;
-
+	static const float 		mass1H 	= 938.272013;
+	static const float 		mass2H 	= 1875.613000;
+	static const float 		mass3H 	= 3.01604927*u_to_MeV;
+	static const float 		mass4He 	= 3727.379000;
+	static const float 		mass6He 	= 5605.534341;
 
 	static const float		c			=	299.792;	// mm/ns
 	
@@ -207,7 +202,7 @@ namespace cs
 
 	static const TString	dir_len_data("/home/guar/data/");
 	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
-	static const float		tar_pos_Z		=	0.0;
+	static const float		tarPos		=	0.0;
 
 	static const int		runNo =	1;
 	static const TString	inDir = "cal";

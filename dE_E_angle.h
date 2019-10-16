@@ -22,9 +22,9 @@ public:
 dE_E_angle();
 dE_E_angle(TTree *inTree, TTree *outTree, TString inFile, int geoNo);
 virtual ~dE_E_angle();		//MWPC_X_1_shift, MWPC_X_2_shift, container for evX, container for mml, 
-Float_t actual_work_gas(Float_t MWPC_X_1_shift = -4.0, Float_t MWPC_X_2_shift = -5.0, Double_t qualityControl[4] = nullptr);
-Float_t actual_work_1H(Double_t inputPars[4] = nullptr, Double_t qualityControl[4] = nullptr);
-Float_t actual_work_2H(Double_t inputPars[4] = nullptr, Double_t qualityControl[4] = nullptr);
+Float_t actual_work_gas(Float_t MWPC_X_1_shift = 0.0, Float_t MWPC_X_2_shift = 0.0, Double_t qualityControl[4] = nullptr);
+Float_t actual_work(Double_t inputPars[4] = nullptr, Double_t qualityControl[4] = nullptr, Int_t geoNo = 0);
+
 
 private:
 TTree *inTree;
@@ -33,10 +33,10 @@ bool create_input_tree(TTree *inTree);
 bool create_output_tree(TTree *outTree);
 
 
-Bool_t he6, angAng1H, angAng2H;
+Bool_t he4, he6, angAng1H, angAng2H, dEAngle;
 bool f_track;
 int out_trig, in_trig, counter;
-double tar_pos_Z;
+double tarPos;
 
 UShort_t in_nx1, in_nx2, in_ny1, in_ny2;
 UShort_t in_x1[32], in_x2[32], in_y1[32], in_y2[32];
@@ -50,7 +50,7 @@ Int_t rest_of_events;
 
 Float_t memE_CsI_R, memE_CsI_L, memE_CsI_0L;
 Float_t dist_tar_det;
-Double_t dX,  dY,  dZ,  XZsum;
+Float_t dX,  dY,  dZ,  XZsum;
 Float_t evX,  evY,  evZ, f5X,  f5Y,  f5Z, f6X,  f6Y,  f6Z;
 Float_t Xpos,  Ypos,  Zpos;
 Float_t X6He_det,  Y6He_det,  Z6He_det, X6He_lab,  Y6He_lab,  Z6He_lab;
@@ -82,7 +82,7 @@ Double_t sqlde, sqletot, kinsqle_1H, kinsqle_2H, sqlphi, sqltheta, fsqltheta_1H,
 Double_t sqrde, sqretot, sqrphi, sqrtheta, fsqrtheta1, fsqrtheta2, sqrang, sqrxtime, sqrytime;
 Double_t sqrang1, sqlang1, sqrang2, sqlang2;
 
-Double_t mml, mom_2H, ene_2H, mom_1H, ene_1H;
+Double_t mml1, mml2, mom_2H, ene_2H, mom_1H, ene_1H;
 Double_t mom_6He, ene_6He, mom_beam, ene_beam;
 
 Double_t in_tSQX_L[32], in_tSQX_R[32], out_tSQX_L[32], out_tSQX_R[32];
@@ -90,7 +90,7 @@ Double_t in_tSQY_L[16], in_tSQY_R[16], out_tSQY_L[16], out_tSQY_R[16];
 Double_t in_tCsI_L[16], in_tCsI_R[16], out_tCsI_L[16], out_tCsI_R[16];
 Double_t SQR_ang, SQL_ang, SQR_dist, SQL_dist;
 Double_t t_Tar, in_aF5, out_aF5;
-Float_t tar_angle, kine_2H, kine_1H, out_tMWPC[4],  in_tMWPC[4], tar_thcknss;
+Float_t tarAngle, kine_2H, kine_1H, out_tMWPC[4],  in_tMWPC[4], tarThickness;
 Float_t tar_cut_lo_X, tar_cut_hi_X, tar_cut_lo_Y, tar_cut_hi_Y;
 Float_t tcor_sqLX_I, tcor_sqLX_II, tcor_sqLY, tcor_sqRX_I, tcor_sqRX_II, tcor_sqRY;
 
@@ -98,18 +98,10 @@ Double_t cut_SQX_L, cut_SQX_R, cut_SQY_L, cut_SQY_R, cut_CsI_L, cut_CsI_R;
 Double_t Si_L_bank, Tcoef;
 Int_t cr;
 
-Float_t pede1[16], A1[16], B1[16], C1[16], D1[16];
-Float_t pede2[16], A2[16], B2[16], C2[16], D2[16];
-Float_t pede3[16], A3[16], B3[16], C3[16], D3[16];
-Float_t pede4[16], A4[16], B4[16], C4[16], D4[16];
-Float_t pede[16];
-Float_t B[16];
-Float_t C[16];
-Float_t D[16];
-
-
 //double gsl_sf_lambert_Wm1(double in);
-TLorentzVector *LV_6He, *LV_2H, *LV_1H, *LV_beam, *LV_tar_1H, *LV_tar_2H;
+TLorentzVector *LV_6He, *LV_2H, *LV_1H, *LV_beam;
+const TLorentzVector LV_tar_1H{0.0, 0.0 ,0.0, cs::mass1H};
+const TLorentzVector LV_tar_2H{0.0, 0.0 ,0.0, cs::mass2H};
 TRotation beam_setting_array;
 TString s_curFile;
 
@@ -137,7 +129,8 @@ AELC *be9_Si;
 TOOL *maynard;
 
 TCutG *gcut_h2, *gcut_h3, *gcut_he4, *gcut_he6, *gcut_li7, *gcut_li8;
-TCutG *gcut_be9, *gcut_dehe6, *gcut_AngAng1H_w6He, *gcut_AngAng2H_w6He, *deut_geo5;
+TCutG *gcut_be9, *gcut_dehe4, *gcut_dehe6, *gcut_AngAng1H_w6He, *gcut_AngAng2H_w6He, *deut_geo5;
+TCutG *dEAnglePro, *dEAngleDeu;
 TF1 *angAngFit_2H = new TF1();
 TF1 *angAngFit_1H = new TF1();
 

@@ -22,13 +22,7 @@ Double_t getT(Double_t , Float_t );
 Double_t getVelo(Double_t , Float_t );
 Double_t gettime(Double_t , Float_t , Float_t);
 bool Get_MWPC_pos(UShort_t, UShort_t *, Float_t *, Short_t);
-bool initializeGeometry(Int_t, Double_t *, Double_t *, Double_t *, Double_t *, Float_t *, Float_t *);
 bool getDeadLayer(TString, TString, double *, Short_t);
-
-void null_strips(	UShort_t *, UShort_t *, UShort_t *,
-					UShort_t *, UShort_t *, UShort_t *);
-void null_energy(	Double_t *, Double_t *, Double_t *,
-					Double_t *, Double_t *, Double_t *);
 
 bool params_loader(TString , float *, float *, short);
 

@@ -1,33 +1,7 @@
 #define jasper_cxx
-// The class definition in jasper.h has been generated automatically
-// by the ROOT utility TTree::MakeSelector(). This class is derived
-// from the ROOT class TSelector. For more information on the TSelector
-// framework see $ROOTSYS/README/README.SELECTOR or the ROOT User Manual.
-
-
-// The following methods are defined in this file:
-//	 Begin():		  called every time a loop on the tree starts,
-//						  a convenient place to create your histograms.
-//	 SlaveBegin():	called after Begin(), when on PROOF called only on the
-//						  slave servers.
-//	 Process():		called for each event, in this function you decide what
-//						  to read and fill your histograms.
-//	 SlaveTerminate: called at the end of the loop on the tree, when on PROOF
-//						  called only on the slave servers.
-//	 Terminate():	 called at the end of the loop on the tree,
-//						  a convenient place to draw/fit your histograms.
-//
-// To use this file, try the following session on your Tree T:
-//
-// root> T->Process("jasper.C")
-// root> T->Process("jasper.C","some options")
-// root> T->Process("jasper.C+")
-//
-
 
 #include "jasper.h"
-#include <TH2.h>
-#include <TStyle.h>
+
 
 void jasper::Begin(TTree * /*tree*/)
 {
@@ -40,8 +14,10 @@ void jasper::Begin(TTree * /*tree*/)
 
 	vf2H = new TVector3();
 	vf6He = new TVector3();
-
-	outF = new TFile("/home/guar/aku/geant4/digi.root","RECREATE");
+	TString option = GetOption();
+	TString outFName = "/home/guar/data/he6_d/simulation/" + option + "_processed.root";
+	//printf("%s\n", outFName.Data());
+	outF = new TFile(outFName.Data(),"RECREATE");
 	outTree = new TTree("digi","digi");
 
 	outTree->Branch("evX",	&out_evX, "evX/D");
@@ -64,17 +40,38 @@ void jasper::Begin(TTree * /*tree*/)
 	outTree->Branch("fhY",	&fhY, "fhY/D");
 	outTree->Branch("fhZ",	&fhZ, "fhZ/D");
 
-	outTree->Branch("sqlang",		&out_sqlang, 	"sqlang/D");
-	outTree->Branch("fsqlang",		&out_fsqlang, 	"fsqlang/D");
+	outTree->Branch("sqlang",		&sqlang, 	"sqlang/D");
+	outTree->Branch("fsqlang",		&fsqlang, 	"fsqlang/D");
+	outTree->Branch("sqlde",		&sqlde,		"sqlde/D");
+	outTree->Branch("resqlde",		&resqlde,	"resqlde/D");
+	outTree->Branch("fsqlde",		&fsqlde,	"fsqlde/D");
+	outTree->Branch("sqletot",		&sqletot,	"sqletot/D");
+	outTree->Branch("fsqletot",		&fsqletot,	"fsqletot/D");
 
-	outTree->Branch("fsqrangg",		&out_fsqrangg, 	"fsqrangg/D");
-	outTree->Branch("fsqlangg",		&out_fsqlangg, 	"fsqlangg/D");
+	outTree->Branch("sqrang",		&sqrang, 	"sqrang/D");
+	outTree->Branch("fsqrang",		&fsqrang, 	"fsqrang/D");
+	outTree->Branch("sqrde",		&sqrde,			"sqrde/D");
+	outTree->Branch("fsqrde",		&fsqrde,		"fsqrde/D");
+	outTree->Branch("sqretot",		&sqretot,		"sqretot/D");
+	outTree->Branch("fsqretot",		&fsqretot,		"fsqretot/D");
 
-	outTree->Branch("sqrang",		&out_sqrang, 	"sqrang/D");
-	outTree->Branch("fsqrang",		&out_fsqrang, 	"fsqrang/D");
+	outTree->Branch("fthetacm",		&fthetacm,		"fthetacm/D");
+	outTree->Branch("fphicm",		&fphicm,		"fphicm/D");
+	outTree->Branch("fmm",			&fmm,			"fmm/D");
 
+	outTree->Branch("thetacm",		&thetacm,		"thetacm/D");
+	outTree->Branch("phicm",		&phicm,			"phicm/D");
+	outTree->Branch("mm",			&mm,			"mm/D");
 
-	TString option = GetOption();
+	outTree->Bronch("flv6He.",		"TLorentzVector",	&flv6He);
+	outTree->Bronch("flv2H.",		"TLorentzVector",	&flv2H);
+	outTree->Bronch("flvbeam.",		"TLorentzVector",	&flvbeam);
+	outTree->Bronch("flv6Hecm.",	"TLorentzVector",	&flv6Hecm);
+	outTree->Bronch("flv2Hcm.",		"TLorentzVector",	&flv2Hcm);
+
+	outTree->Bronch("lv6He.",		"TLorentzVector",	&lv6He);
+	outTree->Bronch("lv2H.",		"TLorentzVector",	&lv2H);
+	
 }
 
 void jasper::SlaveBegin(TTree * /*tree*/)
@@ -95,8 +92,12 @@ void jasper::SlaveBegin(TTree * /*tree*/)
 	hY0 = -7.5 * width_strip_Y;
 	hZ0 = l_sqrdist * cos(l_sqrang*TMath::DegToRad()) + width_strip_X * 15.5 * sin(l_sqrang*TMath::DegToRad());
 
+	struct winsize size;
+	ioctl(STDOUT_FILENO,TIOCGWINSZ,&size);
+	consoleWidth = size.ws_col-8;
+	//printf("No. of rows: %d\tNo. of columns: %d\n",size.ws_row, size.ws_col);
 
-
+	h2_CD2	= new ELC(2, 1, CD2_Nel, 1.0, CD2_A, CD2_Z, CD2_W, 100.,1500);
 	TString option = GetOption();
 
 }
@@ -104,6 +105,20 @@ void jasper::SlaveBegin(TTree * /*tree*/)
 Bool_t jasper::Process(Long64_t entry)
 {
 	fReader.SetEntry(entry);
+	nEntries = fReader.GetEntries(kTRUE);
+	
+	std::cout << "[";
+	int pos = consoleWidth * progress;
+	for (int i = 0; i < consoleWidth; ++i)
+	{
+		if (i < pos) std::cout << "#";
+		else if (i == pos) std::cout << ">";
+		else std::cout << ".";
+	}
+	std::cout << "] " << int(progress * 100.0) << " %\r";
+	std::cout.flush();
+
+	if( entry % ( nEntries / 100 ) == 0) progress += 0.01;
 	// The Process() function is called for each entry in the tree (or possibly
 	// keyed object in the case of PROOF) to be processed. The entry argument
 	// specifies which entry in the currently loaded tree is to be processed.
@@ -120,49 +135,51 @@ Bool_t jasper::Process(Long64_t entry)
 	//
 	// The return value is currently not used.
 
-	
-	Sideut_multY = 0;
-	Sideut_multX = 0;
-	Sihe_multX = 0;
-	Sihe_multY = 0;
+	flv6He = new TLorentzVector(*inlv6He);
+	flv2H = new TLorentzVector(*inlv2H);
+	flvbeam = new TLorentzVector(*inlvBeam);
+	flv6Hecm = new TLorentzVector(*inlv6Hecm);
+	flv2Hcm = new TLorentzVector(*inlv2Hcm);
+	lv2H = new TLorentzVector();
+	lv6He = new TLorentzVector();
 
-	out_evX = *evx;
-	out_evY = *evy;
-	out_evZ = *evz;
+	const TLorentzVector lvTar(0.0, 0.0, 0.0, cs::mass_2H);
 
-	for (int iii = 0; iii < 16; iii++)
+
+	if (std::count_if(SiheY.begin(), SiheY.end(), [](unsigned short i){return i > 5.0;}) == 1 &&
+		std::count_if(SiheX.begin(), SiheX.end(), [](unsigned short i){return i > 5.0;}) == 1 &&
+		std::count_if(SideutY.begin(), SideutY.end(), [](unsigned short i){return i > 1.0;}) == 1 &&
+		std::count_if(SideutX.begin(), SideutX.end(), [](unsigned short i){return i > 1.0;}) == 1	)
 	{
-		if (SideutY[iii]>0.1)
-		{
-			Sideut_multY++;
-			SQY_L_s = iii;
-		}
+		sqletot = 0.0;
+		sqretot = 0.0;
+		out_evX = *fInevx;
+		out_evY = *fInevy;
+		out_evZ = *fInevz;
 
-		if (SiheY[iii]>0.1)	
-		{
-			Sihe_multY++;
-			SQY_R_s = iii;
-		}
-	}
+		fdX = *fInX2H;
+		fdY = *fInY2H;
+		fdZ = *fInZ2H;
 
-	for (int iii = 0; iii < 32; iii++)
-	{
-		if (SideutX[iii]>0.1)
-		{
-			Sideut_multX++;
-			SQX_L_s = iii;
-		}
+		fhX = *fInX6He;
+		fhY = *fInY6He;
+		fhZ = *fInZ6He;
 
-		if (SiheX[iii]>0.1)	
-		{
-			Sihe_multX++;
-			SQX_R_s = iii;
-		}
-	}
+		fsqlang = *fInsqlang;
+		fsqrang = *fInsqrang;
+		fthetacm = flv2Hcm->Theta()*TMath::RadToDeg();
+		fphicm = flv2Hcm->Phi()*TMath::RadToDeg();
 
+		fsqlde = *fInsqlde;
+		fsqrde = *fInsqrde;
+		fsqletot = *fInsqletot;
+		fsqretot = *fInsqretot;
 
-	if (Sideut_multX*Sihe_multX*Sideut_multY*Sihe_multY==1)
-	{	
+		SQY_R_s = std::distance(SiheY.begin(), std::max_element(SiheY.begin(), SiheY.end()));
+		SQX_R_s = std::distance(SiheX.begin(), std::max_element(SiheX.begin(), SiheX.end()));
+		SQY_L_s = std::distance(SideutY.begin(), std::max_element(SideutY.begin(), SideutY.end()));
+		SQX_L_s = std::distance(SideutX.begin(), std::max_element(SideutX.begin(), SideutX.end()));
+		
 		dX = dX0 - (SQX_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * cos(l_sqlang*TMath::DegToRad());
 		dY = dY0 + (SQY_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_Y;
 		dZ = dZ0 + (SQX_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * sin(l_sqlang*TMath::DegToRad());
@@ -170,56 +187,69 @@ Bool_t jasper::Process(Long64_t entry)
 		hX = hX0 - (SQX_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * cos(l_sqrang*TMath::DegToRad());
 		hY = hY0 + (SQY_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_Y;
 		hZ = hZ0 - (SQX_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * sin(l_sqrang*TMath::DegToRad());
-
-		fdX = *X2H;
-		fdY = *Y2H;
-		fdZ = *Z2H;
-
-		fhX = *X6He;
-		fhY = *Y6He;
-		fhZ = *Z6He;
 		
+		sqlde = SideutX[SQX_L_s];
+		sqlde = h2_CD2->GetE(sqlde, -tarThcknss/(2/**cos(fsqlang*TMath::DegToRad()-TMath::Pi()/4.0)*/));
+		sqrde = SiheX[SQX_R_s];
 
-		v2H->SetXYZ(dX-*evx, dY-*evy, dZ-*evz);
-		v6He->SetXYZ(hX-*evx, hY-*evy, hZ-*evz);
+		if (std::count_if(CsIdeut.begin(), CsIdeut.end(), [](unsigned short i){return i > 2.0;})>0)
+		{
+			sqletot = CsIdeut[std::distance(CsIdeut.begin(), std::max_element(CsIdeut.begin(), CsIdeut.end()))];
+		}
 
-		vf2H->SetXYZ(fdX-*evx, fdY-*evy, fdZ-*evz);
-		vf6He->SetXYZ(fhX-*evx, fhY-*evy, fhZ-*evz);
+		if (std::count_if(CsIhe.begin(), CsIhe.end(), [](unsigned short i){return i > 2.0;})>0)
+		{
+			sqretot = CsIhe[std::distance(CsIhe.begin(), std::max_element(CsIhe.begin(), CsIhe.end()))];
+		}
 
-		out_sqlang = lvBeam->Vect().Angle(*v2H)*TMath::RadToDeg();
-		out_sqrang = lvBeam->Vect().Angle(*v6He)*TMath::RadToDeg();
+		v2H->SetXYZ(dX-*fInevx, dY-*fInevy, dZ-*fInevz);
 
-		out_fsqlangg = lvBeam->Vect().Angle(*vf2H)*TMath::RadToDeg();
-		out_fsqrangg = lvBeam->Vect().Angle(*vf6He)*TMath::RadToDeg();
+		Double_t ene2H = cs::mass_2H + sqlde;
+		Double_t mom2H = sqrt(ene2H*ene2H - cs::mass_2H*cs::mass_2H);
+		v2H->SetMag(mom2H);
+		lv2H->SetVectM(*v2H, cs::mass_2H);
+		*lv6He = lvTar + *flvbeam - *lv2H;
+		mm = lv6He->M() - cs::mass_6He;
 
-		out_fsqlang = *fsqlang;
-		out_fsqrang = *fsqrang;
-		//reco_sqlang.push_back(sqlang);
-		//reco_sqrang.push_back(sqrang);
+		Double_t fene2H = flv2H->E();
+		Double_t fmom2H = sqrt(fene2H*fene2H - cs::mass_2H*cs::mass_2H);
+		v2H->SetMag(fmom2H);
+		lv2H->SetVectM(*v2H, cs::mass_2H);
+		*lv6He = lvTar + *flvbeam - *flv2H;
+		fmm = lv6He->M() - cs::mass_6He;
 
-		//printf("SQLANG: %f\tdX: %f\tdY: %f\tdZ:%f\n",reco_sqlang.back(),dX, dY, dZ);\
-		printf("evx: %f\tevy: %f\tevz:%f\n", *evx, *evy, *evz);
+		vf2H->SetXYZ(fdX-*fInevx, fdY-*fInevy, fdZ-*fInevz);
+		vf6He->SetXYZ(fhX-*fInevx, fhY-*fInevy, fhZ-*fInevz);
 
+		sqlang = inlvBeam->Vect().Angle(*v2H)*TMath::RadToDeg();
+		sqrang = inlvBeam->Vect().Angle(*v6He)*TMath::RadToDeg();
 
-		TF1 *angAngFit_2H_rel = new TF1("angAngFit_2H_rel","[0]*atan(2*tan([4]-[1]*x)/(1-tan([4]-[1]*x)*tan([4]-[1]*x)/[2]+[3]*(1+tan([4]-[1]*x)*tan([4]-[1]*x)/[2])))");
+		//calculate energy of recoil particle based on its angle
+		double velo_beam = 0.2377 *cs::c;
+		double mass_ratio = cs::mass_2H/cs::mass_6He;
+		double velo_deu = ((2 * cos(sqlang*TMath::DegToRad())) / (1+mass_ratio)) * velo_beam;
+		double beta_squared= pow(velo_deu/cs::c, 2.0);
+		double gamma=1.0/sqrt(1.0-beta_squared);
+		resqlde =  mass_ratio*(gamma-1.0)*cs::mass_6He;
 
-		angAngFit_2H_rel->FixParameter(0, TMath::RadToDeg());
-		angAngFit_2H_rel->FixParameter(1, TMath::DegToRad());
-		angAngFit_2H_rel->FixParameter(2, 0.970382);
-		angAngFit_2H_rel->FixParameter(3, 2.948803);
-		angAngFit_2H_rel->FixParameter(4, 1.56212);
+		v6He->SetXYZ(hX-*fInevx, hY-*fInevy, hZ-*fInevz);
+		lv6He->SetVectM(*v6He, cs::mass_6He);
 
+		TLorentzVector flvDeuCM = *flvbeam + lvTar;
+		TVector3 fvboost = flvDeuCM.BoostVector();
+		lv2H->Boost(-fvboost);
+
+		thetacm = lv2H->Theta()*TMath::RadToDeg();
+		phicm = lv2H->Phi()*TMath::RadToDeg();
 		outTree->Fill();
 	}	
-
+	
 	return kTRUE;
 }
 
 void jasper::SlaveTerminate()
 {
-
-	//TGraph *gr = new TGraph(reco_sqlang.size(), &reco_sqlang[0], &reco_sqrang[0]);
-	//gr->Draw("A*");
+	printf("\n");
 
 }
 

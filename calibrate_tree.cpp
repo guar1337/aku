@@ -73,7 +73,8 @@ outTree->Branch("SQY_R",	out_SQY_R,	"SQY_R[16]/D");
 outTree->Branch("CsI_L",	out_CsI_L,	"CsI_L[16]/D");
 outTree->Branch("CsI_0L",	out_CsI_0L,	"CsI_0L[16]/D");
 outTree->Branch("CsI_R",	out_CsI_R,	"CsI_R[16]/D");
-outTree->Branch("SQ300",	out_SQ300,	"SQ300[16]/D");	
+outTree->Branch("SQ300",	out_SQ300,	"SQ300[16]/D");
+outTree->Branch("sqretot",	&sqretot,	"sqretot/D");
 
 outTree->Branch("tSQX_L",	out_tSQX_L,	"tSQX_L[32]/D");
 outTree->Branch("tSQX_R",	out_tSQX_R,	"tSQX_R[32]/D");
@@ -178,11 +179,11 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	{
 		for (int iii=0; iii<4; iii++)
 		{
-			out_tF3[iii]	=	(in_tdcF3[iii]-tof_shift_A)*0.125*tof_shift_B;
+			out_tF3[iii]	=	(in_tdcF3[iii]+tof_shift_A)*0.125*tof_shift_B;
 			out_F3[iii]		=	in_aF3[iii];
-			out_tF5[iii]	=	(in_tdcF5[iii]-tof_shift_A)*0.125*tof_shift_B;
+			out_tF5[iii]	=	(in_tdcF5[iii]+tof_shift_A)*0.125*tof_shift_B;
 			out_F5[iii]		=	in_aF5[iii];
-			out_tF6[iii]	=	(in_tdcF6[iii])*0.125*tof_shift_B;
+			out_tF6[iii]	=	(in_tdcF6[iii]+tof_shift_A)*0.125*tof_shift_B;
 			out_F6[iii]		=	in_aF6[iii];
 			out_tMWPC[iii]	=	((in_tMWPC[iii]-tof_shift_A)/3.4133)*tof_shift_B;
 		}

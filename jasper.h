@@ -15,6 +15,10 @@
 #include <TTreeReader.h>
 #include <TTreeReaderValue.h>
 #include <TTreeReaderArray.h>
+#include <sys/ioctl.h> // For ioctl, TIOCGWINSZ
+#include <unistd.h> // For STDOUT_FILENO
+#include <TH2.h>
+#include <TStyle.h>
 
 // Headers needed by this particular selector
 #include "TLorentzVector.h"
@@ -29,41 +33,39 @@ public :
 	TTree *outTree;
 
 	// Readers to access the data (delete the ones you do not need).
-	TTreeReaderValue<TLorentzVector> lvBeam = {fReader, "lvBeam."};
-	TTreeReaderValue<TLorentzVector> lv2H = {fReader, "lv2H."};
-	TTreeReaderValue<TLorentzVector> lv6He = {fReader, "lv6He."};
-	TTreeReaderValue<TLorentzVector> lv2H_CM = {fReader, "lv2H_CM."};
-	TTreeReaderValue<TLorentzVector> lv6He_CM = {fReader, "lv6He_CM."};
+	TTreeReaderValue<TLorentzVector> inlvBeam = {fReader, "lvBeam."};
+	TTreeReaderValue<TLorentzVector> inlv2H = {fReader, "lv2H."};
+	TTreeReaderValue<TLorentzVector> inlv6He = {fReader, "lv6He."};
+	TTreeReaderValue<TLorentzVector> inlv2Hcm = {fReader, "lv2H_CM."};
+	TTreeReaderValue<TLorentzVector> inlv6Hecm = {fReader, "lv6He_CM."};
+
 	TTreeReaderArray<Double_t> CsIdeut = {fReader, "CsIdeut"};
 	TTreeReaderArray<Double_t> SideutX = {fReader, "SideutX"};
 	TTreeReaderArray<Double_t> SideutY = {fReader, "SideutY"};
-	TTreeReaderValue<Double_t> sqlang = {fReader, "sqlang"};
-	TTreeReaderValue<Double_t> fsqlang = {fReader, "fsqlang"};
-	TTreeReaderValue<Double_t> sqlde = {fReader, "sqlde"};
-	TTreeReaderValue<Double_t> sqletot = {fReader, "sqletot"};
-	TTreeReaderValue<Double_t> sqlphi = {fReader, "sqlphi"};
-	TTreeReaderValue<Double_t> sqltheta = {fReader, "sqltheta"};
+
+	TTreeReaderValue<Double_t> fInsqlang = {fReader, "fsqlang"};
+	TTreeReaderValue<Double_t> fInsqlde = {fReader, "fsqlde"};
+	TTreeReaderValue<Double_t> fInsqletot = {fReader, "fsqletot"};
+
 	TTreeReaderArray<Double_t> CsIhe = {fReader, "CsIhe"};
 	TTreeReaderArray<Double_t> SiheY = {fReader, "SiheY"};
 	TTreeReaderArray<Double_t> SiheX = {fReader, "SiheX"};
-	TTreeReaderValue<Double_t> sqrang = {fReader, "sqrang"};
-	TTreeReaderValue<Double_t> sqrde = {fReader, "sqrde"};
-	TTreeReaderValue<Double_t> sqretot = {fReader, "sqretot"};
-	TTreeReaderValue<Double_t> sqrphi = {fReader, "sqrphi"};
-	TTreeReaderValue<Double_t> sqrtheta = {fReader, "sqrtheta"};
-	TTreeReaderValue<Double_t> fsqrang = {fReader, "fsqrang"};
-	TTreeReaderValue<Double_t> beamT = {fReader, "beamT"};
-	TTreeReaderValue<Double_t> thetaCM = {fReader, "thetaCM"};
-	TTreeReaderValue<Double_t> phiCM = {fReader, "phiCM"};
-	TTreeReaderValue<Double_t> evx = {fReader, "evx"};
-	TTreeReaderValue<Double_t> evy = {fReader, "evy"};
-	TTreeReaderValue<Double_t> evz = {fReader, "evz"};
-	TTreeReaderValue<Double_t> X6He = {fReader, "X6He"};
-	TTreeReaderValue<Double_t> Y6He = {fReader, "Y6He"};
-	TTreeReaderValue<Double_t> Z6He = {fReader, "Z6He"};
-	TTreeReaderValue<Double_t> X2H = {fReader, "X2H"};
-	TTreeReaderValue<Double_t> Y2H = {fReader, "Y2H"};
-	TTreeReaderValue<Double_t> Z2H = {fReader, "Z2H"};
+
+	TTreeReaderValue<Double_t> fInsqrang = {fReader, "fsqrang"};
+	TTreeReaderValue<Double_t> fInsqrde = {fReader, "fsqrde"};
+	TTreeReaderValue<Double_t> fInsqretot = {fReader, "fsqretot"};
+
+	TTreeReaderValue<Double_t> beamT = {fReader, "fbeamT"};
+
+	TTreeReaderValue<Double_t> fInevx = {fReader, "fevx"};
+	TTreeReaderValue<Double_t> fInevy = {fReader, "fevy"};
+	TTreeReaderValue<Double_t> fInevz = {fReader, "fevz"};
+	TTreeReaderValue<Double_t> fInX6He = {fReader, "fX6He"};
+	TTreeReaderValue<Double_t> fInY6He = {fReader, "fY6He"};
+	TTreeReaderValue<Double_t> fInZ6He = {fReader, "fZ6He"};
+	TTreeReaderValue<Double_t> fInX2H = {fReader, "fX2H"};
+	TTreeReaderValue<Double_t> fInY2H = {fReader, "fY2H"};
+	TTreeReaderValue<Double_t> fInZ2H = {fReader, "fZ2H"};
 	TTreeReaderValue<Char_t> fEve2H = {fReader, "fEve2H"};
 
 
@@ -71,22 +73,43 @@ public :
 	Int_t Sideut_multX;
 	Int_t Sihe_multX;
 	Int_t Sihe_multY;
-	//int mult_0_count, mult_1_count, mult_2_count, mult_3_count;
-	Double_t l_sqlang, l_sqrang, l_sqldist, l_sqrdist;
+
+	Double_t l_sqlang, l_sqldist, l_sqrang, l_sqrdist;
+	Double_t fsqrde, fsqlde, fsqretot, fsqletot, resqlde;
+	Double_t sqrde, sqlde, sqretot, sqletot;
 	Double_t dX, dY, dZ, hX, hY, hZ;
 	Double_t fdX, fdY, fdZ, fhX, fhY, fhZ;
 	Double_t dX0, dY0, dZ0, hX0, hY0, hZ0;
 	Double_t out_evX, out_evY, out_evZ;
-	Double_t out_sqlang, out_sqrang, out_fsqlang, out_fsqrang;
+	Double_t sqlang, sqrang, fsqlang, fsqrang;
 	Double_t out_fsqlangg, out_fsqrangg;
+	Double_t mm, thetacm, phicm;
+	Double_t fmm, fthetacm, fphicm;
 	Int_t SQX_L_s, SQY_L_s, SQX_R_s, SQY_R_s;
 	const Double_t width_strip_X{58.0/32.0};
 	const Double_t width_strip_Y{58.0/16.0};
 	TRandom3 *rnd;
 	TVector3 *v2H, *v6He, *vf2H, *vf6He;
 	//Double_t reco_sqlang, reco_sqrang;
-	std::vector<float> reco_sqlang;
-	std::vector<float> reco_sqrang;
+
+	TLorentzVector *flv6He;
+	TLorentzVector *flv2H;
+	TLorentzVector *flvbeam;
+	TLorentzVector *flv6Hecm;
+	TLorentzVector *flv2Hcm;
+	TLorentzVector *lv6He;
+	TLorentzVector *lv2H;
+
+	int CD2_Nel=2;
+	double CD2_A[2]{2, 12};
+	double CD2_Z[2]{1, 6};
+	double CD2_W[2]{2, 1};
+	AELC *h2_CD2;
+	double tarThcknss{100.0};
+
+	float progress = 0.0;
+	Long64_t nEntries;
+	int consoleWidth;
 
 	jasper(TTree * /*tree*/ =0) { }
 	virtual ~jasper() { }

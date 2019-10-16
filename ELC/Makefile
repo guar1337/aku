@@ -1,9 +1,5 @@
 # 6He data analysis code
-
-
 NAME := Eloss
-
-
 INCLUDES = -I`root-config --incdir`
 
 SHAREDLIBS = $(addprefix -l, gsl Physics MathCore Core)

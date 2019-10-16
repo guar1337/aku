@@ -73,29 +73,29 @@ namespace ROOT {
 } // end of namespace ROOT
 
 namespace ROOT {
+   static TClass *ELC_Dictionary();
+   static void ELC_TClassManip(TClass*);
    static void *new_ELC(void *p = 0);
    static void *newArray_ELC(Long_t size, void *p);
    static void delete_ELC(void *p);
    static void deleteArray_ELC(void *p);
    static void destruct_ELC(void *p);
-   static void streamer_ELC(TBuffer &buf, void *obj);
 
    // Function generating the singleton type initializer
    static TGenericClassInfo *GenerateInitInstanceLocal(const ::ELC*)
    {
       ::ELC *ptr = 0;
-      static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::ELC >(0);
+      static ::TVirtualIsAProxy* isa_proxy = new ::TIsAProxy(typeid(::ELC));
       static ::ROOT::TGenericClassInfo 
-         instance("ELC", ::ELC::Class_Version(), "ELC.h", 13,
+         instance("ELC", "ELC.h", 13,
                   typeid(::ELC), ::ROOT::Internal::DefineBehavior(ptr, ptr),
-                  &::ELC::Dictionary, isa_proxy, 16,
+                  &ELC_Dictionary, isa_proxy, 0,
                   sizeof(::ELC) );
       instance.SetNew(&new_ELC);
       instance.SetNewArray(&newArray_ELC);
       instance.SetDelete(&delete_ELC);
       instance.SetDeleteArray(&deleteArray_ELC);
       instance.SetDestructor(&destruct_ELC);
-      instance.SetStreamerFunc(&streamer_ELC);
       return &instance;
    }
    TGenericClassInfo *GenerateInitInstance(const ::ELC*)
@@ -104,6 +104,17 @@ namespace ROOT {
    }
    // Static variable to force the class initialization
    static ::ROOT::TGenericClassInfo *_R__UNIQUE_DICT_(Init) = GenerateInitInstanceLocal((const ::ELC*)0x0); R__UseDummy(_R__UNIQUE_DICT_(Init));
+
+   // Dictionary for non-ClassDef classes
+   static TClass *ELC_Dictionary() {
+      TClass* theClass =::ROOT::GenerateInitInstanceLocal((const ::ELC*)0x0)->GetClass();
+      ELC_TClassManip(theClass);
+   return theClass;
+   }
+
+   static void ELC_TClassManip(TClass* ){
+   }
+
 } // end of namespace ROOT
 
 //______________________________________________________________________________
@@ -142,41 +153,6 @@ TClass *AELC::Class()
 }
 
 //______________________________________________________________________________
-atomic_TClass_ptr ELC::fgIsA(0);  // static to hold class pointer
-
-//______________________________________________________________________________
-const char *ELC::Class_Name()
-{
-   return "ELC";
-}
-
-//______________________________________________________________________________
-const char *ELC::ImplFileName()
-{
-   return ::ROOT::GenerateInitInstanceLocal((const ::ELC*)0x0)->GetImplFileName();
-}
-
-//______________________________________________________________________________
-int ELC::ImplFileLine()
-{
-   return ::ROOT::GenerateInitInstanceLocal((const ::ELC*)0x0)->GetImplFileLine();
-}
-
-//______________________________________________________________________________
-TClass *ELC::Dictionary()
-{
-   fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::ELC*)0x0)->GetClass();
-   return fgIsA;
-}
-
-//______________________________________________________________________________
-TClass *ELC::Class()
-{
-   if (!fgIsA.load()) { R__LOCKGUARD(gInterpreterMutex); fgIsA = ::ROOT::GenerateInitInstanceLocal((const ::ELC*)0x0)->GetClass(); }
-   return fgIsA;
-}
-
-//______________________________________________________________________________
 void AELC::Streamer(TBuffer &R__b)
 {
    // Stream an object of class AELC.
@@ -202,14 +178,6 @@ namespace ROOT {
    }
 } // end of namespace ROOT for class ::AELC
 
-//______________________________________________________________________________
-void ELC::Streamer(TBuffer &R__b)
-{
-   // Stream an object of class ELC.
-
-   AELC::Streamer(R__b);
-}
-
 namespace ROOT {
    // Wrappers around operator new
    static void *new_ELC(void *p) {
@@ -228,10 +196,6 @@ namespace ROOT {
    static void destruct_ELC(void *p) {
       typedef ::ELC current_t;
       ((current_t*)p)->~current_t();
-   }
-   // Wrapper around a custom streamer member function.
-   static void streamer_ELC(TBuffer &buf, void *obj) {
-      ((::ELC*)obj)->::ELC::Streamer(buf);
    }
 } // end of namespace ROOT for class ::ELC
 

@@ -75,6 +75,7 @@ Double_t out_SQX_R[32];
 Double_t out_SQY_L[16];
 Double_t out_SQY_R[16];
 Double_t out_SQ300[16];
+Double_t sqretot;
 
 Double_t out_tSQX_L[32];
 Double_t out_tSQX_R[32];

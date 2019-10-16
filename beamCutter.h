@@ -15,6 +15,8 @@
 #include <TTreeReaderValue.h>
 #include <TTreeReaderArray.h>
 #include "constants.h"
+#include <sys/ioctl.h> // For ioctl, TIOCGWINSZ
+#include <unistd.h> // For STDOUT_FILENO
 
 // Headers needed by this particular selector
 
@@ -25,6 +27,7 @@ public :
 	TTree			 *fChain = 0;	//!pointer to the analyzed TTree or TChain
 	TFile *outF;
 	TTree *outTree;
+	Long64_t nEntries;
 
 	// Readers to access the data (delete the ones you do not need).
 	TTreeReaderArray<unsigned short> F3 = {fReader, "NeEvent.F3[4]"};	
@@ -69,7 +72,8 @@ public :
 	TVector3 *vBeam;
 	TLorentzVector *lvBeam;
 	TRandom3 *rnd;
-	int counter;
+	float progress = 0.0;
+	int consoleWidth;
 
 };
 

@@ -61,7 +61,7 @@ bool beamCutter::Get_MWPC_pos(UShort_t multi, unsigned short *wireNo,
 		//one wire got signal - simplest solution
 		if (multi==1)
 		{
-			//printf("simplest solution %i\n", wireNo[0]);
+			//printf("svBeamimplest solution %i\n", wireNo[0]);
 			if (MWPC_id == 0 || MWPC_id == 2)
 			{
 				*MWPC_pos = zero_position + displacement - wireNo[0]*1.25;
@@ -123,7 +123,7 @@ void beamCutter::Begin(TTree * /*tree*/)
 	// When running with PROOF Begin() is only called on the client.
 	// The tree argument is deprecated (on PROOF 0 is passed).
 
-	outF = new TFile("/home/guar/aku/geant4/beamSource_5.root","RECREATE");
+	outF = new TFile("/home/guar/aku/geant4/beamSource_1.root","RECREATE");
 	outTree = new TTree("beamSource","beam_Source");
 	rnd = new TRandom3();
 
@@ -135,7 +135,7 @@ void beamCutter::Begin(TTree * /*tree*/)
 	outTree->Branch("MWPC_2_Z", &MWPC_2_Z,	 "MWPC_2_Z/F");
 	outTree->Bronch("lvBeam.",	"TLorentzVector", &lvBeam);
 
-	
+	printf("Cutting some beans\n");
 	TString option = GetOption();
 
 }
@@ -145,24 +145,22 @@ void beamCutter::SlaveBegin(TTree * /*tree*/)
 	// The SlaveBegin() function is called after the Begin() function.
 	// When running with PROOF SlaveBegin() is called on each slave server.
 	// The tree argument is deprecated (on PROOF 0 is passed).
-	vBeam = new TVector3();
-	lvBeam = new TLorentzVector();
-
-	//create target volume
-	new TGeoManager("gasVolume", "interaction point");
-	TGeoVolume *deutDiscTube = gGeoManager->MakeTube("deutDiscTube", 0.0, 12.5, 2.0);
-	TGeoVolume *deutSphere = gGeoManager->MakeSphere("deutSphere", 0.0, 78.63, 0.0, 4.0*TMath::Pi(), 0.0, 12.95*2*TMath::RadToDeg());
-	TGeoVolume *sphereCutoff = gGeoManager->MakeBox("sphereCutoff", 100.0, 100.0, 77.63)
-	TGeoVolume *deutCap = new TGeoSubtraction("deutSphere-sphereCutoff", deutSphere, );
-
 	TString option = GetOption();
+	vBeam = new TVector3;
+	lvBeam = new TLorentzVector;
+	nEntries = option.Atoll();
 	
-	counter=0;
+
+	struct winsize size;
+	ioctl(STDOUT_FILENO,TIOCGWINSZ,&size);
+	consoleWidth = size.ws_col-8;
+	//printf("No. of rows: %d\tNo. of columns: %d\n",size.ws_row, size.ws_col);
+
 
 }
 
 Bool_t beamCutter::Process(Long64_t entry)
-{/*
+{
 	// The Process() function is called for each entry in the tree (or possibly
 	// keyed object in the case of PROOF) to be processed. The entry argument
 	// specifies which entry in the currently loaded tree is to be processed.
@@ -179,87 +177,96 @@ Bool_t beamCutter::Process(Long64_t entry)
 	//
 	// The return value is currently not used.
 
-	//TTreeReaderArray<unsigned short> x1 = TTreeReaderArray<unsigned short>{fReader, "NeEvent.x1[32]"};
 	fReader.SetLocalEntry(entry);
+
+
+	std::cout << "[";
+	int pos = consoleWidth * progress;
+	for (int i = 0; i < consoleWidth; ++i)
+	{
+		if (i < pos) std::cout << "#";
+		else if (i == pos) std::cout << ">";
+		else std::cout << ".";
+	}
+	std::cout << "] " << int(progress * 100.0) << " %\r";
+	std::cout.flush();
+
+	if( entry % ( nEntries / 100 ) == 0) progress += 0.01;
+
 
 	if (*trigger==1)
 	{
 
-	tac=false;
-	range=false;
+		tac=false;
+		range=false;
 
-	for (int iii= 0; iii<32; ++iii)
-	{
-		temp_x1[iii] = x1[iii];
-		temp_x2[iii] = x2[iii];
-		temp_y1[iii] = y1[iii];
-		temp_y2[iii] = y2[iii];
-		
-	}
-
-	if(tF3[0]*tF3[1]*tF3[2]*tF3[3]*tF5[0]*tF5[1]*tF5[2]*tF5[3])
-	{
-		if ((	tF3[0]-tF3[1]) > -50.0 && (tF3[0]-tF3[1]) < 50.0 &&
-		(	tF5[0]-tF5[1]) > -50.0 && (tF5[0]-tF5[1]) < 50.0	)
+		for (int iii= 0; iii<32; ++iii)
 		{
-			tac=true;
-		}		
-	}
-
-	tof=(-(tF3[0]+tF3[1]+tF3[2]+tF3[3])/4.0+(tF5[0]+tF5[1])/2)*0.125+cs::tof_const;
-
-	if (tac && tof>165 && tof<180 && F5[0]>600 && F5[0]<2800)
-	{
-		range=true;
-	}
-
-	if (	Get_MWPC_pos(*nx1, temp_x1, &MWPC_1_X, cs::MWPC_1_X_id)	&&
-			Get_MWPC_pos(*nx2, temp_x2, &MWPC_2_X, cs::MWPC_2_X_id)	&&
-			Get_MWPC_pos(*ny1, temp_y1, &MWPC_1_Y, cs::MWPC_1_Y_id)	&&
-			Get_MWPC_pos(*ny2, temp_y2, &MWPC_2_Y, cs::MWPC_2_Y_id)	&&
-			range
-		)
-	{
-		
-		beta_squared= pow((cs::tofBase/tof)/cs::c, 2.0);
-		gamma=1.0/sqrt(1.0-beta_squared);
-		kinE =  cs::mass_6He*(gamma-1.0);
-
-		MWPC_1_X += rnd->Uniform(0.0,1.25)-0.6125;
-		MWPC_1_Y += rnd->Uniform(0.0,1.25)-0.6125;
-		MWPC_1_Z = -816.0;
-		MWPC_2_X += rnd->Uniform(0.0,1.25)-0.6125;
-		MWPC_2_Y += rnd->Uniform(0.0,1.25)-0.6125;
-		MWPC_2_Z = -270.0;
-
-		dX=MWPC_2_X-MWPC_1_X;
-		dY=MWPC_2_Y-MWPC_1_Y;
-		dZ=MWPC_2_Z-MWPC_1_Z;
-		vBeam->SetXYZ(dX,dY,dZ);
-
-		if (geoNo==5)
-		{
-			Tcoef=(cos(tar_angle)*cs::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
-			XZsum= - sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z;
-		
-			evX = MWPC_1_X + dX*Tcoef;	//X,Y,Z coordinates on target plane
-			evY = MWPC_1_Y + dY*Tcoef;
-			evZ = MWPC_1_Z + dZ*Tcoef;
-			//need to calculate distance to the gas target volume
+			temp_x1[iii] = x1[iii];
+			temp_x2[iii] = x2[iii];
+			temp_y1[iii] = y1[iii];
+			temp_y2[iii] = y2[iii];
+			
 		}
-		
 
-		ene_beam = cs::mass_6He + kinE;
-		mom_beam = sqrt(ene_beam*ene_beam - cs::mass_6He*cs::mass_6He);
-		
-		vBeam->SetMag(mom_beam);
-		lvBeam->SetVectM(*vBeam, cs::mass_6He);
+		if(tF3[0]*tF3[1]*tF3[2]*tF3[3]*tF5[0]*tF5[1]*tF5[2]*tF5[3])
+		{
 
-		outTree->Fill();
-	}
+			if (	(tF3[0]-tF3[1]) > -50.0 && (tF3[0]-tF3[1]) < 50.0 &&
+					(tF5[0]-tF5[1]) > -50.0 && (tF5[0]-tF5[1]) < 50.0	)
+			{
+				tac=true;
+				tof=(-(tF3[0]+tF3[1]+tF3[2]+tF3[3])/4.0+(tF5[0]+tF5[1])/2)*0.125+cs::tof_const;
+				//tof=(-(tF3[0]+tF3[1]+tF3[2]+tF3[3])/4.0+(tF5[0]+tF5[1])/2)*0.0625+cs::tof_const_5;
 
+
+				//if (tof>175 && tof<181 && F5[0]>400 && F5[0]<800)		//gas target
+				if (tac && tof>165 && tof<182 && F5[0]>600 && F5[0]<2800)
+				{
+					range=true;
+
+					
+					if (Get_MWPC_pos(*nx1, temp_x1, &MWPC_1_X, cs::MWPC_1_X_id)	&&
+						Get_MWPC_pos(*nx2, temp_x2, &MWPC_2_X, cs::MWPC_2_X_id)	&&
+						Get_MWPC_pos(*ny1, temp_y1, &MWPC_1_Y, cs::MWPC_1_Y_id)	&&
+						Get_MWPC_pos(*ny2, temp_y2, &MWPC_2_Y, cs::MWPC_2_Y_id)		)
+					{		
+						beta_squared= pow((cs::tofBase/tof)/cs::c, 2.0);
+						gamma=1.0/sqrt(1.0-beta_squared);
+						kinE =  cs::mass_6He*(gamma-1.0);
+
+						MWPC_1_Z = -816.0;
+						MWPC_2_Z = -270.0;
+
+						dX = (MWPC_2_X + rnd->Uniform(0.0,1.25)-0.6125) - (MWPC_1_X + rnd->Uniform(0.0,1.25)-0.6125);
+						dY = (MWPC_2_Y + rnd->Uniform(0.0,1.25)-0.6125) - (MWPC_1_Y + rnd->Uniform(0.0,1.25)-0.6125);
+						dZ = (MWPC_2_Z + rnd->Uniform(0.0,1.25)-0.6125) - (MWPC_1_Z + rnd->Uniform(0.0,1.25)-0.6125);
+						vBeam->SetXYZ(dX,dY,dZ);
+				/*
+						if (geoNo==5)
+						{
+							Tcoef=(cos(tar_angle)*cs::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
+							XZsum= - sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z;
+						
+							evX = MWPC_1_X + dX*Tcoef;	//X,Y,Z coordinates on target plane
+							evY = MWPC_1_Y + dY*Tcoef;
+							evZ = MWPC_1_Z + dZ*Tcoef;
+							//need to calculate distance to the gas target volume
+						}
+				*/		
+
+						ene_beam = cs::mass_6He + kinE;
+						mom_beam = sqrt(ene_beam*ene_beam - cs::mass_6He*cs::mass_6He);
+						
+						vBeam->SetMag(mom_beam);
+						lvBeam->SetVectM(*vBeam, cs::mass_6He);
+						outTree->Fill();
+					}
+				}
+			}		
+		}
 }
-	return kTRUE;*/
+	return kTRUE;
 }
 
 void beamCutter::SlaveTerminate()
@@ -274,6 +281,7 @@ void beamCutter::Terminate()
 {
 	outTree->Write();
 	outF->Close();
+	std::cout << std::endl;
 	// The Terminate() function is the last function to be called during
 	// a query. It always runs on the client, it can be used to present
 	// the results graphically or save the results to file.

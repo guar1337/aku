@@ -18,7 +18,7 @@ R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
 bool butler()
 {
 	Double_t qualityControl[4];
-	Double_t inputPars[]{0.0,0.0,0.0,0.0};
+	Double_t inputPars[]{6.33544,7.7553,6.7597,0.0};
 	TStopwatch time{};
 	TString sourceDir, destinationDir, s_fnamePrefix, s_outFName;
 	TString s_outTreeName, s_inTreeName, str_name;
@@ -86,7 +86,7 @@ bool butler()
 			else if(cs::inDir=="cal")
 			{
 				dE_E_angle *Hermes = new dE_E_angle(inT,outT, str_name, cs::runNo);
-				(cs::runNo == 5) ? Hermes->actual_work_gas() : Hermes->actual_work_1H(inputPars, qualityControl);
+				(cs::runNo == 5) ? Hermes->actual_work_gas() : Hermes->actual_work(inputPars, qualityControl, cs::runNo);
 			}
 
 			outT->Write();

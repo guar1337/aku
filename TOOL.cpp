@@ -16,11 +16,11 @@ void TOOL::printSetup(	Double_t sqr_ang, Double_t sql_ang,
 			"Left telescope distance from target = %i mm\n"
 			"Target at %i deg\n"
 			"*****************************************\n",
-			static_cast<int>(round(sqr_ang*cs::rad_to_deg)),
-			static_cast<int>(round(sql_ang*cs::rad_to_deg)),
+			static_cast<int>(round(sqr_ang*TMath::RadToDeg())),
+			static_cast<int>(round(sql_ang*TMath::RadToDeg())),
 			static_cast<int>(round(sqr_dist)),
 			static_cast<int>(round(sql_dist)),
-			static_cast<int>(round(tar_angle*cs::rad_to_deg)));
+			static_cast<int>(round(tar_angle*TMath::RadToDeg())));
 }
 
 
@@ -163,127 +163,6 @@ bool TOOL::Get_MWPC_pos(UShort_t multi, UShort_t *wireNo,
 	return 0;
 }
 
-
-bool TOOL::initializeGeometry(	Int_t geoNo, Double_t *sqr_ang, Double_t *sql_ang,
-								Double_t *sqr_dist, Double_t *sql_dist,
-								Float_t *tar_angle, Float_t *tar_thcknss) 
-{
-	//Read detectors geometry parameters depending on run
-	switch (geoNo)
-	{
-		case 7:
-		*sqr_ang=cs::sqr_ang7;
-		*sql_ang=cs::sql_ang7;
-
-		*sqr_dist=cs::sqr_dist_s7;
-		*sql_dist=cs::sql_dist_s7;
-		*tar_angle=cs::tar_ang_s3;
-		*tar_thcknss=cs::tar_thcknss_7;
-		break;
-
-		case 9:
-		*sqr_ang=cs::sqr_ang9;
-		*sql_ang=cs::sql_ang9;
-		
-		*sqr_dist=cs::sqr_dist_s9;
-		*sql_dist=cs::sql_dist_s9;
-		*tar_angle=cs::tar_ang_s3;
-		*tar_thcknss=cs::tar_thcknss_9;
-		break;
-
-		case 1:
-		*sqr_ang=cs::sqr_ang_s1;
-		*sql_ang=cs::sql_ang_s1;
-		
-		*sqr_dist=cs::sqr_dist_s1;
-		*sql_dist=cs::sql_dist_s1;
-		*tar_angle=cs::tar_ang_s1;
-		*tar_thcknss=cs::tar_thcknss_1;
-		break;
-
-		case 2:
-		*sqr_ang=cs::sqr_ang_s2;
-		*sql_ang=cs::sql_ang_s2;
-		
-		*sqr_dist=cs::sqr_dist_s2;
-		*sql_dist=cs::sql_dist_s2;
-		*tar_angle=cs::tar_ang_s2;
-		*tar_thcknss=cs::tar_thcknss_2;
-		break;
-
-		case 3:
-		*sqr_ang=cs::sqr_ang_s3;
-		*sql_ang=cs::sql_ang_s3;
-		
-		*sqr_dist=cs::sqr_dist_s3;
-		*sql_dist=cs::sql_dist_s3;
-		*tar_angle=cs::tar_ang_s3;
-		*tar_thcknss=cs::tar_thcknss_3;
-		break;
-
-		case 4:
-		*sqr_ang=cs::sqr_ang_s4;
-		*sql_ang=cs::sql_ang_s4;
-		
-		*sqr_dist=cs::sqr_dist_s4;
-		*sql_dist=cs::sql_dist_s4;
-		*tar_angle=cs::tar_ang_s4;
-		*tar_thcknss=cs::tar_thcknss_4;
-		break;
-
-		case 5:
-		*sqr_ang=cs::sqr_ang_s5;
-		*sql_ang=cs::sql_ang_s5;
-		
-		*sqr_dist=cs::sqr_dist_s5;
-		*sql_dist=cs::sql_dist_s5;
-		*tar_angle=cs::tar_ang_s5;
-		*tar_thcknss=cs::tar_thcknss_5;
-		break;
-
-		case 0:
-		*sqr_ang=cs::sqr_ang_s0;
-		*sql_ang=cs::sql_ang_s0;
-		
-		*sqr_dist=cs::sqr_dist_s0;
-		*sql_dist=cs::sql_dist_s0;
-		*tar_angle=cs::tar_ang_s3;
-		*tar_thcknss=cs::tar_thcknss_0;
-		break;
-
-		default:
-		printf("\nError: NO EXPERIMENTAL SETUP PARAMETERS\n");
-		return 0;
-		break;
-	}
-	//printSetup(*sqr_ang, *sql_ang, *sqr_dist, *sql_dist, *tar_angle);
-	return 1;
-}
-
-
-
-void TOOL::null_strips(	UShort_t *SQX_L, UShort_t *SQY_L, UShort_t *CsI_L,
-						UShort_t *SQX_R, UShort_t *SQY_R, UShort_t *CsI_R)
-{
-	fill(SQX_L,SQX_L+32,32);
-	fill(SQY_L,SQY_L+16,16);
-	fill(CsI_L,CsI_L+16,16);
-	fill(SQX_R,SQX_R+32,32);
-	fill(SQY_R,SQY_R+16,16);
-	fill(CsI_R,CsI_R+16,16);
-}
-
-void TOOL::null_energy( Double_t *SQX_L, Double_t *SQY_L, Double_t *CsI_L,
-						Double_t *SQX_R, Double_t *SQY_R, Double_t *CsI_R)
-{
-	fill(SQX_L,SQX_L+32,0.0);
-	fill(SQY_L,SQY_L+16,0.0);
-	fill(CsI_L,CsI_L+16,0.0);
-	fill(SQX_R,SQX_R+32,0.0);
-	fill(SQY_R,SQY_R+16,0.0);
-	fill(CsI_R,CsI_R+16,0.0); 
-}
-
 bool TOOL::params_loader(TString fname, float *AConst, float *BConst, short chNo)
 {
 	ifstream instream(fname.Copy().Prepend(cs::dir_params.Data()).Data());
@@ -321,9 +200,10 @@ bool TOOL::gcuts_loader(TString fName, TCutG *gcut, TString ion, int geoNo)
 
 	if (!instream) 
 	{
-		printf ("!!Cannot open %s coefficient file\n",(cs::dir_gcut+fName+ion).Data());
+		//printf ("!!Cannot open %s coefficient file\n",dir_cur.Data());
 		return false;
 	}
+	
 	for (int iii = 0; iii < 4; ++iii)//clean lines before No of points
 	{
 		getline(instream, dummy);
@@ -382,31 +262,31 @@ int TOOL::gcut_noPoints(TString fName, TString ion, int geoNo)
 
 }
 
-Float_t TOOL::kin_GetAngRecoil(Float_t T_deu, Float_t T_beam, Float_t mass_ratio)
+Float_t TOOL::kin_GetAngRecoil(Float_t T_deu, Float_t T_beam, Float_t massRatio)
 {
 	Float_t velo_deu, velo_beam;
-	velo_deu = getVelo(T_deu, cs::mass_6He*mass_ratio);
-	velo_beam = getVelo(T_beam, cs::mass_6He);
-	return acos( ( (1+mass_ratio)/2.0) * (velo_deu/velo_beam))*cs::rad_to_deg;
+	velo_deu = getVelo(T_deu, cs::mass6He*massRatio);
+	velo_beam = getVelo(T_beam, cs::mass6He);
+	return acos( ( (1+massRatio)/2.0) * (velo_deu/velo_beam))*TMath::RadToDeg();
 }
 
-Float_t TOOL::kin_GetERecoil(Float_t theta, Float_t T_beam, Float_t mass_ratio)
+Float_t TOOL::kin_GetERecoil(Float_t theta, Float_t T_beam, Float_t massRatio)
 {
 	Float_t velo_deu, velo_beam;
-	velo_beam = getVelo(T_beam, cs::mass_6He);
-	velo_deu = ((2 * cos(theta)) / (1+mass_ratio)) * velo_beam;
+	velo_beam = getVelo(T_beam, cs::mass6He);
+	velo_deu = ((2 * cos(theta)) / (1+massRatio)) * velo_beam;
 	beta_squared= pow(velo_deu/cs::c, 2.0);
 	gamma=1.0/sqrt(1.0-beta_squared);
-	return mass_ratio*(gamma-1.0)*cs::mass_6He;
+	return massRatio*(gamma-1.0)*cs::mass6He;
 }
 
-Float_t TOOL::kin_GetAngProjectile(Float_t T_deut, Float_t T_beam, Float_t mass_ratio)
+Float_t TOOL::kin_GetAngProjectile(Float_t T_deut, Float_t T_beam, Float_t massRatio)
 {
 	Float_t velo_hel, velo_beam, vel_R;
-	velo_hel = getVelo(T_beam - T_deut, cs::mass_6He);
-	velo_beam = getVelo(T_beam, cs::mass_6He);
+	velo_hel = getVelo(T_beam - T_deut, cs::mass6He);
+	velo_beam = getVelo(T_beam, cs::mass6He);
 	vel_R = velo_hel/velo_beam;
-	return acos(((1+mass_ratio)*vel_R*vel_R+1-mass_ratio)/(2*vel_R))*cs::rad_to_deg;
+	return acos(((1+massRatio)*vel_R*vel_R+1-massRatio)/(2*vel_R))*TMath::RadToDeg();
 }
 
 Int_t TOOL::GetRunNumber(TString fileName)
