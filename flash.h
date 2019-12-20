@@ -2,7 +2,7 @@
 // This class has been automatically generated on
 // Tue Jul 16 13:46:16 2019 by ROOT version 6.12/06
 // from TTree dE_angle/dE_angle
-// found on file: /home/guar/data/he6_d/dE/geo1/PG_deu1.root
+// found on file: /home/zalewski/data/he6_d/dE/geo1/PG_deu1.root
 //////////////////////////////////////////////////////////
 
 #ifndef flash_h

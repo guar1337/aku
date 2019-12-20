@@ -1,7 +1,7 @@
 // -*- mode:C++ -*-
 #ifndef __AELC_H__
 #define __AELC_H__ 1
-#include "Rtypes.h"
+
 class AELC
 {
   // abstract class for energy loss calculation
@@ -17,7 +17,7 @@ public:
   virtual double  GetR(const double E0,const double E1)=0;
   
   virtual bool IsReady(){return is_ready;}
-  ClassDef(AELC,0);
+
 };
 
 #endif

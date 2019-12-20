@@ -15,22 +15,26 @@ void jasper::Begin(TTree * /*tree*/)
 	vf2H = new TVector3();
 	vf6He = new TVector3();
 	TString option = GetOption();
-	TString outFName = "/home/guar/data/he6_d/simulation/" + option + "_processed.root";
+	TString outFName = "/home/zalewski/Desktop/6He/analysis/19DecMWPC/" + option + "_processed.root";
 	//printf("%s\n", outFName.Data());
 	outF = new TFile(outFName.Data(),"RECREATE");
 	outTree = new TTree("digi","digi");
 
-	outTree->Branch("evX",	&out_evX, "evX/D");
-	outTree->Branch("evY",	&out_evY, "evY/D");
-	outTree->Branch("evZ",	&out_evZ, "evZ/D");
+	outTree->Branch("evX",	&evX, "evX/D");
+	outTree->Branch("evY",	&evY, "evY/D");
+	outTree->Branch("evZ",	&evZ, "evZ/D");
 
-	outTree->Branch("dX",	&dX, "dX/D");
-	outTree->Branch("dY",	&dY, "dY/D");
-	outTree->Branch("dZ",	&dZ, "dZ/D");
+	outTree->Branch("fevX",	&fevX, "fevX/D");
+	outTree->Branch("fevY",	&fevY, "fevY/D");
+	outTree->Branch("fevZ",	&fevZ, "fevZ/D");
 
-	outTree->Branch("hX",	&hX, "hX/D");
-	outTree->Branch("hY",	&hY, "hY/D");
-	outTree->Branch("hZ",	&hZ, "hZ/D");
+	outTree->Branch("X2H",	&X2H, "X2H/D");
+	outTree->Branch("Y2H",	&Y2H, "Y2H/D");
+	outTree->Branch("Z2H",	&Z2H, "Z2H/D");
+
+	outTree->Branch("X6He",	&X6He, "X6He/D");
+	outTree->Branch("Y6He",	&Y6He, "Y6He/D");
+	outTree->Branch("Z6He",	&Z6He, "Z6He/D");
 
 	outTree->Branch("fdX",	&fdX, "fdX/D");
 	outTree->Branch("fdY",	&fdY, "fdY/D");
@@ -79,18 +83,23 @@ void jasper::SlaveBegin(TTree * /*tree*/)
 	// The SlaveBegin() function is called after the Begin() function.
 	// When running with PROOF SlaveBegin() is called on each slave server.
 	// The tree argument is deprecated (on PROOF 0 is passed).
-	l_sqlang = 65.0;
-	l_sqrang = 15.0;
-	l_sqldist = 170.0;
-	l_sqrdist = 250.0;
 
-	dX0 = l_sqldist * sin(l_sqlang*TMath::DegToRad()) + width_strip_X * 15.5 * cos(l_sqlang*TMath::DegToRad());
-	dY0 = -7.5 * width_strip_Y;
-	dZ0 = l_sqldist * cos(l_sqlang*TMath::DegToRad()) + -1 * width_strip_X * 15.5 * sin(l_sqlang*TMath::DegToRad());
+	SQLang = 65.0*TMath::DegToRad();
+	SQRang = 15.0*TMath::DegToRad();
+	SQLdist = 170.0;
+	SQRdist = 250.0;
+	tarAngle = 45.0*TMath::DegToRad();
+	tarPos = 8.25908e+00;
+	MWPC_1_Z = -816.0;
+	MWPC_2_Z = -270.0;
 
-	hX0 = -1 * l_sqrdist * sin(l_sqrang*TMath::DegToRad()) + width_strip_X * 15.5 * cos(l_sqrang*TMath::DegToRad());
-	hY0 = -7.5 * width_strip_Y;
-	hZ0 = l_sqrdist * cos(l_sqrang*TMath::DegToRad()) + width_strip_X * 15.5 * sin(l_sqrang*TMath::DegToRad());
+	X2Hlab = SQLdist*sin(SQLang) + (cs::SQLstartX) * cos(SQLang);
+	Y2Hlab = cs::SQLstartY + cs::widthStripX;
+	Z2Hlab = SQLdist*cos(SQLang) - (cs::SQLstartX) * sin(SQLang);
+
+	X6Helab = SQRdist*(sin(-SQRang)) + (cs::SQRstartX) * cos(SQRang);
+	Y6Helab = cs::SQRstartY;
+	Z6Helab = SQRdist*cos(SQRang) + (cs::SQRstartX) * sin(SQRang);
 
 	struct winsize size;
 	ioctl(STDOUT_FILENO,TIOCGWINSZ,&size);
@@ -142,8 +151,10 @@ Bool_t jasper::Process(Long64_t entry)
 	flv2Hcm = new TLorentzVector(*inlv2Hcm);
 	lv2H = new TLorentzVector();
 	lv6He = new TLorentzVector();
+	vBeam = new TVector3();
+	lvBeam = new TLorentzVector();
 
-	const TLorentzVector lvTar(0.0, 0.0, 0.0, cs::mass_2H);
+	const TLorentzVector lvTar(0.0, 0.0, 0.0, cs::mass2H);
 
 
 	if (std::count_if(SiheY.begin(), SiheY.end(), [](unsigned short i){return i > 5.0;}) == 1 &&
@@ -153,9 +164,33 @@ Bool_t jasper::Process(Long64_t entry)
 	{
 		sqletot = 0.0;
 		sqretot = 0.0;
-		out_evX = *fInevx;
-		out_evY = *fInevy;
-		out_evZ = *fInevz;
+
+		fevX = *fInevx;
+		fevY = *fInevy;
+		fevZ = *fInevz;
+
+		MWPC_1_X = *fMWPC_1_X + rnd->Uniform(0.0,1.25)-0.625;
+		MWPC_1_Y = *fMWPC_1_Y + rnd->Uniform(0.0,1.25)-0.625;
+
+		MWPC_2_X = *fMWPC_2_X + rnd->Uniform(0.0,1.25)-0.625;
+		MWPC_2_Y = *fMWPC_2_Y + rnd->Uniform(0.0,1.25)-0.625;
+
+		dX=MWPC_2_X-MWPC_1_X;
+		dY=MWPC_2_Y-MWPC_1_Y;
+		dZ=MWPC_2_Z-MWPC_1_Z;
+
+		double kinE = inlvBeam->E() - inlvBeam->M();
+		vBeam->SetXYZ(dX,dY,dZ);
+		Double_t ene_beam = cs::mass6He + kinE;
+		Double_t mom_beam = sqrt(ene_beam*ene_beam - cs::mass6He*cs::mass6He);
+		vBeam->SetMag(mom_beam);
+		lvBeam->SetVectM(*vBeam, cs::mass6He);
+
+		double Tcoef=(cos(tarAngle)*tarPos-sin(tarAngle)*MWPC_1_X - cos(tarAngle)*MWPC_1_Z)/(sin(tarAngle)*dX+cos(tarAngle)*dZ);
+
+		evX = MWPC_1_X + dX*Tcoef;
+		evY = MWPC_1_Y + dY*Tcoef;
+		evZ = MWPC_1_Z + dZ*Tcoef;
 
 		fdX = *fInX2H;
 		fdY = *fInY2H;
@@ -175,22 +210,30 @@ Bool_t jasper::Process(Long64_t entry)
 		fsqletot = *fInsqletot;
 		fsqretot = *fInsqretot;
 
-		SQY_R_s = std::distance(SiheY.begin(), std::max_element(SiheY.begin(), SiheY.end()));
-		SQX_R_s = std::distance(SiheX.begin(), std::max_element(SiheX.begin(), SiheX.end()));
-		SQY_L_s = std::distance(SideutY.begin(), std::max_element(SideutY.begin(), SideutY.end()));
-		SQX_L_s = std::distance(SideutX.begin(), std::max_element(SideutX.begin(), SideutX.end()));
+		SQY_R_sNo= std::distance(SiheY.begin(), std::max_element(SiheY.begin(), SiheY.end()));
+		SQX_R_sNo= std::distance(SiheX.begin(), std::max_element(SiheX.begin(), SiheX.end()));
+		SQY_L_sNo= std::distance(SideutY.begin(), std::max_element(SideutY.begin(), SideutY.end()));
+		SQX_L_sNo= std::distance(SideutX.begin(), std::max_element(SideutX.begin(), SideutX.end()));
 		
-		dX = dX0 - (SQX_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * cos(l_sqlang*TMath::DegToRad());
-		dY = dY0 + (SQY_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_Y;
-		dZ = dZ0 + (SQX_L_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * sin(l_sqlang*TMath::DegToRad());
+		X2Hdet = cs::widthStripX * (SQX_L_sNo+rnd->Uniform(0.0,1.0)-0.5) * cos(SQLang);
+		Y2Hdet = cs::widthStripY * (SQY_L_sNo+rnd->Uniform(0.0,1.0)-0.5);
+		Z2Hdet = cs::widthStripX * (SQX_L_sNo+rnd->Uniform(0.0,1.0)-0.5) * sin(SQLang);
 
-		hX = hX0 - (SQX_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * cos(l_sqrang*TMath::DegToRad());
-		hY = hY0 + (SQY_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_Y;
-		hZ = hZ0 - (SQX_R_s+rnd->Uniform(-0.5,0.5)) * width_strip_X * sin(l_sqrang*TMath::DegToRad());
+		X2H = X2Hlab - X2Hdet;
+		Y2H = Y2Hlab + Y2Hdet;
+		Z2H = Z2Hlab + Z2Hdet;
+		//printf("%f\t%f\t%f\n", Z2Hlab, Z2Hdet, Z2H);
+		X6Hedet = cs::widthStripX * (SQX_R_sNo+rnd->Uniform(0.0,1.0)-0.5) * cos(SQRang);
+		Y6Hedet = cs::widthStripY * (SQY_R_sNo+rnd->Uniform(0.0,1.0)-0.5);
+		Z6Hedet = cs::widthStripX * (SQX_R_sNo+rnd->Uniform(0.0,1.0)-0.5) * sin(SQRang);
+
+		X6He = X6Helab - X6Hedet;
+		Y6He = Y6Helab + Y6Hedet;
+		Z6He = Z6Helab - Z6Hedet;
 		
-		sqlde = SideutX[SQX_L_s];
-		sqlde = h2_CD2->GetE(sqlde, -tarThcknss/(2/**cos(fsqlang*TMath::DegToRad()-TMath::Pi()/4.0)*/));
-		sqrde = SiheX[SQX_R_s];
+		sqlde = SideutX[SQX_L_sNo];
+		//sqlde = h2_CD2->GetE(sqlde, -tarThcknss/(2/**cos(fsqlang*TMath::DegToRad()-TMath::Pi()/4.0)*/));
+		sqrde = SiheX[SQX_R_sNo];
 
 		if (std::count_if(CsIdeut.begin(), CsIdeut.end(), [](unsigned short i){return i > 2.0;})>0)
 		{
@@ -202,38 +245,40 @@ Bool_t jasper::Process(Long64_t entry)
 			sqretot = CsIhe[std::distance(CsIhe.begin(), std::max_element(CsIhe.begin(), CsIhe.end()))];
 		}
 
-		v2H->SetXYZ(dX-*fInevx, dY-*fInevy, dZ-*fInevz);
-
-		Double_t ene2H = cs::mass_2H + sqlde;
-		Double_t mom2H = sqrt(ene2H*ene2H - cs::mass_2H*cs::mass_2H);
+		v2H->SetXYZ(X2H-evX, Y2H-evY, Z2H-evZ);
+		Double_t ene2H = cs::mass2H + sqlde;
+		Double_t mom2H = sqrt(ene2H*ene2H - cs::mass2H*cs::mass2H);
 		v2H->SetMag(mom2H);
-		lv2H->SetVectM(*v2H, cs::mass_2H);
+		lv2H->SetVectM(*v2H, cs::mass2H);
 		*lv6He = lvTar + *flvbeam - *lv2H;
-		mm = lv6He->M() - cs::mass_6He;
+		mm = lv6He->M() - cs::mass6He;
+
+		v6He->SetXYZ(X6He-evX, Y6He-evY, Z6He-evZ);
+		Double_t ene6He = cs::mass6He + sqrde;
+		Double_t mom6He = sqrt(ene6He*ene6He - cs::mass6He*cs::mass6He);
+		v6He->SetMag(mom6He);
+		lv6He->SetVectM(*v6He, cs::mass6He);
+
+		sqlang = lvBeam->Vect().Angle(*v2H)*TMath::RadToDeg();
+		sqrang = lvBeam->Vect().Angle(*v6He)*TMath::RadToDeg();
 
 		Double_t fene2H = flv2H->E();
-		Double_t fmom2H = sqrt(fene2H*fene2H - cs::mass_2H*cs::mass_2H);
+		Double_t fmom2H = sqrt(fene2H*fene2H - cs::mass2H*cs::mass2H);
 		v2H->SetMag(fmom2H);
-		lv2H->SetVectM(*v2H, cs::mass_2H);
+		lv2H->SetVectM(*v2H, cs::mass2H);
 		*lv6He = lvTar + *flvbeam - *flv2H;
-		fmm = lv6He->M() - cs::mass_6He;
+		fmm = lv6He->M() - cs::mass6He;
 
 		vf2H->SetXYZ(fdX-*fInevx, fdY-*fInevy, fdZ-*fInevz);
 		vf6He->SetXYZ(fhX-*fInevx, fhY-*fInevy, fhZ-*fInevz);
 
-		sqlang = inlvBeam->Vect().Angle(*v2H)*TMath::RadToDeg();
-		sqrang = inlvBeam->Vect().Angle(*v6He)*TMath::RadToDeg();
-
 		//calculate energy of recoil particle based on its angle
 		double velo_beam = 0.2377 *cs::c;
-		double mass_ratio = cs::mass_2H/cs::mass_6He;
-		double velo_deu = ((2 * cos(sqlang*TMath::DegToRad())) / (1+mass_ratio)) * velo_beam;
+		double massratio = cs::mass2H/cs::mass6He;
+		double velo_deu = ((2 * cos(sqlang*TMath::DegToRad())) / (1+massratio)) * velo_beam;
 		double beta_squared= pow(velo_deu/cs::c, 2.0);
 		double gamma=1.0/sqrt(1.0-beta_squared);
-		resqlde =  mass_ratio*(gamma-1.0)*cs::mass_6He;
-
-		v6He->SetXYZ(hX-*fInevx, hY-*fInevy, hZ-*fInevz);
-		lv6He->SetVectM(*v6He, cs::mass_6He);
+		resqlde =  massratio*(gamma-1.0)*cs::mass6He;
 
 		TLorentzVector flvDeuCM = *flvbeam + lvTar;
 		TVector3 fvboost = flvDeuCM.BoostVector();

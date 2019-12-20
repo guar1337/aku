@@ -80,7 +80,7 @@ Double_t CsI_L_Edep[17], CsI_R_Edep[17], SQX_L_Edep[33], SQX_L_Edep2[33], SQX_R_
 Double_t out_tF3[4], out_F3[4], out_tF5[4], out_F5[4], out_tF6[4], out_F6[4];
 Double_t sqlde, sqletot, kinsqle_1H, kinsqle_2H, sqlphi, sqltheta, fsqltheta_1H, fsqltheta_2H, sqlang, sqlxtime, sqlytime, fel_2H, fdel_2H, ftot;
 Double_t sqrde, sqretot, sqrphi, sqrtheta, fsqrtheta1, fsqrtheta2, sqrang, sqrxtime, sqrytime;
-Double_t sqrang1, sqlang1, sqrang2, sqlang2;
+Double_t sqrang1, sqlang1, sqrang2, sqlang2, sqrang3, sqlang3;
 
 Double_t mml1, mml2, mom_2H, ene_2H, mom_1H, ene_1H;
 Double_t mom_6He, ene_6He, mom_beam, ene_beam;

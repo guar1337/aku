@@ -2,7 +2,7 @@
 // This class has been automatically generated on
 // Mon Jan 28 15:55:12 2019 by ROOT version 6.12/06
 // from TTree dE_angle/dE_angle
-// found on file: /home/guar/data/mar2018/dE/geo1/dE_geo1.root
+// found on file: /home/zalewski/data/mar2018/dE/geo1/dE_geo1.root
 //////////////////////////////////////////////////////////
 
 #ifndef dE_File_clnr_h

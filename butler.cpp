@@ -9,11 +9,11 @@
 #include "muchobojca.h"
 #include "calibrate_tree.h"
 
-// !! IF NOT WORKING, TRY **gSystem->Load("/home/guar/Desktop/Eloss/trial/libelo.so");** 
+// !! IF NOT WORKING, TRY **gSystem->Load("/home/zalewski/Desktop/Eloss/trial/libelo.so");** 
 //instead of
-R__LOAD_LIBRARY(libgsl.so); 
-R__LOAD_LIBRARY(/home/guar/aku/wrk/ELC/libEloss.so);
-R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
+R__LOAD_LIBRARY(libgsl.so);
+R__LOAD_LIBRARY(/home/zalewski/aku/wrk/libMr_Blue_Sky.so);
+R__LOAD_LIBRARY(/home/zalewski/aku/wrk/ELC/build/libEloss.so);
 
 bool butler()
 {

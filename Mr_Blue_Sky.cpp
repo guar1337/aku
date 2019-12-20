@@ -1,6 +1,7 @@
 // Do NOT change. Changes will be lost next time file is generated
 
 #define R__DICTIONARY_FILENAME Mr_Blue_Sky
+#define R__NO_DEPRECATION
 
 /*******************************************************************/
 #include <stddef.h>
@@ -33,7 +34,7 @@
 
 #include "TDataMember.h"
 
-// Since CINT ignores the std namespace, we need to do so in this file.
+// The generated code does not explicitly qualifies STL entities
 namespace std {} using namespace std;
 
 // Header files passed as explicit arguments
@@ -464,7 +465,7 @@ namespace {
     static const char* includePaths[] = {
 "/usr/local/include",
 "/usr/local/include",
-"/home/guar/aku/wrk/",
+"/home/zalewski/aku/wrk/",
 0
     };
     static const char* fwdDeclCode = R"DICTFWDDCLS(
@@ -481,11 +482,9 @@ class __attribute__((annotate("$clingAutoload$calibrate_tree.h")))  calibrate_tr
     static const char* payloadCode = R"DICTPAYLOAD(
 #line 1 "Mr_Blue_Sky dictionary payload"
 
-#ifndef G__VECTOR_HAS_CLASS_ITERATOR
-  #define G__VECTOR_HAS_CLASS_ITERATOR 1
-#endif
 
 #define _BACKWARD_BACKWARD_WARNING_H
+// Inline headers
 #include "TOOL.h"
 #include "dE_E_angle.h"
 #include "muchobojca.h"
@@ -504,7 +503,7 @@ nullptr};
     if (!isInitialized) {
       TROOT::RegisterModule("Mr_Blue_Sky",
         headers, includePaths, payloadCode, fwdDeclCode,
-        TriggerDictionaryInitialization_Mr_Blue_Sky_Impl, {}, classesHeaders);
+        TriggerDictionaryInitialization_Mr_Blue_Sky_Impl, {}, classesHeaders, /*has no C++ module*/false);
       isInitialized = true;
     }
   }

@@ -22,7 +22,7 @@ protected:
   
   //E-range graph
   double fEnergyMax;
-  int fEnergyPointsNum;  //  number of points in graph   
+  Int_t fEnergyPointsNum;  //  number of points in graph   
   double * fETable; 
   double * fRTable; 
 
@@ -47,7 +47,7 @@ public:
     
   ELC(int Ap,int Zp,int Nel,double density, 
       double * A, double * Z, double * W,
-      double Emax, int Epoints);
+      double Emax, Int_t Epoints);
   virtual ~ELC(void);  
   //  void PlotRE();
   virtual double GetE(const double e0, const double r);
@@ -55,7 +55,7 @@ public:
 
   virtual double GetR(const double E0,const double E1);
   
-
+  //ClassDef(ELC,0);
 };
 
 #endif

@@ -1,14 +1,14 @@
 #include "TString.h"
 #include "constants.h"
 
-#include "ELCcpy/AELC.h"
-#include "ELCcpy/ELC.h"
+#include "ELC/AELC.h"
+#include "ELC/ELC.h"
 R__LOAD_LIBRARY(libgsl.so); 
-R__LOAD_LIBRARY(/home/guar/aku/wrk/ELCcpy/build/libEloss.so);
+R__LOAD_LIBRARY(/home/zalewski/aku/wrk/ELC/build/libEloss.so);
 
 
 
-TFile *inF = new TFile{"/home/guar/data/he6_d/dE/PG_geo.root", "READ"};
+TFile *inF = new TFile{"/home/zalewski/data/he6_d/dE/PG_geo.root", "READ"};
 TTreeReader fReader("dE_angle", inF);
 
 TTreeReaderValue<Float_t> SQX_L_sNo = {fReader, "SQX_L_sNo"};
@@ -27,9 +27,9 @@ TTreeReaderValue<Double_t> sqretot = {fReader, "sqretot"};
 TTreeReaderValue<Float_t> MWPC_1_X = {fReader, "MWPC_1_X"};
 TTreeReaderValue<Float_t> MWPC_1_Y = {fReader, "MWPC_1_Y"};
 TTreeReaderValue<Float_t> MWPC_1_Z = {fReader, "MWPC_1_Z"};
-TTreeReaderValue<Float_t> dX = {fReader, "dX"};
-TTreeReaderValue<Float_t> dY = {fReader, "dY"};
-TTreeReaderValue<Float_t> dZ = {fReader, "dZ"};
+TTreeReaderValue<Float_t> MWPC_2_X = {fReader, "MWPC_2_X"};
+TTreeReaderValue<Float_t> MWPC_2_Y = {fReader, "MWPC_2_Y"};
+TTreeReaderValue<Float_t> MWPC_2_Z = {fReader, "MWPC_2_Z"};
 TTreeReaderValue<Short_t> geo = {fReader, "geo"};
 TTreeReaderValue<Bool_t> deu = {fReader, "deu"};
 TTreeReaderValue<Bool_t> pro = {fReader, "pro"};
@@ -48,7 +48,7 @@ Float_t fEproFromLang, fEdeuFromLang, fsqltheta_1H, fsqltheta_2H, fsqrang1H, fsq
 Float_t inputPars[4];
 Float_t sqlde;
 TRandom3 *rnd;
-TGraph *langRang1H, *flangRang1H, *langRang2H, *flangRang2H, *dELang1H, *dELang2H;
+TGraph *langRang1H, *flangRang1H, *langRang2H, *flangRang2H, *dELang1H, *dELang2H, *angang2H;
 
 int fnPar=1; Double_t fgin[2]; Double_t freturner; Int_t iflag;
 
@@ -75,8 +75,8 @@ TVector3 *vBeam, v6He;
 //TLorentzVector *lvH1, *lvH2, *lvHe6, *lvTar1H, *lvTar2H;
 TF1 *fit1, *fit2;
 
-TH1	*histMml1 = new TH1F("hist1", "hist mml1", 1000, -50.0, 50.0);
-TH1 *histMml2 = new TH1F("hist2", "hist mml2", 1000, -50.0, 50.0);
+TH1	*histMml1 = new TH1F("hist1", "hist mml1", 1000, -20.0, 20.0);
+TH1 *histMml2 = new TH1F("hist2", "hist mml2", 1000, -20.0, 20.0);
 
 TF1 *angAngFit1H;
 TF1 *angAngFit2H;
@@ -111,30 +111,28 @@ void kniggit()
 	angEFit1H = new TF1("angEFit1H", "[0]*(1.0/sqrt(1.0-pow(((2 * cos(x*[1])) / (1.0+[0])) * [2], 2.0))-1.0)*[3]");
 	angEFit1H->FixParameter(0,cs::mass1H/cs::mass6He);
 	angEFit1H->FixParameter(1,TMath::DegToRad());
-	angEFit1H->FixParameter(2, 0.2388);
+	angEFit1H->FixParameter(2, 0.2313);
 	angEFit1H->FixParameter(3,cs::mass6He);
 
 	angEFit2H = new TF1("angEFit2H", "[0]*(1.0/sqrt(1.0-pow(((2 * cos(x*[1])) / (1.0+[0])) * [2], 2.0))-1.0)*[3]");
 	angEFit2H->FixParameter(0,cs::mass2H/cs::mass6He);
 	angEFit2H->FixParameter(1,TMath::DegToRad());
-	angEFit2H->FixParameter(2, 0.2388);
+	angEFit2H->FixParameter(2, 0.2313);
 	angEFit2H->FixParameter(3,cs::mass6He);
 
 
-	Int_t fnPar = 8;
-	Double_t finPar[fnPar];
-	finPar[0] = 0.136211;
-	finPar[1] = 2.68637;
-	finPar[2] = 7.21955;
-	finPar[3] = 1.41038;
-	finPar[4] = 2.62977;
-	finPar[5] = 1.86681;
-	finPar[6] = -18.0818;
-	finPar[7] = 11.0166;
+	Int_t nPar = 8;
+	Double_t inPar[nPar];
+	inPar[0] = 0.0;//4.22389e+00;
+	inPar[1] = 0.0;//9.33719e+00;
+	inPar[2] = 0.0;//9.23913e+00;
+	inPar[3] = 0.0;//-2.60958e+00;
+	inPar[4] = 0.0;//-1.41267e+00;
+	inPar[5] =0.0;// -4.84871e+00;
 	Double_t gin[1];
 	Double_t returner;
 
-	//myFnc(fnPar, gin, returner, finPar, 100);	
+	//myFnc(nPar, gin, returner, inPar, 100);	
 	fitter();
 
 	stopwatch->Print();
@@ -143,23 +141,26 @@ void kniggit()
 
 void fitter()
 {
-	TFitter *virtFit = new TFitter(6);
+	TFitter *virtFit = new TFitter(7);
 	virtFit->SetFCN(myFnc);
-	Double_t inputArgs[6];
+	Double_t inputArgs[7];
 	inputArgs[0] = 0.0;
-	inputArgs[1] = 10.0;
+	inputArgs[1] = 0.0;
 	inputArgs[2] = 0.0;
 	inputArgs[3] = 0.0;
 	inputArgs[4] = 0.0;
 	inputArgs[5] = 0.0;
+	inputArgs[6] = 0.0;
 
 	Double_t cmdPars[2]={1,0.01};
 	virtFit->SetParameter(0, "tarShift", 		inputArgs[0], 0.1, -20.0, 20.0);
-	virtFit->SetParameter(1, "tarShift 2", 		inputArgs[1], 0.1, -20.0, 20.0);
-	virtFit->SetParameter(2, "Left det Shift",	inputArgs[2], 0.1, -20.0, 20.0);
-	virtFit->SetParameter(3, "Right det Shift", inputArgs[3], 0.1, -20.0, 20.0);
-	virtFit->SetParameter(4, "Left det dist", 	inputArgs[4], 0.1, -20.0, 20.0);
+	virtFit->SetParameter(1, "Left det Shift", 	inputArgs[1], 0.1, -20.0, 20.0);
+	virtFit->SetParameter(2, "Right det Shift",	inputArgs[2], 0.1, -20.0, 20.0);
+	virtFit->SetParameter(3, "Left det dist", 	inputArgs[3], 0.1, -20.0, 20.0);
+	virtFit->SetParameter(4, "Right det dist", 	inputArgs[4], 0.1, -20.0, 20.0);
 	virtFit->SetParameter(5, "Right det dist",	inputArgs[5], 0.1, -20.0, 20.0);
+	virtFit->SetParameter(6, "Right det dist",	inputArgs[6], 0.1, -3.0, 3.0);
+	//virtFit->SetParameter(7, "Right det dist",	inputArgs[7], 0.1, -3.0, 3.0);
 	
 	virtFit->GetMinuit()->SetPrintLevel(2);
 	Double_t prec[2] = {0.0001,1};
@@ -196,14 +197,19 @@ void myFnc(Int_t &npar, Double_t *gin, Double_t &returner, Double_t *inPar, Int_
 	std::vector<Float_t> vecDe2H;
 	std::vector<Float_t> vecdELang2H;
 
+	std::vector<Float_t> sqlang1;
+	std::vector<Float_t> sqrang1;
+	std::vector<Float_t> sqlang2;
+	std::vector<Float_t> sqrang2;
+
 	histMml1->Reset();
 	histMml2->Reset();
 	lvTar1H->SetVectM(vTarget, cs::mass1H);
 	lvTar2H->SetVectM(vTarget, cs::mass2H);
 	int counter = -1;
 
-	SQLdist = 170.0 + inPar[4];
-	SQRdist = 250.0 + inPar[5];
+	SQLdist = 170.0;
+	SQRdist = 250.0;
 
 	while (fReader.Next())
 	{
@@ -214,9 +220,9 @@ void myFnc(Int_t &npar, Double_t *gin, Double_t &returner, Double_t *inPar, Int_
 			tarPosZ = cs::tarPos + inPar[0];
 			tarAngle = 45.0 * TMath::DegToRad();
 			SQLang = (65.0) * TMath::DegToRad();
-			SQRang = (15.0) * TMath::DegToRad();
+			SQRang = (15.0/* + inPar[2]*/) * TMath::DegToRad();
 
-			tarThickness = 80.0/* + inPar[6]*/;
+			tarThickness = 100.0;
 		}
 
 		else if(*geo==2)
@@ -224,9 +230,9 @@ void myFnc(Int_t &npar, Double_t *gin, Double_t &returner, Double_t *inPar, Int_
 			tarPosZ = cs::tarPos + inPar[1];
 			tarAngle = 6.0 * TMath::DegToRad();
 			SQLang = (50.0) * TMath::DegToRad();
-			SQRang = (15.0) * TMath::DegToRad();
+			SQRang = (15.0/* + inPar[2]*/) * TMath::DegToRad();
 			geoFlag = true;
-			tarThickness = 80.0/* + inPar[6]*/;
+			tarThickness = 200.0;
 		}
 
 		else if(*geo==3)
@@ -234,18 +240,33 @@ void myFnc(Int_t &npar, Double_t *gin, Double_t &returner, Double_t *inPar, Int_
 			tarPosZ = cs::tarPos + inPar[1];
 			tarAngle = 0.0 * TMath::DegToRad();
 			SQLang = (35.0) * TMath::DegToRad();
-			SQRang = (15.0) * TMath::DegToRad();
-			tarThickness = 80.0/* + inPar[6]*/;
+			SQRang = (15.0/* + inPar[2]*/) * TMath::DegToRad();
+			tarThickness = 200.0;
 		}
 
-		double tempE = he6Si->GetE((*lvBeam).E() - (*lvBeam).M(), 550.0);
+		double tempE = he6Si->GetE((*lvBeam).E() - (*lvBeam).M(), 644.0);
 		//printf("%f\n", tempE);
 		tempE = he6CD2->GetE(tempE, tarThickness/2);
-		TLorentzVector *flvBeam = new TLorentzVector((*lvBeam).Px(), (*lvBeam).Py(), (*lvBeam).Pz(), tempE + cs::mass6He);
+		double eneBeam = tempE + cs::mass6He;
+		double momBeam = sqrt(eneBeam*eneBeam-cs::mass6He*cs::mass6He);
+		double fMWPC_1_X = *MWPC_1_X + inPar[3];
+		double fMWPC_1_Y = *MWPC_1_Y + inPar[4];
+		double fMWPC_2_X = *MWPC_2_X + inPar[5];
+		double fMWPC_2_Y = *MWPC_2_Y + inPar[6];
+		double dX = fMWPC_2_X - fMWPC_1_X;
+		double dY = fMWPC_2_Y - fMWPC_1_Y;
+		double dZ = *MWPC_2_Z - *MWPC_1_Z;
+		
+		Tcoef=(cos(tarAngle)*tarPosZ-sin(tarAngle) * fMWPC_1_X - cos(tarAngle) * (*MWPC_1_Z)) / (sin(tarAngle) * dX + cos(tarAngle) * dZ);
 
-		X2Hlab = SQLdist*sin(SQLang) + (cs::SQLstartX + inPar[2]) * cos(SQLang);
+		TVector3 vBeam((*lvBeam).Vect());
+		vBeam.SetMag(momBeam);
+		TLorentzVector *flvBeam = new TLorentzVector();
+		flvBeam->SetVectM(vBeam,cs::mass6He);
+
+		X2Hlab = SQLdist*sin(SQLang) + (cs::SQLstartX) * cos(SQLang);
 		Y2Hlab = cs::SQLstartY + cs::widthStripX;
-		Z2Hlab = SQLdist*cos(SQLang) - (cs::SQLstartX + inPar[2]) * sin(SQLang);
+		Z2Hlab = SQLdist*cos(SQLang) - (cs::SQLstartX) * sin(SQLang);
 
 		X2Hdet = cs::widthStripX * (*SQX_L_sNo) * cos(SQLang);
 		Y2Hdet = cs::widthStripY * (*SQY_L_sNo);
@@ -253,22 +274,20 @@ void myFnc(Int_t &npar, Double_t *gin, Double_t &returner, Double_t *inPar, Int_
 
 		X2H = X2Hlab - X2Hdet;
 		Y2H = Y2Hlab + Y2Hdet;
-		Z2H = Z2Hlab + Z2Hdet;
+		Z2H = Z2Hlab + Z2Hdet;		
 
-		Tcoef=(cos(tarAngle)*tarPosZ-sin(tarAngle) * (*MWPC_1_X) - cos(tarAngle) * (*MWPC_1_Z)) / (sin(tarAngle) * (*dX) + cos(tarAngle) * (*dZ));
-
-		evX = (*MWPC_1_X) + (*dX) * Tcoef;
-		evY = (*MWPC_1_Y) + (*dY) * Tcoef;
-		evZ = (*MWPC_1_Z) + (*dZ) * Tcoef;
+		evX = fMWPC_1_X + dX * Tcoef;
+		evY = fMWPC_1_Y + dY * Tcoef;
+		evZ = *MWPC_1_Z + dZ * Tcoef;
 
 		TVector3 vectH(X2H-evX, Y2H-evY, Z2H-evZ);
 		sqlphi=vectH.Phi()*TMath::RadToDeg();
 		sqltheta=vectH.Theta()*TMath::RadToDeg();
 		sqlang = vectH.Angle(flvBeam->Vect())*TMath::RadToDeg();
 
-		X6Helab = SQRdist*(sin(-SQRang)) - (cs::SQRstartX + inPar[3]) * cos(SQRang);
+		X6Helab = SQRdist*sin(-SQRang) - (cs::SQRstartX) * cos(SQRang);
 		Y6Helab = cs::SQRstartY;
-		Z6Helab = SQRdist*cos(SQRang) - (cs::SQRstartX + inPar[3]) * sin(SQRang);
+		Z6Helab = SQRdist*cos(SQRang) - (cs::SQRstartX) * sin(SQRang);
 
 		X6Hedet = cs::widthStripX * (*SQX_R_sNo) * cos(SQRang);
 		Y6Hedet = cs::widthStripY * (*SQY_R_sNo);
@@ -341,6 +360,33 @@ void myFnc(Int_t &npar, Double_t *gin, Double_t &returner, Double_t *inPar, Int_
 			}
 
 		}
+		if (iflag==100)
+		{
+			rnd = new TRandom3();
+			for (int i = 0; i < 1000; ++i)
+			{
+				double theta_CM = rnd->Uniform(0.0,TMath::Pi());
+				Double_t tmpEne = 150.0;
+				Double_t tmpMom = sqrt(pow((tmpEne+cs::mass6He),2)-cs::mass6He*cs::mass6He);
+				TLorentzVector tmplvbeam(0.0,0.0,tmpMom,cs::mass6He+tmpEne);
+				TLorentzVector lv6He_EL = tmplvbeam;
+				TLorentzVector lv2H_EL(0,0,0,cs::mass2H);
+				TLorentzVector lvCM_EL = lv6He_EL+lv2H_EL;
+				TVector3 boostVect_EL = lvCM_EL.BoostVector();
+
+				lv6He_EL.Boost(-boostVect_EL);
+				lv2H_EL.Boost(-boostVect_EL);
+
+				lv6He_EL.SetTheta(TMath::Pi()-theta_CM);
+				lv2H_EL.SetTheta(theta_CM);
+
+				lv6He_EL.Boost(boostVect_EL);
+				lv2H_EL.Boost(boostVect_EL);
+				sqlang2.push_back(180.0 * (tmplvbeam.Angle(lv2H_EL.Vect()))/double(TMath::Pi()));
+				sqrang2.push_back(180.0 * (tmplvbeam.Angle(lv6He_EL.Vect()))/double(TMath::Pi()));
+			}
+
+		}
 	//delete flvBeam;
 	}
 
@@ -361,7 +407,9 @@ void myFnc(Int_t &npar, Double_t *gin, Double_t &returner, Double_t *inPar, Int_
 	//dELang1H->Fit(angAngFit1H, "QN0");
 	dELang2H =  new TGraph(vecDe2H.size(), &vecdELang2H[0], &vecDe2H[0]);
 	//dELang2H->Fit(angAngFit1H, "QN0");
-/*
+
+	angang2H =  new TGraph(sqlang2.size(), &sqlang2[0], &sqrang2[0]);
+
 	histMml1->Fit("gaus", "QO");
 	histMml2->Fit("gaus", "QO");
 
@@ -372,7 +420,9 @@ void myFnc(Int_t &npar, Double_t *gin, Double_t &returner, Double_t *inPar, Int_
 	fit2 = histMml2->GetFunction("gaus");
 
 	double missM1 = abs(histMml1->GetFunction("gaus")->GetParameter(1));
-	double missM2 = abs(histMml2->GetFunction("gaus")->GetParameter(1));*/
+	double missM2 = abs(histMml2->GetFunction("gaus")->GetParameter(1));
+	double sigma1 = histMml1->GetFunction("gaus")->GetParameter(1);
+	double sigma2 = histMml2->GetFunction("gaus")->GetParameter(2);
 
 	double angAng1H = angAngFit1H->GetChisquare();
 	double angAng2H = angAngFit2H->GetChisquare();
@@ -404,7 +454,7 @@ void myFnc(Int_t &npar, Double_t *gin, Double_t &returner, Double_t *inPar, Int_
 		langRang2H->Draw("AP");
 		langRang2H->Fit(angAngFit2H, "Q");
 		flangRang2H->SetMarkerColor(kRed);
-		flangRang2H->Draw("P,same");
+		angang2H->Draw("P,same");
 
 		myCanvas->cd(5);
 		histMml2->Draw("");
@@ -413,12 +463,14 @@ void myFnc(Int_t &npar, Double_t *gin, Double_t &returner, Double_t *inPar, Int_
 		myCanvas->cd(6);
 		dELang2H->Draw("AP");
 		dELang2H->Fit(angEFit2H,"Q");
+
+		printf("%f\n",histMml1->GetFunction("gaus")->GetParameter(1) - histMml2->GetFunction("gaus")->GetParameter(1));
 	}
 
 	//printf("%f\t%f\t%f\t%f\t%f\n", fit2->GetParameter(2), inPar[0], inPar[1], inPar[2], inPar[3]);
-	returner = angAng1H + angAng2H/* + missM1 + missM2*/;
+	returner = angAng1H + angAng2H + dEAng1H + dEAng2H;//abs(histMml1->GetFunction("gaus")->GetParameter(1) - histMml2->GetFunction("gaus")->GetParameter(1));
 	//returner = dEAng2H;
-	//printf("%f\t%f\t%f\t%f\t%f\n", result_1H, result_2H, fit1->GetParameter(1), fit2->GetParameter(1));
+	printf("%f\t%f\n", angAng1H, angAng2H);
 
 	delete lvHe6, lvH1, lvH2, lvTar1H, lvTar2H, langRang1H, langRang2H;
 }

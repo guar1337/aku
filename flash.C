@@ -233,7 +233,7 @@ void flash::SlaveTerminate()
 
 	string option = GetOption();
 
-	ofstream outStream("/home/guar/Desktop/varDist.txt", ios::app);
+	ofstream outStream("/home/zalewski/Desktop/varDist.txt", ios::app);
 
 	TF1 *angAngFit_1H = new TF1("angAngFit_1H","[2]*atan(sin([0]*x)/([1]-cos([0]*x)))");
 	angAngFit_1H->FixParameter(0, 2*cs::deg_to_rad);

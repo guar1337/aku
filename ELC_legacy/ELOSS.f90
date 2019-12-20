@@ -101,12 +101,12 @@ SUBROUTINE rde(e,range,rel1,rel,ix)
   IMPLICIT REAL*8(A-H,O-Z)
   
   INTERFACE 
-     REAL*8 FUNCTION c(x)
-       REAL*8,intent(in) :: x
+     REAL FUNCTION c(x)
+       REAL,intent(in) :: x
      END FUNCTION c
      
-     REAL*8 FUNCTION c1(x)
-       REAL*8 :: x
+     REAL FUNCTION c1(x)
+       REAL :: x
      END FUNCTION c1
   END INTERFACE
   

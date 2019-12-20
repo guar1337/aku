@@ -2,8 +2,8 @@
 
 
 R__LOAD_LIBRARY(libgsl.so);
-R__LOAD_LIBRARY(/home/guar/aku/ELC/libEloss.so);
-R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
+R__LOAD_LIBRARY(/home/zalewski/aku/ELC/libEloss.so);
+R__LOAD_LIBRARY(/home/zalewski/aku/wrk/libMr_Blue_Sky.so);
 
 
 // voron1392
@@ -208,7 +208,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			cal_SQX_L[iii]=(in_SQX_L[iii]+gRandom->Uniform())*b_SQX_L[iii]+a_SQX_L[iii];
 			cal_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
 
-			if (cal_SQX_L[iii]>3.0)
+			if (cal_SQX_L[iii]>1.0)
 			{
 				sql_count++;
 				sql=true;
@@ -252,7 +252,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			tof_range_count++;
 		}
 
-		if (mwpc && tac && sqr && tof>100 && tof<200 && sql)
+		if (mwpc/* && tac/* && sqr && tof>100 && tof<200 && sql*/)
 		{
 			outTree->Fill();
 		}

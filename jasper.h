@@ -2,7 +2,7 @@
 // This class has been automatically generated on
 // Tue Apr	9 11:42:44 2019 by ROOT version 6.12/06
 // from TTree simevents/MC events
-// found on file: /home/guar/aku/geant4/build/gurney.root
+// found on file: /home/zalewski/aku/geant4/build/gurney.root
 //////////////////////////////////////////////////////////
 
 #ifndef jasper_h
@@ -68,28 +68,38 @@ public :
 	TTreeReaderValue<Double_t> fInZ2H = {fReader, "fZ2H"};
 	TTreeReaderValue<Char_t> fEve2H = {fReader, "fEve2H"};
 
+	TTreeReaderValue<Float_t> fMWPC_1_X = {fReader, "MWPC_1_X"};
+	TTreeReaderValue<Float_t> fMWPC_2_X = {fReader, "MWPC_2_X"};
+	TTreeReaderValue<Float_t> fMWPC_1_Y = {fReader, "MWPC_1_Y"};
+	TTreeReaderValue<Float_t> fMWPC_2_Y = {fReader, "MWPC_2_Y"};
+
 
 	Int_t Sideut_multY;
 	Int_t Sideut_multX;
 	Int_t Sihe_multX;
 	Int_t Sihe_multY;
 
-	Double_t l_sqlang, l_sqldist, l_sqrang, l_sqrdist;
+	Double_t SQLang, SQRang, SQLdist, SQRdist, tarAngle, tarPos;
+	Double_t MWPC_1_Z, MWPC_2_Z;
 	Double_t fsqrde, fsqlde, fsqretot, fsqletot, resqlde;
 	Double_t sqrde, sqlde, sqretot, sqletot;
-	Double_t dX, dY, dZ, hX, hY, hZ;
+	Double_t X2H, Y2H, Z2H, X6He, Y6He, Z6He;
 	Double_t fdX, fdY, fdZ, fhX, fhY, fhZ;
-	Double_t dX0, dY0, dZ0, hX0, hY0, hZ0;
-	Double_t out_evX, out_evY, out_evZ;
+	Double_t X2Hlab, Y2Hlab, Z2Hlab, X6Helab, Y6Helab, Z6Helab;
+	Double_t X2Hdet, Y2Hdet, Z2Hdet, X6Hedet, Y6Hedet, Z6Hedet;
+	Double_t evX, evY, evZ;
+	Double_t fevX, fevY, fevZ;
+	Double_t dX, dY, dZ;
 	Double_t sqlang, sqrang, fsqlang, fsqrang;
 	Double_t out_fsqlangg, out_fsqrangg;
 	Double_t mm, thetacm, phicm;
 	Double_t fmm, fthetacm, fphicm;
-	Int_t SQX_L_s, SQY_L_s, SQX_R_s, SQY_R_s;
+	Double_t MWPC_1_X, MWPC_2_X, MWPC_1_Y, MWPC_2_Y;
+	Int_t SQX_L_sNo, SQY_L_sNo, SQX_R_sNo, SQY_R_sNo;
 	const Double_t width_strip_X{58.0/32.0};
 	const Double_t width_strip_Y{58.0/16.0};
 	TRandom3 *rnd;
-	TVector3 *v2H, *v6He, *vf2H, *vf6He;
+	TVector3 *v2H, *v6He, *vf2H, *vf6He, *vBeam;
 	//Double_t reco_sqlang, reco_sqrang;
 
 	TLorentzVector *flv6He;
@@ -99,6 +109,7 @@ public :
 	TLorentzVector *flv2Hcm;
 	TLorentzVector *lv6He;
 	TLorentzVector *lv2H;
+	TLorentzVector *lvBeam;
 
 	int CD2_Nel=2;
 	double CD2_A[2]{2, 12};

@@ -10,7 +10,7 @@
 #include <TLorentzVector.h>
 #include <TRotation.h>
 
-const TString fpath = "/home/guar/data/mar2018/dE/geos/shortF.root";
+const TString fpath = "/home/zalewski/data/mar2018/dE/geos/shortF.root";
 TFile *inFile = new TFile(fpath.Data(), "READ");
 
 TRandom3 *rnd;

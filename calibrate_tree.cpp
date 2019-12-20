@@ -2,8 +2,8 @@
 
 
 R__LOAD_LIBRARY(libgsl.so);
-R__LOAD_LIBRARY(/home/guar/aku/ELC/libEloss.so);
-R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
+R__LOAD_LIBRARY(/home/zalewski/aku/ELC/libEloss.so);
+R__LOAD_LIBRARY(/home/zalewski/aku/wrk/libMr_Blue_Sky.so);
 
 
 ClassImp(calibrate_tree);
@@ -58,8 +58,6 @@ inTree->SetBranchAddress("tMWPC",	in_tMWPC);
 inTree->SetBranchAddress("trig",	&in_trig);
 inTree->SetBranchAddress("tof",		&in_tof);
 inTree->SetBranchAddress("sumF5",		&sumF5);
-
-
 
 
 //ReCo - detectors
@@ -174,7 +172,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	out_ny2=in_ny2;
 	out_trig=in_trig;
 	aF5 = (in_aF5[0] + in_aF5[1] + in_aF5[2] + in_aF5[3])/4.0;
-
+Run_ID=0;
 	if (Run_ID == 0)
 	{
 		for (int iii=0; iii<4; iii++)

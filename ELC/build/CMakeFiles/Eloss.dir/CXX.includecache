@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/zalewski/aku/wrk/ELC/AELC.cpp
+AELC.h
+/home/zalewski/aku/wrk/ELC/AELC.h
+
+/home/zalewski/aku/wrk/ELC/AELC.h
+
+/home/zalewski/aku/wrk/ELC/ELC.cpp
+ELC.h
+/home/zalewski/aku/wrk/ELC/ELC.h
+
+/home/zalewski/aku/wrk/ELC/ELC.h
+iostream
+-
+AELC.h
+/home/zalewski/aku/wrk/ELC/AELC.h
+cmath
+-
+gsl/gsl_errno.h
+-
+gsl/gsl_spline.h
+-
+

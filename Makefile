@@ -1,6 +1,6 @@
 # 6he data analysis code
 NAME := Mr_Blue_Sky
-ELC_dir = /home/guar/aku/eloss
+ELC_dir = /home/zalewski/aku/eloss
 INCLUDES = -I`root-config --incdir`
 
 SHAREDLIBS = $(addprefix -l, gsl Physics MathCore Core)
@@ -39,7 +39,7 @@ clean:
 .PHONY: new
 new:
 	@make clean --no-print-directory
-	@clear --no-print-directory
+	@clear 
 	@make --no-print-directory
 
 print:

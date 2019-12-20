@@ -7,7 +7,7 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-
+//ClassImp(ELC);
 
 extern "C" void eloss_(int *nel,
 		       double *zel,double *ael,double *wel, 
@@ -100,7 +100,7 @@ void ELC::SetEtab(void){
   EnergyStep=(fEnergyMax-Energy_i)/(double)(fEnergyPointsNum-1);  
   
   fETable[0]=Energy_i;
-  for(int i = 1; i < fEnergyPointsNum;i++){
+  for(Int_t i = 1; i < fEnergyPointsNum;i++){
     fETable[i] =fETable[i-1]+EnergyStep;
     
   }
@@ -117,7 +117,7 @@ void ELC::CallEloss(void){
 	 &(ap = (double) Aion),
 	 &fEnergyPointsNum, 
 	 fETable, fRTable,&zw,&aw);
-  for(int i = 0; i<fEnergyPointsNum;i++)
+  for(Int_t i = 0; i<fEnergyPointsNum;i++)
     fRTable[i]=coef*fRTable[i];
 }
 
@@ -127,7 +127,7 @@ double ELC::GetR(const double e0,const double e){
   //
   return R_of_E(e0) - R_of_E(e);
 } 
-double ELC::GetE(const double e0, const double r){
+Double_t ELC::GetE(const Double_t e0, const Double_t r){
   //
   //Calculate new energy using linear interpolation
   //

@@ -3,9 +3,12 @@
 #include "dE_E_angle.h"
 
 #include "constants.h"
+#include "muchobojca.h"
+#include "calibrate_tree.h"
+
 R__LOAD_LIBRARY(libgsl.so);
-R__LOAD_LIBRARY(/home/guar/aku/wrk/libMr_Blue_Sky.so);
-R__LOAD_LIBRARY(/home/guar/aku/wrk/ELC/libEloss.so);
+R__LOAD_LIBRARY(/home/zalewski/aku/wrk/libMr_Blue_Sky.so);
+R__LOAD_LIBRARY(/home/zalewski/aku/wrk/ELC/build/libEloss.so);
 
 
 #include <sys/time.h>
@@ -17,19 +20,82 @@ bool kniggit();
 void Xerox();
 void madLooper();
 const TString MWPCID = "2";
-void functionDrawer();
+void privateFileCaller();
 
-void werter ()
+void werter()
 {
 	TStopwatch *stopwatch = new TStopwatch();
 	printf("\n**We should definitely do something, aight?\n");
 	//daisy_chain_files(true);
 	MakeSelector_handler();
 	//Xerox();
-	//functionDrawer();
 	//kniggit();
 	//tree_extractor();
+	//privateFileCaller();
 	stopwatch->Print();
+}
+
+void privateFileCaller()
+{/*
+	TString inTreeName,fnamePrefix, outTreeName;
+	Double_t inputPars, qualityControl;
+
+	if (cs::inDir.Contains("raw"))
+	{
+		inTreeName = "AnalysisxTree";
+		fnamePrefix = "cln";
+		outTreeName = "cleaned";
+	}
+
+	else if (cs::inDir.Contains("cln"))
+	{
+		inTreeName = "cleaned";
+		fnamePrefix = "cal";
+		outTreeName = "calibrated";
+	}
+
+	else if (cs::inDir.Contains("cal"))
+	{
+		inTreeName = "calibrated";
+		fnamePrefix = "dE";
+		outTreeName = "dE_angle";
+	}
+
+	TTree *inT, *outT;
+	TFile *inF, *outF;
+	TString infName = "/home/zalewski/data/he6_d/miscroot/CsI/cal_csiR.root";
+	TString outFName = "/home/zalewski/data/he6_d/miscroot/CsI/dE_csiR.root";
+
+	inF = new TFile{infName.Data(), "READ"};
+	if (inF->IsZombie())
+	{
+		return 0;
+	}
+
+	inT = (TTree*)inF->Get(inTreeName.Data());
+	outF = new TFile{outFName.Data(), "RECREATE"};
+	outT= new TTree{outTreeName.Data(),outTreeName.Data()};
+
+	if (cs::inDir=="raw")
+	{
+		muchobojca *MrMuscle = new muchobojca();
+		MrMuscle->wrk(inT, outT);
+	}
+
+	else if(cs::inDir=="cln")
+	{
+		calibrate_tree *Kali = new calibrate_tree();
+		Kali->wrk(inT, outT);
+	}
+
+	else if(cs::inDir=="cal")
+	{
+		dE_E_angle *Hermes = new dE_E_angle(inT,outT, infName, cs::runNo);
+		(cs::runNo == 5) ? Hermes->actual_work_gas() : Hermes->actual_work(&inputPars, &qualityControl, cs::runNo);
+	}
+
+	outT->Write();
+	delete outF, inF;*/
 }
 
 void Xerox()
@@ -37,9 +103,9 @@ void Xerox()
 	Double_t qualityControl[4];
 	Double_t inputPars[]{0.0,0.0,0.0,0.0};
 	TString str_name = "cal_geo2.root";
-	TFile *inF = new TFile{"/home/guar/data/he6_d/cal/geo3/cal_geo3.root", "READ"};
+	TFile *inF = new TFile{"/home/zalewski/data/he6_d/cal/geo3/cal_geo3.root", "READ"};
 	TTree *inT = (TTree*)inF->Get("calibrated");
-	TFile *outF = new TFile{"/home/guar/data/he6_d/cal/geo3/cal_deu3.root", "RECREATE"};
+	TFile *outF = new TFile{"/home/zalewski/data/he6_d/cal/geo3/cal_deu3.root", "RECREATE"};
 	TTree *outT = inT->CloneTree(0);
 	outT->SetName("calibrated");
 	dE_E_angle *Hermes = new dE_E_angle(inT, outT, str_name, cs::runNo);
@@ -54,11 +120,12 @@ void Xerox()
 
 bool MakeSelector_handler()
 {
-	TString fName("deuPoly");
-	TString fullName = "/home/guar/data/he6_d/simulation/" + fName + ".root";
+	TString fName("gurney_bis");
+	TString fullName = "/home/zalewski/Desktop/6He/analysis/19DecMWPC/" + fName + ".root";
 	TFile *inF = new TFile(fullName.Data(),"READ");
 	TTree *inTree;
 	inTree = (TTree*)inF->Get("simevents");
+	//inTree->MakeSelector("expr");
 	inTree->Process("jasper.C",fName.Data());
 	inF->Close();
 	return 1;
@@ -72,66 +139,9 @@ bool MakeSelector_handler(TChain *inChain)
 	return 1;
 }
 
-void functionDrawer()
-{
-	TRandom3 *rndGen = new TRandom3();
-	Double_t theta4 = rndGen->Uniform(0.0, TMath::Pi());
-	TF1 *function1 = new TF1("function1","[2]*atan(sin([0]*x)/([1]-cos([0]*x)))", 0.0, 90.0);
-	function1->FixParameter(0, 2*cs::deg_to_rad);
-	function1->FixParameter(1, cs::mass_6He/cs::mass_2H);
-	function1->FixParameter(2, cs::rad_to_deg);
-	function1->Draw();
-	TF1 *function2 = new TF1("function2","[1]*atan((2*tan([0]*(90.0-x))/(1-(tan([0]*(90.0-x))*tan([0]*(90.0-x))/0.97)+2.948803*(1+(tan([0]*(90.0-x))*tan([0]*(90.0-x))/0.97)))))", 0.0, 90.0);
-	function2->FixParameter(1, cs::rad_to_deg);
-	function2->FixParameter(0, cs::deg_to_rad);
-	function2->Draw("same");
-
-	Double_t ene_beam, mom_beam;
-	TVector3 *vBeam = new TVector3(0.0, 0.0, 1.0);
-	TLorentzVector *lvBeam, lvTarget;
-	lvTarget = TLorentzVector(0.0, 0.0, 1.0, cs::mass_1H);
-	ene_beam = cs::mass_6He + 160.0;
-	mom_beam = sqrt(ene_beam*ene_beam - cs::mass_6He*cs::mass_6He);
-	vBeam->SetMag(mom_beam);	
-	lvBeam->SetVectM(*vBeam, cs::mass_6He);
-
-	TLorentzVector lv6He_IN = *lvBeam;
-	TLorentzVector lv2H_IN = lvTarget;
-	TLorentzVector lvCM_IN = lv6He_IN+lv2H_IN;
-	/*
-	TVector3 boostVect_IN = lvCM_IN.boostVector();
-	lv6He_IN.boost(-boostVect_IN);
-	lv2H_IN.boost(-boostVect_IN);
-	//Let's go inelastic now!
-	Double_t newEcm	= lv2H_IN.e() + lv6He_IN.e() - excitedStateEnergy_6He;
-	Double_t newE2H	= (1/(2*newEcm))*(newEcm*newEcm-mass6He*mass6He+mass2H*mass2H);
-	Double_t newE6He	= (1/(2*newEcm))*(newEcm*newEcm+mass6He*mass6He-mass2H*mass2H)+excitedStateEnergy_6He;
-	Double_t newMom2H	= sqrt(newE2H*newE2H-mass2H*mass2H);
-	Double_t newMom6He = sqrt(newE6He*newE6He-mass6He*mass6He);
-
-	lv2H_IN.setE(newE2H);
-	lv6He_IN.setE(newE6He+excitedStateEnergy_6He);
-	
-	lv2H_IN.setRho(newMom2H);
-	lv6He_IN.setRho(newMom6He);
-
-	//CM PART
-	lv6He_IN.rotate(0,	theta_CM,	0);
-	lv6He_IN.rotate(0,	0,				phi_CM	);
-	lv2H_IN.rotate(0,		-theta_CM,	0	);
-	lv2H_IN.rotate(0,		0,				-phi_CM	);
-		
-	TLorentzVector lv2H_CM_IN(lv2H_IN);
-	TLorentzVector lv6He_CM_IN(lv6He_IN);
-
-	lv6He_IN.boost(boostVect_IN);
-	lv2H_IN.boost(boostVect_IN);
-	*/
-}
-
 bool tree_extractor()
 {
-	TString fpath = "/home/guar/data/he6_d/dE/PG_geo1.root";
+	TString fpath = "/home/zalewski/data/he6_d/dE/PG_geo1.root";
 	TString treeName = "dE_angle";
 	TFile *inFile = new TFile(fpath.Data());
 
@@ -204,7 +214,7 @@ bool daisy_chain_files(bool printout)
 {
 	//	remove this line to use multi-file processing
 
-	TString raw_data_path{"/home/guar/data/he6_d/raw/geo1/"};
+	TString raw_data_path{"/home/zalewski/data/he6_d/raw/geo1/"};
 	TString fileName, TreePath;
 	TString treeName{"/AnalysisxTree"};
 	TChain *inChain = new TChain();
@@ -248,5 +258,15 @@ bool daisy_chain_files(bool printout)
 
 bool kniggit()
 {
-return 0;
+
+	TString fName("gurney_bis");
+	TString fullName = "/home/zalewski/aku/geant4/build/" + fName + ".root";
+	TFile *inF = new TFile(fullName.Data(),"READ");
+	TTree *inTree;
+	inTree = (TTree*)inF->Get("simevents");
+	inTree->MakeSelector("jasper_tmp.C");
+	//inTree->Process("jasper_tmp.C",fName.Data());
+	inF->Close();
+	return 1;
+
 }

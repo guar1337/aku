@@ -41,7 +41,7 @@ void jasperNo5::Begin(TTree * /*tree*/)
 	vf2H = new TVector3();
 	vf6He = new TVector3();
 
-	outF = new TFile("/home/guar/aku/geant4/digi.root","RECREATE");
+	outF = new TFile("/home/zalewski/aku/geant4/digi.root","RECREATE");
 	outTree = new TTree("digi","digi");
 
 	outTree->Branch("evX",	&out_evX, "evX/D");

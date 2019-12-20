@@ -123,7 +123,7 @@ void beamCutter::Begin(TTree * /*tree*/)
 	// When running with PROOF Begin() is only called on the client.
 	// The tree argument is deprecated (on PROOF 0 is passed).
 
-	outF = new TFile("/home/guar/aku/geant4/beamSource_1.root","RECREATE");
+	outF = new TFile("/home/zalewski/aku/geant4/beamSource_1.root","RECREATE");
 	outTree = new TTree("beamSource","beam_Source");
 	rnd = new TRandom3();
 
@@ -233,14 +233,14 @@ Bool_t beamCutter::Process(Long64_t entry)
 					{		
 						beta_squared= pow((cs::tofBase/tof)/cs::c, 2.0);
 						gamma=1.0/sqrt(1.0-beta_squared);
-						kinE =  cs::mass_6He*(gamma-1.0);
+						kinE =  cs::mass6He*(gamma-1.0);
 
 						MWPC_1_Z = -816.0;
 						MWPC_2_Z = -270.0;
 
-						dX = (MWPC_2_X + rnd->Uniform(0.0,1.25)-0.6125) - (MWPC_1_X + rnd->Uniform(0.0,1.25)-0.6125);
-						dY = (MWPC_2_Y + rnd->Uniform(0.0,1.25)-0.6125) - (MWPC_1_Y + rnd->Uniform(0.0,1.25)-0.6125);
-						dZ = (MWPC_2_Z + rnd->Uniform(0.0,1.25)-0.6125) - (MWPC_1_Z + rnd->Uniform(0.0,1.25)-0.6125);
+						dX = (MWPC_2_X + rnd->Uniform(0.0,1.25)-0.625) - (MWPC_1_X + rnd->Uniform(0.0,1.25)-0.625);
+						dY = (MWPC_2_Y + rnd->Uniform(0.0,1.25)-0.625) - (MWPC_1_Y + rnd->Uniform(0.0,1.25)-0.625);
+						dZ = (MWPC_2_Z + rnd->Uniform(0.0,1.25)-0.625) - (MWPC_1_Z + rnd->Uniform(0.0,1.25)-0.625);
 						vBeam->SetXYZ(dX,dY,dZ);
 				/*
 						if (geoNo==5)
@@ -255,11 +255,11 @@ Bool_t beamCutter::Process(Long64_t entry)
 						}
 				*/		
 
-						ene_beam = cs::mass_6He + kinE;
-						mom_beam = sqrt(ene_beam*ene_beam - cs::mass_6He*cs::mass_6He);
+						ene_beam = cs::mass6He + kinE;
+						mom_beam = sqrt(ene_beam*ene_beam - cs::mass6He*cs::mass6He);
 						
 						vBeam->SetMag(mom_beam);
-						lvBeam->SetVectM(*vBeam, cs::mass_6He);
+						lvBeam->SetVectM(*vBeam, cs::mass6He);
 						outTree->Fill();
 					}
 				}

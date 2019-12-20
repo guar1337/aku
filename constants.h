@@ -153,10 +153,10 @@ namespace cs
 	static const float		tcor_sqRY_4	=	400.0;
 
 	//*************************MWPC******************************************************
-	static const float		MWPC1_X_displacement	=	-1.0;
-	static const float		MWPC1_Y_displacement	=	-2.1375;
-	static const float		MWPC2_X_displacement	=	0.2;
-	static const float		MWPC2_Y_displacement	=	-1.125;
+	static const float		MWPC1_X_displacement	=	4.10896e+00;//-1.0;
+	static const float		MWPC1_Y_displacement	=	-6.23299e+00;//-2.1375;
+	static const float		MWPC2_X_displacement	=	-1.32910e+00;//0.2;
+	static const float		MWPC2_Y_displacement	=	-2.96475e+00;//-1.125;
 
 
 	static const float		MWPC1_X_displacement_5	=	0.0;
@@ -180,9 +180,9 @@ namespace cs
 
 	static const float 		mass1H 	= 938.272013;
 	static const float 		mass2H 	= 1875.613000;
-	static const float 		mass3H 	= 3.01604927*u_to_MeV;
-	static const float 		mass4He 	= 3727.379000;
-	static const float 		mass6He 	= 5605.534341;
+	static const float 		mass3H 	= 2808.921;
+	static const float 		mass4He = 3727.379000;
+	static const float 		mass6He = 5605.534341;
 
 	static const float		c			=	299.792;	// mm/ns
 	
@@ -193,15 +193,15 @@ namespace cs
 	static const float		tof_const_5		=	68.475;
 
 
-	static const TString 	dir_runs("/home/guar/data/he6_d/");
-	static const TString 	dir_CsI("/home/guar/data/he6_d/miscroot/CsI/parts");
-	static const TString 	dir_params("/home/guar/data/he6_d/calib_utilities/params/");	
+	static const TString 	dir_runs("/home/zalewski/data/he6_d/");
+	static const TString 	dir_CsI("/home/zalewski/data/he6_d/miscroot/CsI/parts");
+	static const TString 	dir_params("/home/zalewski/data/he6_d/calib_utilities/params/");	
 	static const TString 	s_inFname("run00_12");
-	static const TString	s_playground("/home/guar/data/tools/");
-	static const TString	dir_gcut("/home/guar/data/he6_d/GCuts/");
+	static const TString	s_playground("/home/zalewski/data/tools/");
+	static const TString	dir_gcut("/home/zalewski/data/he6_d/GCuts/");
 
-	static const TString	dir_len_data("/home/guar/data/");
-	static const TString	dir_len_calib("/home/guar/aku/calib_files/");
+	static const TString	dir_len_data("/home/zalewski/data/");
+	static const TString	dir_len_calib("/home/zalewski/aku/calib_files/");
 	static const float		tarPos		=	0.0;
 
 	static const int		runNo =	1;
