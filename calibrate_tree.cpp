@@ -10,8 +10,8 @@ ClassImp(calibrate_tree);
 calibrate_tree::calibrate_tree()
 {
 	maynard = new TOOL();
-	tof_shift_A = -400;
-	tof_shift_B = 1.1;
+	//tof_shift_A = -400;
+	tof_shift_B = 1.0;
 	counter = 0;
 
 }
@@ -28,7 +28,6 @@ inTree->SetBranchAddress("SQX_L",	in_SQX_L);
 inTree->SetBranchAddress("SQX_R",	in_SQX_R);
 inTree->SetBranchAddress("SQY_L",	in_SQY_L);
 inTree->SetBranchAddress("SQY_R",	in_SQY_R);
-//inTree->SetBranchAddress("SQ300",	in_SQ300);
 
 inTree->SetBranchAddress("tSQX_L",	in_tSQX_L);
 inTree->SetBranchAddress("tSQX_R",	in_tSQX_R);
@@ -36,7 +35,13 @@ inTree->SetBranchAddress("tCsI_L",	in_tCsI_L);
 inTree->SetBranchAddress("tCsI_R",	in_tCsI_R);
 inTree->SetBranchAddress("tSQY_L",	in_tSQY_L);
 inTree->SetBranchAddress("tSQY_R",	in_tSQY_R);
-//inTree->SetBranchAddress("tSQ300",	in_tSQ300);
+if (cs::runNo == 3)
+{
+	inTree->SetBranchAddress("SQ300",	in_SQ300);
+	inTree->SetBranchAddress("tSQ300",	in_tSQ300);
+}
+
+
 
 inTree->SetBranchAddress("tF3",	in_tdcF3);
 inTree->SetBranchAddress("F3",	in_aF3);
@@ -57,7 +62,7 @@ inTree->SetBranchAddress("y2",		in_y2);
 inTree->SetBranchAddress("tMWPC",	in_tMWPC);
 inTree->SetBranchAddress("trig",	&in_trig);
 inTree->SetBranchAddress("tof",		&in_tof);
-inTree->SetBranchAddress("sumF5",		&sumF5);
+inTree->SetBranchAddress("sumF5",	&sumF5);
 
 
 //ReCo - detectors
@@ -110,33 +115,23 @@ outTree->Branch("r_CsI_R",	r_CsI_R,	"r_CsI_R[16]/D");
 
 outTree->Branch("trig",		&out_trig,	"trig/I");
 outTree->Branch("tof",		&out_tof,	"tof/D");
+outTree->Branch("kinE",		&kinE,	"kinE/D");
 outTree->Branch("aF5",		&aF5,	"aF5/D");
 outTree->Branch("az",	&AZ,		 "az/D");
 outTree->Branch("run",	&Run_ID,	"run/S");
 
 
 
-if (maynard->params_loader("SQX_L_ec.cal", a_SQX_L, b_SQX_L, 32)	&&
-	maynard->params_loader("SQX_R_ec.cal", a_SQX_R, b_SQX_R, 32)	&&
-	maynard->params_loader("SQX_L_tc.cal", a_tSQX_L, b_tSQX_L, 32)	&&
-	maynard->params_loader("SQX_R_tc.cal", a_tSQX_R, b_tSQX_R, 32)	&&
+if (maynard->params_loader("sqx_l_ec.clb", a_SQX_L, b_SQX_L, 32)	&&
+	maynard->params_loader("sqx_r_ec.clb", a_SQX_R, b_SQX_R, 32)	&&
 
-	maynard->params_loader("SQY_L_ec.cal", a_SQY_L, b_SQY_L, 16)	&&
-	maynard->params_loader("SQY_R_ec.cal", a_SQY_R, b_SQY_R, 16)	&&
-	maynard->params_loader("SQY_L_tc.cal", a_tSQY_L, b_tSQY_L, 16)	&&
-	maynard->params_loader("SQY_R_tc.cal", a_tSQY_R, b_tSQY_R, 16)	&&
+	maynard->params_loader("sqy_l_ec.clb", a_SQY_L, b_SQY_L, 16)	&&
+	maynard->params_loader("sqy_r_ec.clb", a_SQY_R, b_SQY_R, 16)	&&
 
-	maynard->params_loader("csi_r_tc.cal", a_tCsI_R, b_tCsI_R, 16)	&&
-	maynard->params_loader("csi_l_tc.cal", a_tCsI_L, b_tCsI_L, 16)	&&
-	maynard->params_loader("csi_r_ec.cal", a_CsI_R, b_CsI_R, 16)	&&
-	maynard->params_loader("csi_l_ec.cal", a_CsI_L, b_CsI_L, 16)	&&
+	maynard->params_loader("csi_r_ec.clb", a_CsI_R, b_CsI_R, 16)	&&
+	maynard->params_loader("csi_l_ec.clb", a_CsI_L, b_CsI_L, 16)	&&
 
-	maynard->params_loader("DSDX_L_5.cal", a_DSDX_L_5, b_DSDX_L_5, 32)	&&
-	maynard->params_loader("DSDX_R_5.cal", a_DSDX_R_5, b_DSDX_R_5, 32)	&&
-	maynard->params_loader("DSDY_L_5.cal", a_DSDY_L_5, b_DSDY_L_5, 16)	&&
-	maynard->params_loader("DSDY_R_5.cal", a_DSDY_R_5, b_DSDY_R_5, 16)	&&
-	maynard->params_loader("SSD_L_5.cal", a_SSD_L_5, b_SSD_L_5, 16)		&&
-	maynard->params_loader("csi_r_ec_5.cal", a_CsI_R_5, b_CsI_R_5, 16)	)
+	maynard->params_loader("SQ300.clb", a_SQ300, b_SQ300, 16)	)
 {
 	printf("#\tSuccesfully loaded all the parameters for calibration\n");
 }
@@ -172,7 +167,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 	out_ny2=in_ny2;
 	out_trig=in_trig;
 	aF5 = (in_aF5[0] + in_aF5[1] + in_aF5[2] + in_aF5[3])/4.0;
-Run_ID=0;
+	Run_ID=0;
 	if (Run_ID == 0)
 	{
 		for (int iii=0; iii<4; iii++)
@@ -192,11 +187,17 @@ Run_ID=0;
 			out_SQY_R[iii]=(in_SQY_R[iii]+gRandom->Uniform())*b_SQY_R[iii]+a_SQY_R[iii];
 			out_CsI_R[iii]=(in_CsI_R[iii]+gRandom->Uniform())*b_CsI_R[iii]+a_CsI_R[iii];
 			out_CsI_L[iii]=(in_CsI_L[iii]+gRandom->Uniform())*b_CsI_L[iii]+a_CsI_L[iii];
+			
+			if (cs::runNo == 3)
+			{
+				out_SQ300[iii]=(in_SQ300[iii]+gRandom->Uniform())*b_SQ300[iii]+a_SQ300[iii];
+				out_tSQ300[iii]=in_tSQ300[iii];
+			}
 
-			out_tSQY_L[iii]=(in_tSQY_L[iii]+gRandom->Uniform())*b_tSQY_L[iii]+a_tSQY_L[iii];
-			out_tSQY_R[iii]=(in_tSQY_R[iii]+gRandom->Uniform())*b_tSQY_R[iii]+a_tSQY_R[iii];
-			out_tCsI_R[iii]=(in_tCsI_R[iii]+gRandom->Uniform())*b_tCsI_R[iii]+a_tCsI_R[iii];
-			out_tCsI_L[iii]=(in_tCsI_L[iii]+gRandom->Uniform())*b_tCsI_L[iii]+a_tCsI_L[iii];
+			out_tSQY_L[iii]=in_tSQY_L[iii];
+			out_tSQY_R[iii]=in_tSQY_R[iii];
+			out_tCsI_R[iii]=in_tCsI_R[iii];
+			out_tCsI_L[iii]=in_tCsI_L[iii];
 
 			r_SQY_L[iii]=in_SQY_L[iii];
 			r_SQY_R[iii]=in_SQY_R[iii];
@@ -213,8 +214,8 @@ Run_ID=0;
 
 			out_SQX_L[iii]=(in_SQX_L[iii]+gRandom->Uniform())*b_SQX_L[iii]+a_SQX_L[iii];
 			out_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
-			out_tSQX_R[iii]=(in_tSQX_R[iii]+gRandom->Uniform())*b_tSQX_R[iii]+a_tSQX_R[iii];
-			out_tSQX_L[iii]=(in_tSQX_L[iii]+gRandom->Uniform())*b_tSQX_L[iii]+a_tSQX_L[iii];
+			out_tSQX_R[iii]=in_tSQX_R[iii];
+			out_tSQX_L[iii]=in_tSQX_L[iii];
 
 			r_SQX_L[iii]=in_SQX_L[iii];
 			r_SQX_R[iii]=in_SQX_R[iii];
@@ -241,10 +242,10 @@ Run_ID=0;
 			out_CsI_R[iii]=(in_CsI_R[iii]+gRandom->Uniform())*b_CsI_R_5[iii]+a_CsI_R_5[iii];
 			out_CsI_L[iii]=(in_CsI_L[iii]+gRandom->Uniform())*b_SSD_L_5[iii]+a_SSD_L_5[iii];
 
-			out_tSQY_L[iii]=(in_tSQY_L[iii]+gRandom->Uniform())*b_tSQY_L[iii]+a_tSQY_L[iii];
-			out_tSQY_R[iii]=(in_tSQY_R[iii]+gRandom->Uniform())*b_tSQY_R[iii]+a_tSQY_R[iii];
-			out_tCsI_R[iii]=(in_tCsI_R[iii]+gRandom->Uniform())*b_tCsI_R[iii]+a_tCsI_R[iii];
-			out_tCsI_L[iii]=(in_tCsI_L[iii]+gRandom->Uniform())*b_tCsI_L[iii]+a_tCsI_L[iii];
+			out_tSQY_L[iii]=in_tSQY_L[iii];
+			out_tSQY_R[iii]=in_tSQY_R[iii];
+			out_tCsI_R[iii]=in_tCsI_R[iii];
+			out_tCsI_L[iii]=in_tCsI_L[iii];
 
 			r_SQY_L[iii]=in_SQY_L[iii];
 			r_SQY_R[iii]=in_SQY_R[iii];
@@ -261,14 +262,12 @@ Run_ID=0;
 
 			out_SQX_L[iii]=(in_SQX_L[iii]+gRandom->Uniform())*b_DSDX_L_5[iii]+a_DSDX_L_5[iii];
 			out_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_DSDX_R_5[iii]+a_DSDX_R_5[iii];
-			out_tSQX_R[iii]=(in_tSQX_R[iii]+gRandom->Uniform())*b_tSQX_R[iii]+a_tSQX_R[iii];
-			out_tSQX_L[iii]=(in_tSQX_L[iii]+gRandom->Uniform())*b_tSQX_L[iii]+a_tSQX_L[iii];
+			out_tSQX_R[iii]=in_tSQX_R[iii];
+			out_tSQX_L[iii]=in_tSQX_L[iii];
 
 			r_SQX_L[iii]=in_SQX_L[iii];
 			r_SQX_R[iii]=in_SQX_R[iii];
 		}
-
-
 	}
 	
 	else if ( (Run_ID > 0) && (Run_ID<40))
@@ -291,10 +290,10 @@ Run_ID=0;
 			out_CsI_R[iii]=(in_CsI_R[iii]+gRandom->Uniform())*b_CsI_R[iii]+a_CsI_R[iii];
 			out_CsI_L[iii]=(in_CsI_L[iii]+gRandom->Uniform())*b_CsI_L[iii]+a_CsI_L[iii];
 
-			out_tSQY_L[iii]=(in_tSQY_L[iii]+gRandom->Uniform())*b_tSQY_L[iii]+a_tSQY_L[iii];
-			out_tSQY_R[iii]=(in_tSQY_R[iii]+gRandom->Uniform())*b_tSQY_R[iii]+a_tSQY_R[iii];
-			out_tCsI_R[iii]=(in_tCsI_R[iii]+gRandom->Uniform())*b_tCsI_R[iii]+a_tCsI_R[iii];
-			out_tCsI_L[iii]=(in_tCsI_L[iii]+gRandom->Uniform())*b_tCsI_L[iii]+a_tCsI_L[iii];
+			out_tSQY_L[iii]=in_tSQY_L[iii];
+			out_tSQY_R[iii]=in_tSQY_R[iii];
+			out_tCsI_R[iii]=in_tCsI_R[iii];
+			out_tCsI_L[iii]=in_tCsI_L[iii];
 
 			r_SQY_L[iii]=in_SQY_L[iii];
 			r_SQY_R[iii]=in_SQY_R[iii];
@@ -311,8 +310,8 @@ Run_ID=0;
 
 			out_SQX_L[iii]=(in_SQX_L[iii]+gRandom->Uniform())*b_SQX_L[iii]+a_SQX_L[iii];
 			out_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
-			out_tSQX_R[iii]=(in_tSQX_R[iii]+gRandom->Uniform())*b_tSQX_R[iii]+a_tSQX_R[iii];
-			out_tSQX_L[iii]=(in_tSQX_L[iii]+gRandom->Uniform())*b_tSQX_L[iii]+a_tSQX_L[iii];
+			out_tSQX_R[iii]=in_tSQX_R[iii];
+			out_tSQX_L[iii]=in_tSQX_L[iii];
 
 			r_SQX_L[iii]=in_SQX_L[iii];
 			r_SQX_R[iii]=in_SQX_R[iii];
@@ -334,6 +333,9 @@ Run_ID=0;
 		out_tof=(-(out_tF3[0]+out_tF3[1]+out_tF3[2]+out_tF3[3])/4.0+(out_tF5[0]+out_tF5[1]+out_tF5[2]+out_tF5[3])/4)+cs::tof_const;
 	}
 
+	Double_t beta_squared= pow((cs::tofBase/out_tof)/cs::c, 2.0);
+	Double_t gamma=1.0/sqrt(1.0-beta_squared);
+	kinE = cs::mass6He*(gamma-1.0);
 	outTree->Fill();
 	
 	

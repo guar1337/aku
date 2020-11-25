@@ -121,10 +121,11 @@ void Xerox()
 bool MakeSelector_handler()
 {
 	TString fName("gurney_bis");
-	TString fullName = "/home/zalewski/Desktop/6He/analysis/19DecMWPC/" + fName + ".root";
+	TString fullName = "/home/zalewski/Desktop/6He/analysis/20Fev/" + fName + ".root";
 	TFile *inF = new TFile(fullName.Data(),"READ");
 	TTree *inTree;
 	inTree = (TTree*)inF->Get("simevents");
+	printf("%lld\n",inTree->GetEntries() );
 	//inTree->MakeSelector("expr");
 	inTree->Process("jasper.C",fName.Data());
 	inF->Close();
@@ -133,7 +134,7 @@ bool MakeSelector_handler()
 
 bool MakeSelector_handler(TChain *inChain)
 {
-	inChain->MakeSelector("pfff");
+	//inChain->MakeSelector("pfff");
 	TString entriesNo = TString::LLtoa(inChain->GetEntriesFast(),10);
 	inChain->Process("beamCutter.C", entriesNo);
 	return 1;

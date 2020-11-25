@@ -48,61 +48,8 @@ Double_t TOOL::getVelo(Double_t T, Float_t mass)
 
 
 bool TOOL::Get_MWPC_pos(UShort_t multi, UShort_t *wireNo,
-						Float_t *MWPC_pos,Short_t MWPC_id)
+						Float_t *MWPC_pos, Short_t MWPC_id)
 {
-	if (cs::runNo != 5)
-	{
-		switch (MWPC_id)
-		{
-			case cs::MWPC_1_X_id:
-			displacement = cs::MWPC1_X_displacement;
-			zero_position = cs::MWPC1_X_zero_position;
-			break;
-
-			case cs::MWPC_1_Y_id:
-			displacement = cs::MWPC1_Y_displacement;
-			zero_position = cs::MWPC1_Y_zero_position;
-			break;
-
-			case cs::MWPC_2_X_id:
-			displacement = cs::MWPC2_X_displacement;
-			zero_position = cs::MWPC2_X_zero_position;
-			break;
-
-			case cs::MWPC_2_Y_id:
-			displacement = cs::MWPC2_Y_displacement;
-			zero_position = cs::MWPC2_Y_zero_position;
-			break;
-		}
-	}
-
-	else if (cs::runNo == 5)
-	{
-		switch (MWPC_id)
-		{
-			case cs::MWPC_1_X_id:
-			displacement = cs::MWPC1_X_displacement_5;
-			zero_position = cs::MWPC1_X_zero_position;
-			break;
-
-			case cs::MWPC_1_Y_id:
-			displacement = cs::MWPC1_Y_displacement_5;
-			zero_position = cs::MWPC1_Y_zero_position;
-			break;
-
-			case cs::MWPC_2_X_id:
-			displacement = cs::MWPC2_X_displacement_5;
-			zero_position = cs::MWPC2_X_zero_position;
-			break;
-
-			case cs::MWPC_2_Y_id:
-			displacement = cs::MWPC2_Y_displacement_5;
-			zero_position = cs::MWPC2_Y_zero_position;
-			break;
-		}
-	}
-
-	
 	UShort_t sizeof_clust=1;
 	if (multi!=0)
 		{
@@ -112,14 +59,13 @@ bool TOOL::Get_MWPC_pos(UShort_t multi, UShort_t *wireNo,
 			//printf("simplest solution %i\n", wireNo[0]);
 			if (MWPC_id == 0 || MWPC_id == 2)
 			{
-				*MWPC_pos = zero_position + displacement - wireNo[0]*1.25;
+				*MWPC_pos = (15.5 - wireNo[0])*1.25;
 			}
 
 			else
 			{
-				*MWPC_pos = zero_position + displacement + wireNo[0]*1.25;
+				*MWPC_pos = (-15.5 + wireNo[0])*1.25;
 			}
-			
 			return 1;
 		}
 
@@ -136,16 +82,15 @@ bool TOOL::Get_MWPC_pos(UShort_t multi, UShort_t *wireNo,
 			//
 			if (sizeof_clust==multi)
 			{
+
 				if (MWPC_id == 0 || MWPC_id == 2)
 				{
-					*MWPC_pos = zero_position + displacement -
-					((wireNo[0]+wireNo[multi-1])/2)*1.25;
+					*MWPC_pos = (15.5 - (wireNo[0]+wireNo[multi-1])/2.0)*1.25;
 				}
 
 				else
 				{
-					*MWPC_pos = zero_position + displacement +
-					((wireNo[0]+wireNo[multi-1])/2)*1.25;
+					*MWPC_pos = (-15.5 + (wireNo[0]+wireNo[multi-1])/2.0)*1.25;
 				}
 				return 1;
 
@@ -176,14 +121,12 @@ bool TOOL::params_loader(TString fname, float *AConst, float *BConst, short chNo
 		return 0;
 	}
 
-	getline(instream, dummy);
-	getline(instream, dummy);
 	for (int iii=0; iii<chNo; iii++)
 	{
 		instream>>AConst[iii]>>BConst[iii]>>CConst;
 		//cout<<AConst[iii]<<"  "<<BConst[iii]<<endl;
 	}
-
+//cout<<endl;
 	instream.close();
 	return 1;
 }
@@ -200,7 +143,7 @@ bool TOOL::gcuts_loader(TString fName, TCutG *gcut, TString ion, int geoNo)
 
 	if (!instream) 
 	{
-		//printf ("!!Cannot open %s coefficient file\n",dir_cur.Data());
+		printf ("!!Cannot open %s coefficient file\n",dir_cur.Data());
 		return false;
 	}
 	
@@ -256,7 +199,7 @@ int TOOL::gcut_noPoints(TString fName, TString ion, int geoNo)
 
 	getline(instream, dummy, ',');
 	getline(instream, dummy, ')');
-	//printf("%s\n%s\n",dummy.c_str(), (cs::dir_gcut+fName+ion).Data());
+	//printf("%s\n%s\n",dummy.c_str(), dir_cur.Data());
 	points = stoi(dummy);//"I am number of points now"
 	return points;
 

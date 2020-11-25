@@ -1,83 +1,47 @@
 #define beamCutter_cxx
-// The class definition in beamCutter.h has been generated automatically
-// by the ROOT utility TTree::MakeSelector(). This class is derived
-// from the ROOT class TSelector. For more information on the TSelector
-// framework see $ROOTSYS/README/README.SELECTOR or the ROOT User Manual.
-
-
-// The following methods are defined in this file:
-//	 Begin():		  called every time a loop on the tree starts,
-//						  a convenient place to create your histograms.
-//	 SlaveBegin():	called after Begin(), when on PROOF called only on the
-//						  slave servers.
-//	 Process():		called for each event, in this function you decide what
-//						  to read and fill your histograms.
-//	 SlaveTerminate: called at the end of the loop on the tree, when on PROOF
-//						  called only on the slave servers.
-//	 Terminate():	 called at the end of the loop on the tree,
-//						  a convenient place to draw/fit your histograms.
-//
-// To use this file, try the following session on your Tree T:
-//
-// root> T->Process("beamCutter.C")
-// root> T->Process("beamCutter.C","some options")
-// root> T->Process("beamCutter.C+")
-//
-
 
 #include "beamCutter.h"
 #include <TH2.h>
 #include <TStyle.h>
 
+double beamCutter::MWPCrange(double position, int clusterMultiplicity)
+{
+	if (clusterMultiplicity%2 == 0)
+	{
+		position += rnd->Uniform(0.0, 0.23)-0.5*0.23;
+	}
+	else
+	{
+		position += rnd->Uniform(0.0, 1.02)-0.5*1.02;
+	}
+	return position;
+}
+
 bool beamCutter::Get_MWPC_pos(UShort_t multi, unsigned short *wireNo,
 						Float_t *MWPC_pos, Short_t MWPC_id)
 {
-	switch (MWPC_id)
-	{
-		case cs::MWPC_1_X_id:
-		displacement = cs::MWPC1_X_displacement;
-		zero_position = cs::MWPC1_X_zero_position;
-		break;
-
-		case cs::MWPC_1_Y_id:
-		displacement = cs::MWPC1_Y_displacement;
-		zero_position = cs::MWPC1_Y_zero_position;
-		break;
-
-		case cs::MWPC_2_X_id:
-		displacement = cs::MWPC2_X_displacement;
-		zero_position = cs::MWPC2_X_zero_position;
-		break;
-
-		case cs::MWPC_2_Y_id:
-		displacement = cs::MWPC2_Y_displacement;
-		zero_position = cs::MWPC2_Y_zero_position;
-		break;
-	}
-	
 	UShort_t sizeof_clust=1;
 	if (multi!=0)
 		{
 		//one wire got signal - simplest solution
 		if (multi==1)
 		{
-			//printf("svBeamimplest solution %i\n", wireNo[0]);
+			//printf("simplest solution %i\n", wireNo[0]);
 			if (MWPC_id == 0 || MWPC_id == 2)
 			{
-				*MWPC_pos = zero_position + displacement - wireNo[0]*1.25;
+				*MWPC_pos = (15.5 - wireNo[0])*1.25;
 			}
 
 			else
 			{
-				*MWPC_pos = zero_position + displacement + wireNo[0]*1.25;
+				*MWPC_pos = (-15.5 + wireNo[0])*1.25;
 			}
-			
 			return 1;
 		}
 
 		//more than one but is it one cluster?
 		else
-		{  //checking...
+		{	//checking...
 			for (int iii = 1; iii < multi; iii++)
 			{
 				if ((wireNo[iii] - wireNo[iii-1])==1)
@@ -88,16 +52,15 @@ bool beamCutter::Get_MWPC_pos(UShort_t multi, unsigned short *wireNo,
 			//
 			if (sizeof_clust==multi)
 			{
+
 				if (MWPC_id == 0 || MWPC_id == 2)
 				{
-					*MWPC_pos = zero_position + displacement -
-					((wireNo[0]+wireNo[multi-1])/2)*1.25;
+					*MWPC_pos = (15.5 - (wireNo[0]+wireNo[multi-1])/2.0)*1.25;
 				}
 
 				else
 				{
-					*MWPC_pos = zero_position + displacement +
-					((wireNo[0]+wireNo[multi-1])/2)*1.25;
+					*MWPC_pos = (-15.5 + (wireNo[0]+wireNo[multi-1])/2.0)*1.25;
 				}
 				return 1;
 
@@ -110,7 +73,7 @@ bool beamCutter::Get_MWPC_pos(UShort_t multi, unsigned short *wireNo,
 	}
 	else
 	{
-		return 0;	
+		return 0;
 	}
 	return 0;
 }
@@ -123,9 +86,14 @@ void beamCutter::Begin(TTree * /*tree*/)
 	// When running with PROOF Begin() is only called on the client.
 	// The tree argument is deprecated (on PROOF 0 is passed).
 
-	outF = new TFile("/home/zalewski/aku/geant4/beamSource_1.root","RECREATE");
+	outF = new TFile("/home/zalewski/aku/geant4/build/beamSource3.root","RECREATE");
 	outTree = new TTree("beamSource","beam_Source");
 	rnd = new TRandom3();
+
+	outTree->Branch("nx1", &out_nx1,	 "nx1/F");
+	outTree->Branch("ny1", &out_ny1,	 "ny1/F");
+	outTree->Branch("nx2", &out_nx2,	 "nx2/F");
+	outTree->Branch("ny2", &out_ny2,	 "ny2/F");
 
 	outTree->Branch("MWPC_1_X", &MWPC_1_X,	 "MWPC_1_X/F");
 	outTree->Branch("MWPC_2_X", &MWPC_2_X,	 "MWPC_2_X/F");
@@ -219,8 +187,6 @@ Bool_t beamCutter::Process(Long64_t entry)
 				tof=(-(tF3[0]+tF3[1]+tF3[2]+tF3[3])/4.0+(tF5[0]+tF5[1])/2)*0.125+cs::tof_const;
 				//tof=(-(tF3[0]+tF3[1]+tF3[2]+tF3[3])/4.0+(tF5[0]+tF5[1])/2)*0.0625+cs::tof_const_5;
 
-
-				//if (tof>175 && tof<181 && F5[0]>400 && F5[0]<800)		//gas target
 				if (tac && tof>165 && tof<182 && F5[0]>600 && F5[0]<2800)
 				{
 					range=true;
@@ -237,23 +203,21 @@ Bool_t beamCutter::Process(Long64_t entry)
 
 						MWPC_1_Z = -816.0;
 						MWPC_2_Z = -270.0;
-
-						dX = (MWPC_2_X + rnd->Uniform(0.0,1.25)-0.625) - (MWPC_1_X + rnd->Uniform(0.0,1.25)-0.625);
-						dY = (MWPC_2_Y + rnd->Uniform(0.0,1.25)-0.625) - (MWPC_1_Y + rnd->Uniform(0.0,1.25)-0.625);
-						dZ = (MWPC_2_Z + rnd->Uniform(0.0,1.25)-0.625) - (MWPC_1_Z + rnd->Uniform(0.0,1.25)-0.625);
-						vBeam->SetXYZ(dX,dY,dZ);
-				/*
-						if (geoNo==5)
-						{
-							Tcoef=(cos(tar_angle)*cs::tar_pos_Z-sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z)/(sin(tar_angle)*dX+cos(tar_angle)*dZ);
-							XZsum= - sin(tar_angle)*MWPC_1_X - cos(tar_angle)*MWPC_1_Z;
 						
-							evX = MWPC_1_X + dX*Tcoef;	//X,Y,Z coordinates on target plane
-							evY = MWPC_1_Y + dY*Tcoef;
-							evZ = MWPC_1_Z + dZ*Tcoef;
-							//need to calculate distance to the gas target volume
-						}
-				*/		
+						out_nx1 = *nx1;
+						out_ny1 = *ny1;
+						out_nx2 = *nx2;
+						out_ny2 = *ny2;
+
+						MWPC_1_X = MWPCrange(MWPC_1_X, out_nx1);
+						MWPC_1_Y = MWPCrange(MWPC_1_Y, out_ny1);
+						MWPC_2_X = MWPCrange(MWPC_2_X, out_nx2);
+						MWPC_2_Y = MWPCrange(MWPC_2_Y, out_ny2);
+
+						dX = MWPC_2_X - MWPC_1_X;
+						dY = MWPC_2_Y - MWPC_1_Y;
+						dZ = MWPC_2_Z - MWPC_1_Z;
+						vBeam->SetXYZ(dX,dY,dZ);
 
 						ene_beam = cs::mass6He + kinE;
 						mom_beam = sqrt(ene_beam*ene_beam - cs::mass6He*cs::mass6He);

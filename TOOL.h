@@ -4,7 +4,6 @@
 #include <TSystem.h>
 #include <TString.h>
 #include <TH1I.h>
-#include <TF1.h>
 #include <TTree.h>
 #include <TFile.h>
 #include <TCutG.h>

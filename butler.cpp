@@ -3,6 +3,8 @@
 #include <TROOT.h>
 #include <TSystem.h>
 #include <TString.h>
+#include <TStopwatch.h>
+#include <TCutG.h>
 
 #include "constants.h"
 #include "dE_E_angle.h"
@@ -25,6 +27,9 @@ bool butler()
 	TTree *inT, *outT;
 	TFile *inF, *outF;
 
+	//Don't remove it, it has to be here, but I don't know why
+	//some linking problem 
+	TCutG *blaha = new TCutG();
 	if (cs::inDir.Contains("raw"))
 	{
 		s_inTreeName = "AnalysisxTree";

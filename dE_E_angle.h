@@ -1,5 +1,7 @@
 #ifndef dE_E_angle_h
 #define dE_E_angle_h 1
+#include "TOOL.h"
+#include "constants.h"
 #include <TLorentzVector.h>
 #include <TTree.h>
 #include <gsl/gsl_sf_lambert.h>
@@ -11,9 +13,9 @@
 #include <TMath.h>
 #include <TCutG.h>
 #include <TVectorT.h>
+//#include <TF1.h>
 
-#include "TOOL.h"
-#include "constants.h"
+
 
 class dE_E_angle
 {
@@ -31,9 +33,10 @@ TTree *inTree;
 TTree *outTree;
 bool create_input_tree(TTree *inTree);
 bool create_output_tree(TTree *outTree);
+double MWPCrange(double position, int clusterMultiplicity);
 
 
-Bool_t he4, he6, angAng1H, angAng2H, dEAngle;
+Bool_t he4, he6, angAng1H, angAng2H, dEAngle, kineProB, kineDeuB;
 bool f_track;
 int out_trig, in_trig, counter;
 double tarPos;
@@ -47,6 +50,9 @@ UShort_t memS_CsI_R, memS_CsI_L, memS_CsI_0L, Ion_ID, Run_ID, Geo_ID, s_csir, s_
 Short_t run;
 
 Int_t rest_of_events;
+
+Double_t eneCM, ene3H, ene4He, mom3H, mom4He;
+Double_t mom6He, ene6He, momBeam, eneBeam;
 
 Float_t memE_CsI_R, memE_CsI_L, memE_CsI_0L;
 Float_t dist_tar_det;
@@ -69,7 +75,7 @@ TGraph *lang_vs_rang;
 
 Float_t dummy01, dummy02, dummy1, dummy2;
 
-Double_t SQ300[16], r_SQ300[16], in_tSQ300[16], SQ300_Edep[16];
+Double_t SQ300[16], r_SQ300[16], tSQ300[16], SQ300_Edep[16];
 Double_t CsI_L[16], CsI_0L[16], CsI_R[16], SQX_L[32], SQX_Ln[32], SQX_R[32], SQY_L[16],	SQY_R[16];
 Double_t c_CsI_L[16], c_CsI_R[16], c_SQX_L[32], c_SQX_R[32], c_SQY_L[16], c_SQY_R[16];
 Double_t r_CsI_L[16], r_CsI_R[16], r_SQX_L[32], r_SQX_R[32], r_SQY_L[16], r_SQY_R[16];
@@ -78,12 +84,13 @@ Double_t in_tF3[4],	in_F3[4], in_tF5[4], in_F5[4], in_tF6[4], in_F6[4];
 Double_t in_tof, out_tof, tempE, kinE, in_AZ, out_AZ;
 Double_t CsI_L_Edep[17], CsI_R_Edep[17], SQX_L_Edep[33], SQX_L_Edep2[33], SQX_R_Edep[33], SQY_L_Edep[17], SQY_R_Edep[17];
 Double_t out_tF3[4], out_F3[4], out_tF5[4], out_F5[4], out_tF6[4], out_F6[4];
-Double_t sqlde, sqletot, kinsqle_1H, kinsqle_2H, sqlphi, sqltheta, fsqltheta_1H, fsqltheta_2H, sqlang, sqlxtime, sqlytime, fel_2H, fdel_2H, ftot;
-Double_t sqrde, sqretot, sqrphi, sqrtheta, fsqrtheta1, fsqrtheta2, sqrang, sqrxtime, sqrytime;
-Double_t sqrang1, sqlang1, sqrang2, sqlang2, sqrang3, sqlang3;
+Double_t sqlde, sqletot, kinsqle_1H, kinsqle_2H, sqlphi, sqltheta, fsqltheta_1H, fsqltheta_2H, sqlang, sqlxtime, sqlytime, fel_2H, fdel_2H, ftot, sq300de;
+Double_t sqldEE;
+Double_t sqrde, sqretot, sqrphi, sqrtheta, fsqrtheta1, fsqrtheta2, sqrang, tsqr, tsql, tsq300, sqlangCM1, sqlangCM2;
+Double_t sqlangpp, sqlangdd, sqlangpt, sqlangdt, sqlangdp;
+Double_t sqrangpp, sqrangdd, sqrangpt, sqrangdt, sqrangdp;
 
-Double_t mml1, mml2, mom_2H, ene_2H, mom_1H, ene_1H;
-Double_t mom_6He, ene_6He, mom_beam, ene_beam;
+Double_t mml1, mml2, mom_2H, ene_2H, mom_1H, ene_1H, mom_3H, ene_3H;
 
 Double_t in_tSQX_L[32], in_tSQX_R[32], out_tSQX_L[32], out_tSQX_R[32];
 Double_t in_tSQY_L[16], in_tSQY_R[16], out_tSQY_L[16], out_tSQY_R[16];
@@ -95,11 +102,11 @@ Float_t tar_cut_lo_X, tar_cut_hi_X, tar_cut_lo_Y, tar_cut_hi_Y;
 Float_t tcor_sqLX_I, tcor_sqLX_II, tcor_sqLY, tcor_sqRX_I, tcor_sqRX_II, tcor_sqRY;
 
 Double_t cut_SQX_L, cut_SQX_R, cut_SQY_L, cut_SQY_R, cut_CsI_L, cut_CsI_R;
-Double_t Si_L_bank, Tcoef;
+Double_t Si_L_bank, Tcoef, mmN;
 Int_t cr;
 
 //double gsl_sf_lambert_Wm1(double in);
-TLorentzVector *LV_6He, *LV_2H, *LV_1H, *LV_beam;
+TLorentzVector *LV_6He, *LV_1H, *LV_2H, *LV_3H, *LV_n, *LV_beam, *LV_4He;
 const TLorentzVector LV_tar_1H{0.0, 0.0 ,0.0, cs::mass1H};
 const TLorentzVector LV_tar_2H{0.0, 0.0 ,0.0, cs::mass2H};
 TRotation beam_setting_array;
@@ -130,9 +137,7 @@ TOOL *maynard;
 
 TCutG *gcut_h2, *gcut_h3, *gcut_he4, *gcut_he6, *gcut_li7, *gcut_li8;
 TCutG *gcut_be9, *gcut_dehe4, *gcut_dehe6, *gcut_AngAng1H_w6He, *gcut_AngAng2H_w6He, *deut_geo5;
-TCutG *dEAnglePro, *dEAngleDeu;
-TF1 *angAngFit_2H = new TF1();
-TF1 *angAngFit_1H = new TF1();
+TCutG *dEAnglePro, *dEAngleDeu, *proKine, *deuKine;
 
 double si_A[1];
 double si_Z[1];

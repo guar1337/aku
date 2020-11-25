@@ -2,48 +2,20 @@
 #define constants_h 1
 #include <Rtypes.h>
 #include <TString.h>
+#include <TMath.h>
 
 namespace cs
 {
 
-	static const float		rad_to_deg	=	180.0/3.14159265359;
-	static const float		deg_to_rad	=	3.14159265359/180.0;
-	static const float		PI 			=	3.14159265359;
+
 	//*************************geometry**************************************************
-	static const float		sql_ang7		=	70.0	* deg_to_rad;
-	static const float		sqr_ang7		=	13.0	* deg_to_rad;
-	static const float		sql_ang9		=	35.0	* deg_to_rad;
-	static const float		sqr_ang9		=	18.0	* deg_to_rad;
+	static const float		sql_ang7		=	70.0 * TMath::DegToRad();
+	static const float		sqr_ang7		=	13.0 * TMath::DegToRad();
+	static const float		sql_ang9		=	35.0 * TMath::DegToRad();
+	static const float		sqr_ang9		=	18.0 * TMath::DegToRad();
 
 	static const float		sql_ang_s0		=	0.0	* (3.1415/180.0);
 	static const float		sqr_ang_s0		=	0.0	* (3.1415/180.0);
-
-	static const float		sql_ang_s1		=	(65.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s1		=	(15.0)	* (3.1415/180.0);
-
-	static const float		sql_ang_s2		=	(50.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s2		=	(15.0)	* (3.1415/180.0);
-
-	static const float		sql_ang_s3		=	(35.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s3		=	(15.0 )	* (3.1415/180.0);
-
-	static const float		sql_ang_s4		=	(75.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s4		=	10.58	* (3.1415/180.0);
-
-	static const float		sql_ang_s5		=	(70.0)	* (3.1415/180.0);
-	static const float		sqr_ang_s5		=	(9.0)	* (3.1415/180.0);
-
-	static const float		tar_ang_s1		=	45.0	* (3.1415/180.0);
-	static const float		tar_ang_s2		=	6.0		* (3.1415/180.0);
-	static const float		tar_ang_s3		=	0.0		* (3.1415/180.0);
-	static const float		tar_ang_s4		=	32.0	* (3.1415/180.0);
-	static const float		tar_ang_s5		=	33.0	* (3.1415/180.0);
-
-	static const float		tar_thcknss_1		=	80;
-	static const float		tar_thcknss_2		=	160;
-	static const float		tar_thcknss_3		=	200;
-	static const float		tar_thcknss_4		=	20;
-	static const float		tar_thcknss_5		=	100;
 
 	static const float		tar_thcknss_7		=	100;
 	static const float		tar_thcknss_9		=	10;
@@ -79,18 +51,11 @@ namespace cs
 	static const float		widthStripX	=	1.8125;
 	static const float		widthStripY	=	3.625;
 
-	static const float		SQLdisplacementX	=	2.116;
-	static const float		SQLdisplacementY	=	1.282;
-
 	static const float		SQLzeroX	=	widthStripX * 15.5;//28.09375;
 	static const float		SQLzeroY	=	-widthStripY * 7.5;//-27.1875;
 
 	static const float		SQLstartX	=	SQLzeroX;
 	static const float		SQLstartY	=	SQLzeroY;
-
-
-	static const float		SQRdisplacementX	=	-0.606;
-	static const float		SQRdisplacementY	=	1.697;
 
 	static const float		SQRzeroX	=	widthStripX * 15.5;//28.09375;
 	static const float		SQRzeroY	=	-widthStripY * 7.5;//-27.1875;
@@ -113,7 +78,10 @@ namespace cs
 
 	static const float		SQX_R_5	=	5.0;	//since it's for He6, I can use 5 MeV
 	static const float		SQY_R_5	=	5.0;	//since it's for He6, I can use 5 MeV
-	static const float		CsI_R_5	=	150.0;	
+	static const float		CsI_R_5	=	150.0;
+
+	static const float		sqRDeadLayer = 3.45;
+	static const float		sqLDeadLayer = 3.5;
 
 	//************************* dets time correction *******************************************
 	// 1st geo
@@ -153,16 +121,28 @@ namespace cs
 	static const float		tcor_sqRY_4	=	400.0;
 
 	//*************************MWPC******************************************************
-	static const float		MWPC1_X_displacement	=	4.10896e+00;//-1.0;
-	static const float		MWPC1_Y_displacement	=	-6.23299e+00;//-2.1375;
-	static const float		MWPC2_X_displacement	=	-1.32910e+00;//0.2;
-	static const float		MWPC2_Y_displacement	=	-2.96475e+00;//-1.125;
 
+	static const float	MWPC1_X_displacement = -1.0;
+	static const float	MWPC1_Y_displacement = 0.0;
+	static const float	MWPC2_X_displacement = -2.1375;
+	static const float	MWPC2_Y_displacement = 0.0;
 
-	static const float		MWPC1_X_displacement_5	=	0.0;
-	static const float		MWPC1_Y_displacement_5	=	0.0;
-	static const float		MWPC2_X_displacement_5	=	0.0;
-	static const float		MWPC2_Y_displacement_5	=	0.0;
+	static const float	leftDetShift = 0.0;
+	static const float	rightDetShift = 0.0;
+	static const float	leftDetShiftX = 0.0;
+	static const float	rightDetShiftX = 0.0;
+
+	static const float	leftDetDist = 0.0;
+	static const float	rightDetDist = 0.0;
+
+	static const float	leftAngShift = 0.536;
+	static const float	rightAngShift = 0.275;
+
+	static const float	tarThicknessShift = 36.8251;
+	static const float	tarPos = 10.0;
+	static const float	tarAngle = 0.0;
+	
+
 
 	static const float		MWPC1_X_zero_position	=	15.5*1.25;
 	static const float		MWPC1_Y_zero_position	=	-15.5*1.25;
@@ -178,11 +158,15 @@ namespace cs
 	static const float		alpha_from_Ra226[4]{4.751, 5.459, 5.972, 7.661};
 	static const float		u_to_MeV	=	931.4936;
 
+	static const float		massN	= 939.565;
 	static const float 		mass1H 	= 938.272013;
-	static const float 		mass2H 	= 1875.613000;
+	static const float 		mass2H 	= 1876.124366211;
 	static const float 		mass3H 	= 2808.921;
 	static const float 		mass4He = 3727.379000;
-	static const float 		mass6He = 5605.534341;
+	static const float 		mass5He = 4668.699;//4668.699
+	static const float 		mass6He = 5606.558019;
+	static const float 		mass7He = 6546.524420563;
+	static const float 		mass8Li = 8022.48625;
 
 	static const float		c			=	299.792;	// mm/ns
 	
@@ -193,18 +177,15 @@ namespace cs
 	static const float		tof_const_5		=	68.475;
 
 
-	static const TString 	dir_runs("/home/zalewski/data/he6_d/");
+	static const TString 	dir_runs("/home/zalewski/data/bank/");
 	static const TString 	dir_CsI("/home/zalewski/data/he6_d/miscroot/CsI/parts");
-	static const TString 	dir_params("/home/zalewski/data/he6_d/calib_utilities/params/");	
+	static const TString 	dir_params("/home/zalewski/aku/calibrationParameters/");	
 	static const TString 	s_inFname("run00_12");
-	static const TString	s_playground("/home/zalewski/data/tools/");
-	static const TString	dir_gcut("/home/zalewski/data/he6_d/GCuts/");
+	static const TString	dir_gcut("/home/zalewski/aku/wrk/GCuts/");
 
-	static const TString	dir_len_data("/home/zalewski/data/");
-	static const TString	dir_len_calib("/home/zalewski/aku/calib_files/");
-	static const float		tarPos		=	0.0;
-
-	static const int		runNo =	1;
+	static const int		runNo = 3;
 	static const TString	inDir = "cal";
+	static const bool 		fixedMWPC = false;
+	static const int		tarMass = 2;
 }
 #endif

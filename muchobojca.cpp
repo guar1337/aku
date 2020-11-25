@@ -51,7 +51,7 @@ else if (cs::runNo!=5)
 	inTree->SetBranchAddress("NeEvent.SQX_R[32]",	in_SQX_R);
 	inTree->SetBranchAddress("NeEvent.SQY_L[16]",	in_SQY_L);
 	inTree->SetBranchAddress("NeEvent.SQY_R[16]",	in_SQY_R);
-	//inTree->SetBranchAddress("NeEvent.SQ300[16]",	in_SQ300);
+
 
 	inTree->SetBranchAddress("NeEvent.tSQX_L[32]",	in_tSQX_L);
 	inTree->SetBranchAddress("NeEvent.tSQX_R[32]",	in_tSQX_R);
@@ -59,7 +59,13 @@ else if (cs::runNo!=5)
 	inTree->SetBranchAddress("NeEvent.tCsI_R[16]",	in_tCsI_R);
 	inTree->SetBranchAddress("NeEvent.tSQY_L[16]",	in_tSQY_L);
 	inTree->SetBranchAddress("NeEvent.tSQY_R[16]",	in_tSQY_R);
-//inTree->SetBranchAddress("NeEvent.tSQ300[16]",	in_tSQ300);
+
+	if (cs::runNo == 3)
+	{
+		inTree->SetBranchAddress("NeEvent.SQ300[16]",	in_SQ300);
+		inTree->SetBranchAddress("NeEvent.tSQ300[16]",	in_tSQ300);
+	}
+
 }
 
 inTree->SetBranchAddress("NeEvent.tF3[4]",	in_tdcF3);
@@ -124,8 +130,8 @@ outTree->Branch("tof",		&tof,		"tof/D");
 outTree->Branch("sumF5",	&sumF5,		"sumF5/F");
 outTree->Branch("trig",		&out_trig,	"trig/I");
 
-maynard->params_loader("SQX_L_ec.cal", a_SQX_L, b_SQX_L, 32);
-maynard->params_loader("SQX_R_ec.cal", a_SQX_R, b_SQX_R, 32);
+maynard->params_loader("sqx_l_ec.clb", a_SQX_L, b_SQX_L, 32);
+maynard->params_loader("sqx_r_ec.clb", a_SQX_R, b_SQX_R, 32);
 
 Long64_t nEntries = inTree->GetEntries();
 counter = 0;
@@ -148,14 +154,12 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 		{
 			tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4.0+(in_tdcF5[0]+in_tdcF5[1])/2)*0.125+cs::tof_const;
 			sumF5 = (in_aF5[0] + in_aF5[1] + in_aF5[2] + in_aF5[3])/4.0;
-			AZ = 0.017142857 * tof;
 		}
 
 		else if (cs::runNo == 5)
 		{
 			tof=(-(in_tdcF3[0]+in_tdcF3[1]+in_tdcF3[2]+in_tdcF3[3])/4.0+(in_tdcF5[0]+in_tdcF5[1])/2)*0.0625+cs::tof_const_5;
 			sumF5 = (in_aF5[0] + in_aF5[1] + in_aF5[2] + in_aF5[3])/4.0;
-			AZ = 0.017142857 * tof;
 		}
 
 
@@ -208,7 +212,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			cal_SQX_L[iii]=(in_SQX_L[iii]+gRandom->Uniform())*b_SQX_L[iii]+a_SQX_L[iii];
 			cal_SQX_R[iii]=(in_SQX_R[iii]+gRandom->Uniform())*b_SQX_R[iii]+a_SQX_R[iii];
 
-			if (cal_SQX_L[iii]>1.0)
+			if (cal_SQX_L[iii]>1.2)
 			{
 				sql_count++;
 				sql=true;
@@ -230,14 +234,14 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			(in_tdcF5[0]-in_tdcF5[1]) > -50.0 && (in_tdcF5[0]-in_tdcF5[1]) < 50.0 &&
 			(in_tdcF5[0]-in_tdcF5[2]) > -50.0 && (in_tdcF5[0]-in_tdcF5[2]) < 50.0 &&
 			(in_tdcF5[0]-in_tdcF5[3]) > -50.0 && (in_tdcF5[0]-in_tdcF5[3]) < 50.0 )
-		{
-			tac=true;
-			tac_count++;
-		}
+			{
+				tac=true;
+				tac_count++;
+			}
 
-		if (maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, cs::MWPC_1_X_id)*
-			maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, cs::MWPC_1_Y_id)*
-			maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, cs::MWPC_2_X_id)*
+		if (maynard->Get_MWPC_pos(in_nx1, in_x1, &MWPC_1_X, cs::MWPC_1_X_id)&&
+			maynard->Get_MWPC_pos(in_ny1, in_y1, &MWPC_1_Y, cs::MWPC_1_Y_id)&&
+			maynard->Get_MWPC_pos(in_nx2, in_x2, &MWPC_2_X, cs::MWPC_2_X_id)&&
 			maynard->Get_MWPC_pos(in_ny2, in_y2, &MWPC_2_Y, cs::MWPC_2_Y_id))
 		{
 
@@ -245,14 +249,7 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 			mwpc_count++;
 		}
 		
-
-		if (tof>150 && tof<200)
-		{
-			tof_range=true;
-			tof_range_count++;
-		}
-
-		if (mwpc/* && tac/* && sqr && tof>100 && tof<200 && sql*/)
+		if (mwpc && tac && tof>100 && tof<200 && sql)
 		{
 			outTree->Fill();
 		}
@@ -266,10 +263,11 @@ for (Long64_t entry=0; entry<nEntries; entry++)
 }
 outTree->Write();
 //printf("\n\n#\tCreating file: %s with tree named \"cleaned\"\n",fname.Copy().Prepend("cal_").Data());
-printf("#\tWe got from %lli entries to %lli entries with trigger cut\n",inTree->GetEntries(), outTree->GetEntries()	);
+printf("#\tWe got from %lli entries to %lli entries\n",inTree->GetEntries(), outTree->GetEntries()	);
 printf("#\tThat gives %i%% total efficiency\n", static_cast<int>(100*outTree->GetEntries()/inTree->GetEntries())	);
-printf("#\tTDC signals out of phase: %i%%\n", static_cast<int>(100*(nEntries-tac_count)/nEntries)	);
-printf("#\tSQL amplitude at 0: %i%%\n", static_cast<int>(100*(nEntries-sql_count)/nEntries)		);
+printf("#\tTDC signals out of phase: %i%%\n", static_cast<int>(100*(nEntries-tac_count)/nEntries));
+printf("#\tSQL amplitude at 0: %i%%\n", static_cast<int>(100*(nEntries-sql_count)/nEntries)	);
+printf("#\tSQR amplitude at less than 8.0: %i%%\n", static_cast<int>(100*(nEntries-sqr_count)/nEntries)	);
 printf("#\tWrong tracking: %i%%\twhile there is %i%% of 0_mult events\n", static_cast<int>	(100*(nEntries-mwpc_count)/nEntries),static_cast<int>(100*(nEntries-zero_mult)/nEntries));
 printf("#\tToF out of range: %i%%\n", static_cast<int>(100*(nEntries-tof_range_count)/nEntries)	);
 printf("#\tGoodbye\n");

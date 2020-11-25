@@ -59,7 +59,7 @@ namespace ROOT {
       ::TOOL *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::TOOL >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("TOOL", ::TOOL::Class_Version(), "TOOL.h", 16,
+         instance("TOOL", ::TOOL::Class_Version(), "TOOL.h", 15,
                   typeid(::TOOL), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::TOOL::Dictionary, isa_proxy, 16,
                   sizeof(::TOOL) );
@@ -93,7 +93,7 @@ namespace ROOT {
       ::dE_E_angle *ptr = 0;
       static ::TVirtualIsAProxy* isa_proxy = new ::TInstrumentedIsAProxy< ::dE_E_angle >(0);
       static ::ROOT::TGenericClassInfo 
-         instance("dE_E_angle", ::dE_E_angle::Class_Version(), "dE_E_angle.h", 18,
+         instance("dE_E_angle", ::dE_E_angle::Class_Version(), "dE_E_angle.h", 20,
                   typeid(::dE_E_angle), ::ROOT::Internal::DefineBehavior(ptr, ptr),
                   &::dE_E_angle::Dictionary, isa_proxy, 16,
                   sizeof(::dE_E_angle) );
@@ -464,7 +464,7 @@ namespace {
     };
     static const char* includePaths[] = {
 "/usr/local/include",
-"/usr/local/include",
+"/usr/local/include/",
 "/home/zalewski/aku/wrk/",
 0
     };
@@ -492,18 +492,18 @@ class __attribute__((annotate("$clingAutoload$calibrate_tree.h")))  calibrate_tr
 
 #undef  _BACKWARD_BACKWARD_WARNING_H
 )DICTPAYLOAD";
-    static const char* classesHeaders[]={
+    static const char* classesHeaders[] = {
 "TOOL", payloadCode, "@",
 "calibrate_tree", payloadCode, "@",
 "dE_E_angle", payloadCode, "@",
 "muchobojca", payloadCode, "@",
-nullptr};
-
+nullptr
+};
     static bool isInitialized = false;
     if (!isInitialized) {
       TROOT::RegisterModule("Mr_Blue_Sky",
         headers, includePaths, payloadCode, fwdDeclCode,
-        TriggerDictionaryInitialization_Mr_Blue_Sky_Impl, {}, classesHeaders, /*has no C++ module*/false);
+        TriggerDictionaryInitialization_Mr_Blue_Sky_Impl, {}, classesHeaders, /*hasCxxModule*/false);
       isInitialized = true;
     }
   }

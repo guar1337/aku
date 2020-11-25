@@ -19,7 +19,7 @@
 #include <unistd.h> // For STDOUT_FILENO
 #include <TH2.h>
 #include <TStyle.h>
-
+#include "/home/zalewski/aku/wrk/constants.h"
 // Headers needed by this particular selector
 #include "TLorentzVector.h"
 
@@ -73,12 +73,18 @@ public :
 	TTreeReaderValue<Float_t> fMWPC_1_Y = {fReader, "MWPC_1_Y"};
 	TTreeReaderValue<Float_t> fMWPC_2_Y = {fReader, "MWPC_2_Y"};
 
+	TTreeReaderValue<Float_t> fnx1 = {fReader, "nx1"};
+	TTreeReaderValue<Float_t> fnx2 = {fReader, "nx2"};
+	TTreeReaderValue<Float_t> fny1 = {fReader, "ny1"};
+	TTreeReaderValue<Float_t> fny2 = {fReader, "ny2"};
+
 
 	Int_t Sideut_multY;
 	Int_t Sideut_multX;
 	Int_t Sihe_multX;
 	Int_t Sihe_multY;
 
+	Double_t tarPosZ;
 	Double_t SQLang, SQRang, SQLdist, SQRdist, tarAngle, tarPos;
 	Double_t MWPC_1_Z, MWPC_2_Z;
 	Double_t fsqrde, fsqlde, fsqretot, fsqletot, resqlde;
@@ -90,7 +96,7 @@ public :
 	Double_t evX, evY, evZ;
 	Double_t fevX, fevY, fevZ;
 	Double_t dX, dY, dZ;
-	Double_t sqlang, sqrang, fsqlang, fsqrang;
+	Double_t sqlang, sqrang, fsqlang, fsqrang, sqlangCM;
 	Double_t out_fsqlangg, out_fsqrangg;
 	Double_t mm, thetacm, phicm;
 	Double_t fmm, fthetacm, fphicm;
@@ -98,6 +104,7 @@ public :
 	Int_t SQX_L_sNo, SQY_L_sNo, SQX_R_sNo, SQY_R_sNo;
 	const Double_t width_strip_X{58.0/32.0};
 	const Double_t width_strip_Y{58.0/16.0};
+	double tarThcknss;
 	TRandom3 *rnd;
 	TVector3 *v2H, *v6He, *vf2H, *vf6He, *vBeam;
 	//Double_t reco_sqlang, reco_sqrang;
@@ -116,8 +123,7 @@ public :
 	double CD2_Z[2]{1, 6};
 	double CD2_W[2]{2, 1};
 	AELC *h2_CD2;
-	double tarThcknss{100.0};
-
+	
 	float progress = 0.0;
 	Long64_t nEntries;
 	int consoleWidth;
@@ -137,7 +143,7 @@ public :
 	virtual TList	*GetOutputList() const { return fOutput; }
 	virtual void	SlaveTerminate();
 	virtual void	Terminate();
-
+	double			MWPCrange(double position, int clusterMultiplicity);
 	ClassDef(jasper,0);
 
 };

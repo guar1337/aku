@@ -110,7 +110,7 @@ Double_t out_tF5[4];
 Double_t out_F5[4];
 Double_t out_tF6[4];
 Double_t out_F6[4];
-Double_t aF5, in_tof, out_tof, sumF5, AZ;
+Double_t aF5, in_tof, out_tof, sumF5, AZ, kinE;
 Short_t Run_ID;
 
 Float_t out_tMWPC[4];
